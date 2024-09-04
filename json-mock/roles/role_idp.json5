@@ -1,0 +1,54 @@
+{
+  "description": "API response for a single entity object (local role / remote entity)",
+  "entityId": "string",
+  "displayName": "name",
+  "logoSource": "srcURL string",
+  "protocol": "SAML",
+  "entityType": "SAML_IDP",
+
+
+  "SAML_IDP": {
+    "metadataSource": {
+      "type": "url",
+      "value": "string (file path or URL)"
+    },
+
+    "isActive": true,
+    "isRemote": false,
+    "notes": "arbitrary free text"
+  },
+
+  "SAML_SP": {
+
+  },
+
+  "OIDC_OP": {
+
+  },
+
+  "OIDC_RP": {
+
+  },
+
+
+  "keyMaterial": "pubkey string",
+
+
+  actions: [
+    {
+      "name": "updateEntity",
+      "uri": "https://wizard.ti/entities/meaningful-id/update",
+      "method": "PATCH"
+    },
+    {
+      "name": "deleteEntity",
+      "uri": "https://wizard.ti/entities/meaningful-id/delete",
+      "method": "DELETE"
+    },
+    {
+      "name": "changeActiveStatus",
+      "uri": "https://wizard.ti/entities/meaningful-id/change-status",
+      "method": "PATCH"
+    }
+  ]
+}
