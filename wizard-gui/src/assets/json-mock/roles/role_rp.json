@@ -1,21 +1,14 @@
 {
   "description": "API response for a single entity object (local role / remote entity)",
-  "entityId": "string",
-  "displayName": "name",
+  "entityId": "alpe4.incubator.geant.org/oidc-rp-very-very-long-id-sample-sample-sa",
+  "displayName": "Mock RP",
   "logoSource": "srcURL string",
-  "protocol": "SAML",
-  "entityType": "SAML_IDP",
+  "protocol": "OIDC",
+  "entityType": "OIDC_RP",
 
 
   "SAML_IDP": {
-    "metadataSource": {
-      "type": "url",
-      "value": "string (file path or URL)"
-    },
 
-    "isActive": true,
-    "isRemote": false,
-    "notes": "arbitrary free text"
   },
 
   "SAML_SP": {
@@ -27,14 +20,27 @@
   },
 
   "OIDC_RP": {
+    "metadataSource": {
+      "type": "url",
+      "value": "string (file path or URL)"
+    },
 
+    "isActive": false,
+    "isRemote": true,
+    "notes": "arbitrary free text",
+
+    "redirectUri": "string",
+    "name": "string",
+    "description": "string",
+    "clientId": "string (auto-generated?)",
+    "clientSecret": "string (auto-generated?)"
   },
 
 
   "keyMaterial": "pubkey string",
 
 
-  actions: [
+  "actions": [
     {
       "name": "updateEntity",
       "uri": "https://wizard.ti/entities/meaningful-id/update",

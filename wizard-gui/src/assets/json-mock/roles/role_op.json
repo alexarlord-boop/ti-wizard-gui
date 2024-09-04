@@ -1,0 +1,60 @@
+{
+  "description": "API response for a single entity object (local role / remote entity)",
+  "entityId": "alpe4.incubator.geant.org/oidc-op-very-very-long-id-sample-sample-sa",
+  "displayName": "Mock OP",
+  "logoSource": "srcURL string",
+  "protocol": "OIDC",
+  "entityType": "OIDC_OP",
+
+
+  "SAML_IDP": {
+
+  },
+
+  "SAML_SP": {
+
+  },
+
+  "OIDC_OP": {
+    "metadataSource": {
+      "type": "url",
+      "value": "string (file path or URL)"
+    },
+
+    "isActive": false,
+    "isRemote": true,
+    "notes": "arbitrary free text",
+
+    "redirectUri": "string",
+    "name": "string",
+    "description": "string",
+    "clientId": "string (auto-generated?)",
+    "clientSecret": "string (auto-generated?)"
+  },
+
+  "OIDC_RP": {
+
+  },
+
+
+  "keyMaterial": "pubkey string",
+
+
+  "actions": [
+    {
+      "name": "updateEntity",
+      "uri": "https://wizard.ti/entities/meaningful-id/update",
+      "method": "PATCH"
+    },
+    {
+      "name": "deleteEntity",
+      "uri": "https://wizard.ti/entities/meaningful-id/delete",
+      "method": "DELETE"
+    },
+    {
+      "name": "changeActiveStatus",
+      "uri": "https://wizard.ti/entities/meaningful-id/change-status",
+      "method": "PATCH"
+    }
+  ]
+}
