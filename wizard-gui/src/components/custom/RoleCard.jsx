@@ -12,7 +12,16 @@ import {Button} from "../ui/button.jsx";
 import {Edit} from "lucide-react";
 import RolePreviewDialog from "./RolePreviewDialog.jsx"; // Assuming you're using lucide-react for icons
 
-export default function RoleCard({title, isActive}) {
+export default function RoleCard({type, data}) {
+
+    const [isActive, setActive] = React.useState(data[data.entityType].isActive);
+    const handleAdd = () => {
+        setActive(true);
+    }
+
+    const handleRemove = () => {
+        setActive(false);
+    }
 
     return (
         <>
@@ -22,31 +31,31 @@ export default function RoleCard({title, isActive}) {
             <Card className={cn(isActive && "border border-black bg-accent")}>
                 <CardHeader className={cn("text-left")}>
                     {isActive ? (
-                        <CardTitle><RolePreviewDialog>{title}</RolePreviewDialog></CardTitle>
+                        <CardTitle><RolePreviewDialog>{data.displayName}</RolePreviewDialog></CardTitle>
                     ) : (
-                        <CardTitle>{title}</CardTitle>
+                        <CardTitle>{data.displayName}</CardTitle>
                     )}
-                    <CardDescription>Card Description</CardDescription>
+                    <CardDescription>{data.protocol}</CardDescription>
                 </CardHeader>
 
                 <CardContent>
-                    <p>Card Content</p>
+                    <p>{data.entityId}</p>
                 </CardContent>
 
                 <CardFooter className={cn("flex justify-between")}>
                     {isActive ? (
                         <>
                             {/* Render remove button if card is active */}
-                            <Button variant="destructive">Remove</Button>
+                            <Button variant="destructive" onClick={() => handleRemove()}>Remove</Button>
 
                             {/* Render edit icon button if card is active */}
-                            <Button variant="ghost" className="ml-2 p-2">
-                                <Edit className="h-4 w-4"/>
+                            <Button variant="outline" size="icon" className="ml-2 p-2 bg-accent hover:bg-white">
+                                <Edit className=""/>
                             </Button>
                         </>
                     ) : (
 
-                        <Button>Add</Button>
+                        <Button onClick={() => handleAdd()}>Add</Button>
 
                     )}
                 </CardFooter>
