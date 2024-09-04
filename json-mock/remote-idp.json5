@@ -1,20 +1,20 @@
 {
   "description": "API response for a single entity object (local role / remote entity)",
   "entityId": "string",
-//  "meaningfulId": "string",
   "displayName": "name",
   "logoSource": "srcURL string",
-  "protocol": "SAML", // OIDC
-  "entityType": "SAML_IDP", // "OIDC_OP", "SAML_SP", "OIDC_RP"
+  "protocol": "SAML",
+  "entityType": "SAML_IDP",
 
 
   "SAML_IDP": {
     "metadataSource": {
-      "type": "file", // or "url"
+      "type": "url",
       "value": "string (file path or URL)"
     },
-    "isActive": false, // can be created and stored in a DB, but not performing in relations.
-    "isRemote": true,  // isLocalRole
+
+    "isActive": false,
+    "isRemote": true,
     "notes": "arbitrary free text"
   },
 
@@ -22,12 +22,8 @@
 
   },
 
-  "OIDC_OP": { // extra fields for OIDC entities
-    "redirectUri": "string",
-    "name": "string",
-    "description": "string",
-    "clientId": "string (auto-generated?)",
-    "clientSecret": "string (auto-generated?)",
+  "OIDC_OP": {
+
   },
 
   "OIDC_RP": {
@@ -38,7 +34,7 @@
   "keyMaterial": "pubkey string",
 
 
-  actions: [ // possible actions to perform
+  actions: [
     {
       "name": "updateEntity",
       "uri": "https://wizard.ti/entities/meaningful-id/update",
