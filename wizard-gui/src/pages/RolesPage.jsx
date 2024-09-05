@@ -21,7 +21,7 @@ function RolesPage() {
 
     return (
         <>
-            <Breadcrumbs itemList={[{ path: '/roles', label: 'My Roles' }]} />
+            <Breadcrumbs itemList={[{path: '/', label: 'Home'}, { path: '/roles', label: 'My Roles' }]} />
             <h1 className="text-2xl font-bold">Welcome to the Roles Page</h1>
             {roles.length > 0 ? (
                 <>
