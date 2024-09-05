@@ -28,13 +28,13 @@ function RolesPage() {
                     id: "3",
                     role: "OIDC RP",
                     name: "ORCID",
-                    status: "disabled"
+                    status: "inactive"
                 },
                 {
                     id: "4",
                     role: "SAML SP",
                     name: "GEANT Cloud Services",
-                    status: "disabled"
+                    status: "inactive"
                 },
                 // Add more data as needed
             ];
@@ -53,9 +53,6 @@ function RolesPage() {
     return (
         <>
             <Breadcrumbs itemList={[{path: '/', label: 'Home'}, { path: '/remotes-entities', label: 'Remote Entities' }]} />
-            <h1 className="text-2xl font-bold">Welcome to the Remote Entity Page</h1>
-            <br/>
-            <br/>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Button variant="">+ IDP</Button>
                 <Button variant="">+ SP</Button>

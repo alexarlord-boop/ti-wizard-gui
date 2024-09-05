@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import {useState} from 'react'
+import {Suspense} from 'react';
+import {useTranslation} from 'react-i18next';
 import './App.css'
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import MainLayout from "./components/MainLayout.jsx";
@@ -9,30 +9,35 @@ import RolesPage from "./pages/RolesPage.jsx";
 import RemotePage from "./pages/RemotePage.jsx";
 
 
-
-
 function App() {
-  const [count, setCount] = useState(0)
+    const [count, setCount] = useState(0)
 
-  return (
-      <Router>
-          {/* MainLayout wraps the entire application layout */}
-          <MainLayout>
-              <Routes>
-                  {/* Define routes for different components */}
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/roles" element={<RolesPage />} />
-                  <Route path="/remote-entities" element={<RemotePage />} />
-
-
-                  {/* Catch-all route for unknown paths */}
-                  <Route path="*" element={<Navigate to="/" replace />} />
+    return (
+        <Router>
+            {/* MainLayout wraps the entire application layout */}
+            <MainLayout>
+                <Routes>
+                    {/* Define routes for different components */}
+                    <Route path="/" element={<HomePage/>}/>
+                    <Route path="/roles" element={<RolesPage/>}/>
+                    <Route path="/remote-entities" element={<RemotePage/>}/>
 
 
-              </Routes>
-          </MainLayout>
-      </Router>
-  )
+                    {/* Catch-all route for unknown paths */}
+                    <Route path="*" element={<Navigate to="/" replace/>}/>
+
+
+                </Routes>
+            </MainLayout>
+        </Router>
+    )
 }
 
-export default App
+// export default App
+export default function WrappedApp() {
+    return (
+        <Suspense fallback="...loading">
+            <App />
+        </Suspense>
+    )
+}

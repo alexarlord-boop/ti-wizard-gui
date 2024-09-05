@@ -10,9 +10,11 @@ import {
 import {cn} from "../../lib/utils.js";
 import {Button} from "../ui/button.jsx";
 import {Edit} from "lucide-react";
-import RolePreviewDialog from "./RolePreviewDialog.jsx"; // Assuming you're using lucide-react for icons
+import RolePreviewDialog from "./RolePreviewDialog.jsx";
+import {useTranslation} from "react-i18next"; // Assuming you're using lucide-react for icons
 
 export default function RoleCard({type, data}) {
+    const { t, i18n } = useTranslation();
 
     const [isActive, setActive] = React.useState(data[data.entityType].isActive);
     const handleAdd = () => {
@@ -46,7 +48,7 @@ export default function RoleCard({type, data}) {
                     {isActive ? (
                         <>
                             {/* Render remove button if card is active */}
-                            <Button variant="destructive" onClick={() => handleRemove()}>Remove</Button>
+                            <Button variant="destructive" onClick={() => handleRemove()}>{t('roles.cardBtn.delete')}</Button>
 
                             {/* Render edit icon button if card is active */}
                             <Button variant="outline" size="icon" className="ml-2 p-2 bg-accent hover:bg-white">
@@ -55,7 +57,7 @@ export default function RoleCard({type, data}) {
                         </>
                     ) : (
 
-                        <Button onClick={() => handleAdd()}>Add</Button>
+                        <Button onClick={() => handleAdd()}>{t('roles.cardBtn.create')}</Button>
 
                     )}
                 </CardFooter>

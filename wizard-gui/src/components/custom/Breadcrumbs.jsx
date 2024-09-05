@@ -16,7 +16,7 @@ export default function Breadcrumbs({ itemList = [] }) {
     let currentList = [...initList, ...itemList];
 
     return (
-        <Breadcrumb>
+        <Breadcrumb className="mb-10">
             <BreadcrumbList>
                 {
                     currentList.map((item, index) => (

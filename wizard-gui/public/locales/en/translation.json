@@ -1,0 +1,47 @@
+{
+  "home": {
+    "header": null,
+    "description": null,
+
+    "roleCard": {
+      "title": "My Roles",
+      "content": "content"
+    },
+    "remoteCard": {
+      "title": null,
+      "content": null
+    },
+    "sourceCard": {
+      "title": null,
+      "content": null
+    },
+    "proxyCard": {
+      "title": null,
+      "content": null
+    }
+  },
+
+  "roles": {
+    "cardBtn": {
+      "delete": "Remove",
+      "create": "Add"
+    }
+
+  },
+
+  "remote_entities": {
+
+  },
+
+  "remote_sources": {
+
+  },
+
+  "proxy": {
+
+  },
+
+  "settings": {
+
+  }
+}

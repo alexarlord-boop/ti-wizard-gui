@@ -22,10 +22,9 @@ function RolesPage() {
     return (
         <>
             <Breadcrumbs itemList={[{path: '/', label: 'Home'}, { path: '/roles', label: 'My Roles' }]} />
-            <h1 className="text-2xl font-bold">Welcome to the Roles Page</h1>
             {roles.length > 0 ? (
                 <>
-                    <div className="mt-[5%] grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {roles.map((role, index) => (
                             <RoleCard key={index} data={role.data} />
                         ))}
