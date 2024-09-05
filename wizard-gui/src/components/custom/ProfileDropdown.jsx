@@ -6,6 +6,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {GearIcon} from "@radix-ui/react-icons";
 
 
 export default function ProfileDropdown({children}) {
@@ -19,6 +20,7 @@ export default function ProfileDropdown({children}) {
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Team</DropdownMenuItem>
                 <DropdownMenuItem>Subscription</DropdownMenuItem>
+                <DropdownMenuItem><GearIcon/> Settings</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
 

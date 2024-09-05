@@ -10,10 +10,7 @@ import {Fragment} from "react";
 
 export default function Breadcrumbs({ itemList = [] }) {
     const initList = [
-        {
-            path: '/',
-            label: 'Home',
-        }
+        // {path: '/', label: 'Home'}
     ];
 
     let currentList = [...initList, ...itemList];

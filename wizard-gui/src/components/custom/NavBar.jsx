@@ -19,10 +19,11 @@ export default function NavBar() {
         <NavigationMenu>
             <NavigationMenuList>
                 <NavigationMenuItem>
+                    <NavigationMenuLinkItem href="/">Home</NavigationMenuLinkItem>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
                     <NavigationMenuLinkItem href="/roles">My Roles</NavigationMenuLinkItem>
-                    {/*<NavigationMenuContent>*/}
-                    {/*    <NavigationMenuLink>Content</NavigationMenuLink>*/}
-                    {/*</NavigationMenuContent>*/}
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
@@ -77,7 +78,9 @@ export default function NavBar() {
 
             </NavigationMenuList>
 
-            <ProfileDropdown>Account</ProfileDropdown>
+            <div className="flex">
+                <ProfileDropdown>Account</ProfileDropdown>
+            </div>
 
         </NavigationMenu>
 
