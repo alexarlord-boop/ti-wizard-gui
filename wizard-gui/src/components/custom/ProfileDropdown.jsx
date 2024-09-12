@@ -6,13 +6,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {GearIcon} from "@radix-ui/react-icons";
 
 
 export default function ProfileDropdown({children}) {
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
+            <DropdownMenuTrigger className="focus:outline-none">{children}</DropdownMenuTrigger>
             <DropdownMenuContent>
                 {/*<DropdownMenuLabel><GearIcon/> Settings</DropdownMenuLabel>*/}
                 <DropdownMenuSeparator />
