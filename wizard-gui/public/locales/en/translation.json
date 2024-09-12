@@ -8,15 +8,15 @@
       "content": "content"
     },
     "remoteCard": {
-      "title": null,
+      "title": "Remote Entities",
       "content": null
     },
     "sourceCard": {
-      "title": null,
+      "title": "Sources",
       "content": null
     },
     "proxyCard": {
-      "title": null,
+      "title": "Proxy",
       "content": null
     }
   },

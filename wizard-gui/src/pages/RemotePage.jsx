@@ -36,7 +36,6 @@ function RolesPage() {
                     name: "GEANT Cloud Services",
                     status: "inactive"
                 },
-                // Add more data as needed
             ];
 
             setData(fetchedData);

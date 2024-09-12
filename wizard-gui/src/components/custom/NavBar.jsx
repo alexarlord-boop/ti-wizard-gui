@@ -12,6 +12,7 @@ import React from "react";
 import {cn} from "../../lib/utils.js";
 import {NavigationMenuLinkItem} from "../ui/navigation-menu.jsx";
 import ProfileDropdown from "./ProfileDropdown.jsx";
+import {GearIcon} from "@radix-ui/react-icons";
 
 export default function NavBar() {
 
@@ -79,7 +80,7 @@ export default function NavBar() {
             </NavigationMenuList>
 
             <div className="flex">
-                <ProfileDropdown>Account</ProfileDropdown>
+                <ProfileDropdown>Settings</ProfileDropdown>
             </div>
 
         </NavigationMenu>

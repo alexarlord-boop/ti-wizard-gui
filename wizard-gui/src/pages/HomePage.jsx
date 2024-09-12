@@ -2,7 +2,6 @@ import {Link, useNavigate} from "react-router-dom";
 import Breadcrumbs from "../components/custom/Breadcrumbs.jsx";
 import {Card, CardContent, CardFooter, CardHeader} from "../components/ui/card.jsx";
 import {useTranslation} from "react-i18next";
-import i18n from "i18next";
 
 
 function HomePage() {
@@ -22,7 +21,6 @@ function HomePage() {
                 <CCard href='/remote-entities' title={t('home.remoteCard.title')} content={t('home.remoteCard.content')}/>
                 <CCard href='' title={t('home.sourceCard.title')} content={t('home.sourceCard.content')}/>
                 <CCard href='' title={t('home.proxyCard.title')} content={t('home.proxyCard.content')}/>
-
             </div>
         </>
     );

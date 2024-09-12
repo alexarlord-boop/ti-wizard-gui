@@ -14,13 +14,13 @@ export default function ProfileDropdown({children}) {
         <DropdownMenu>
             <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                {/*<DropdownMenuLabel><GearIcon/> Settings</DropdownMenuLabel>*/}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Team</DropdownMenuItem>
                 <DropdownMenuItem>Subscription</DropdownMenuItem>
-                <DropdownMenuItem><GearIcon/> Settings</DropdownMenuItem>
+
             </DropdownMenuContent>
         </DropdownMenu>
 
