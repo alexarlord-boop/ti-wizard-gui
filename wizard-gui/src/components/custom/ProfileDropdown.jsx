@@ -15,10 +15,10 @@ export default function ProfileDropdown({children}) {
             <DropdownMenuContent>
                 {/*<DropdownMenuLabel><GearIcon/> Settings</DropdownMenuLabel>*/}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
+                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                <DropdownMenuItem>Logs</DropdownMenuItem>
+                <DropdownMenuItem>Cron Tab</DropdownMenuItem>
+                <DropdownMenuItem>Contact details</DropdownMenuItem>
 
             </DropdownMenuContent>
         </DropdownMenu>
