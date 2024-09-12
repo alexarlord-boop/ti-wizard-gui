@@ -5,15 +5,15 @@
 
     "roleCard": {
       "title": "My Roles",
-      "content": "content"
+      "content": "Configure deployment identity"
     },
     "remoteCard": {
       "title": "Remote Entities",
-      "content": null
+      "content": "Manage remote entity metadata"
     },
     "sourceCard": {
       "title": "Sources",
-      "content": null
+      "content": "Search remote endpoints, retrieve trusted entities"
     },
     "proxyCard": {
       "title": "Proxy",

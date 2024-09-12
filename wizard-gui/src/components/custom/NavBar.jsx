@@ -35,14 +35,14 @@ export default function NavBar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                    <NavigationMenuTrigger>MDQ Source</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>Sources</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className="text-left grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                             <ListItem href="/source/mdq" title="+ MDQ Source">
                                 Trusted set of entities
                             </ListItem>
-                            <ListItem href="/source/xml" title="+ Remote XML file">
-                                XML file for SAML
+                            <ListItem href="/source/xml" title="+ MDX Source">
+                                Remote XML file for SAML
                             </ListItem>
                         </ul>
                     </NavigationMenuContent>
