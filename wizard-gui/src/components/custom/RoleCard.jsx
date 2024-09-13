@@ -43,15 +43,27 @@ export default function RoleCard({type, data}) {
             <Card className={cn(isActive && "border border-black bg-accent")}>
                 <CardHeader className={cn("text-left")}>
                     {isActive ? (
-                        <CardTitle><RolePreviewDialog>{data.displayName}</RolePreviewDialog></CardTitle>
+                        <>
+                            <CardTitle><RolePreviewDialog>{data.displayName}</RolePreviewDialog></CardTitle>
+                            <CardDescription>{data.protocol}</CardDescription>
+                        </>
                     ) : (
-                        <CardTitle>{data.displayName}</CardTitle>
+                        <>
+                            <CardTitle>{t('roles.card.displayName')}</CardTitle>
+                            <CardDescription>{t('roles.card.protocol')}</CardDescription>
+
+                        </>
+                        
                     )}
-                    <CardDescription>{data.protocol}</CardDescription>
+                   
                 </CardHeader>
 
                 <CardContent>
-                    <p>{data.entityId}</p>
+                    {isActive ? (
+                        <p>{data.entityId}</p>
+                    ) : (
+                        <p>{t('roles.card.entityId')}</p>
+                    )}
                 </CardContent>
 
                 <CardFooter className={cn("flex justify-between")}>
