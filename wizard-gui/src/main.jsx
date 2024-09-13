@@ -4,6 +4,7 @@ import {QueryClient, QueryClientProvider} from "react-query";
 import App from './App.jsx'
 import './index.css'
 import './i18n';
+import {Toaster} from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
             <App/>
+            <Toaster />
         </QueryClientProvider>
     </StrictMode>,
 )

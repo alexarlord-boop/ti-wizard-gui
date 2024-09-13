@@ -11,7 +11,8 @@ import {cn} from "../../lib/utils.js";
 import {Button} from "../ui/button.jsx";
 import {Edit} from "lucide-react";
 import RolePreviewDialog from "./RolePreviewDialog.jsx";
-import {useTranslation} from "react-i18next"; // Assuming you're using lucide-react for icons
+import {useTranslation} from "react-i18next";
+import {toast} from "sonner"; // Assuming you're using lucide-react for icons
 
 export default function RoleCard({type, data}) {
     const { t, i18n } = useTranslation();
@@ -19,6 +20,15 @@ export default function RoleCard({type, data}) {
     const [isActive, setActive] = React.useState(data[data.entityType].isActive);
     const handleAdd = () => {
         setActive(true);
+        toast("Role has been added.",
+            {
+                // description: "description description",
+                action: {
+                    label: "OK",
+                    onClick: () => console.log("OK"),
+                },
+            })
+
     }
 
     const handleRemove = () => {
