@@ -19,15 +19,17 @@ export default function RoleCard({type, data}) {
 
     const [isActive, setActive] = React.useState(data[data.entityType].isActive);
     const handleAdd = () => {
-        setActive(true);
-        toast("Role has been added.",
-            {
-                // description: "description description",
-                action: {
-                    label: "OK",
-                    onClick: () => console.log("OK"),
-                },
-            })
+        setTimeout(() => {
+            setActive(true);
+            toast("Role has been added.",
+                {
+                    // description: "description description",
+                    action: {
+                        label: "OK",
+                        onClick: () => console.log("OK"),
+                    },
+                })
+        }, 1000);
 
     }
 
