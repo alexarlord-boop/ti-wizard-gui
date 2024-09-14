@@ -5,7 +5,7 @@ export default function MainLayout({children}) {
     return (
         <>
             <NavBar/>
-            <main className="flex-grow container mx-auto p-4">
+            <main className="h-dvh container mx-auto p-4">
                 {children}
             </main>
 
