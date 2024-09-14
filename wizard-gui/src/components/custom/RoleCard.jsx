@@ -1,4 +1,6 @@
 import React, {useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+
 import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
 } from "@/components/ui/card";
@@ -78,7 +80,7 @@ export default function RoleCard({data, entityType}) {
                             {t('roles.cardBtn.delete')}
                         </Button>
                         <Button variant="outline" size="icon" className="ml-2 p-2 bg-accent hover:bg-white">
-                            <Edit/>
+                            <Link to={`/roles/edit/${entityType}`}><Edit/></Link>
                         </Button>
                     </>
                 ) : (

@@ -7,6 +7,7 @@ import MainLayout from "./components/MainLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import RolesPage from "./pages/RolesPage.jsx";
 import RemotePage from "./pages/RemotePage.jsx";
+import RoleEditPage from "./pages/RoleEditPage.jsx";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
                     {/* Define routes for different components */}
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/roles" element={<RolesPage/>}/>
+                    <Route path="/roles/edit/:entityType" element={<RoleEditPage/>}/>
                     <Route path="/remote-entities" element={<RemotePage/>}/>
 
 
