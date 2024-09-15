@@ -12,8 +12,8 @@ function HomePage() {
             <Breadcrumbs/>
             <br/>
 
-            <h1 className="text-2xl font-bold">{t('main.header')}</h1>
-            <p className="mt-4">{t('main.description')}</p>
+            <h1 className="text-2xl font-bold">{t('home.header')}</h1>
+            <p className="mt-4">{t('home.description')}</p>
             <br/>
             <br/>
             <div className=" grid  md:grid-cols-4 gap-10 h-[300px]">

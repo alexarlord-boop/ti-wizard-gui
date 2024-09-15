@@ -1,7 +1,7 @@
 {
   "home": {
-    "header": null,
-    "description": null,
+    "header": "Landing / intro page",
+    "description": "",
 
     "roleCard": {
       "title": "My Roles",
