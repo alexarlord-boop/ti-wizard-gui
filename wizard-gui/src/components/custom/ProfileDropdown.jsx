@@ -1,27 +1,37 @@
+// components/custom/ProfileDropdown.jsx
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+import { useTour } from '../context/TourContext';
+import { useTranslation } from 'react-i18next';
 
+export default function ProfileDropdown({ children }) {
+    const { t } = useTranslation();
+    const { startTour, setStartTour } = useTour();
 
-export default function ProfileDropdown({children}) {
+    const handleTour = () => {
+        if (startTour) {
+            console.log("Tour is being triggered");  // Add this log for debugging
+            startTour();  // Trigger the tour for the current page
+        } else {
+            console.log("No tour is set for this page");
+        }
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none">{children}</DropdownMenuTrigger>
             <DropdownMenuContent>
-                {/*<DropdownMenuLabel><GearIcon/> Settings</DropdownMenuLabel>*/}
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
-                <DropdownMenuItem>Logs</DropdownMenuItem>
-                <DropdownMenuItem>Cron Tab</DropdownMenuItem>
-                <DropdownMenuItem>Contact details</DropdownMenuItem>
-
+                <DropdownMenuItem onClick={handleTour}>{t('navbar.startTour')}</DropdownMenuItem>
+                <DropdownMenuItem>{t('navbar.logs')}</DropdownMenuItem>
+                <DropdownMenuItem>{t('navbar.cronTab')}</DropdownMenuItem>
+                <DropdownMenuItem>{t('navbar.contactDetails')}</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
-
     );
 }
