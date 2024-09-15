@@ -16,25 +16,73 @@ function RolesPage() {
                     id: "1",
                     role: "SAML IDP",
                     name: "eduGAIN",
-                    status: "active"
+                    status: "on"
                 },
                 {
                     id: "2",
                     role: "OIDC OP",
                     name: "Microsoft Azure AD",
-                    status: "active"
+                    status: "on"
                 },
                 {
                     id: "3",
                     role: "OIDC RP",
                     name: "ORCID",
-                    status: "inactive"
+                    status: "off"
                 },
                 {
                     id: "4",
                     role: "SAML SP",
                     name: "GEANT Cloud Services",
-                    status: "inactive"
+                    status: "off"
+                },
+                {
+                    id: "1",
+                    role: "SAML IDP",
+                    name: "eduGAIN",
+                    status: "on"
+                },
+                {
+                    id: "2",
+                    role: "OIDC OP",
+                    name: "Microsoft Azure AD",
+                    status: "on"
+                },
+                {
+                    id: "3",
+                    role: "OIDC RP",
+                    name: "ORCID",
+                    status: "off"
+                },
+                {
+                    id: "4",
+                    role: "SAML SP",
+                    name: "GEANT Cloud Services",
+                    status: "off"
+                },
+                {
+                    id: "1",
+                    role: "SAML IDP",
+                    name: "eduGAIN",
+                    status: "on"
+                },
+                {
+                    id: "2",
+                    role: "OIDC OP",
+                    name: "Microsoft Azure AD",
+                    status: "on"
+                },
+                {
+                    id: "3",
+                    role: "OIDC RP",
+                    name: "ORCID",
+                    status: "off"
+                },
+                {
+                    id: "4",
+                    role: "SAML SP",
+                    name: "GEANT Cloud Services",
+                    status: "off"
                 },
             ];
 

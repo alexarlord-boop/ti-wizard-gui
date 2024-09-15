@@ -1,12 +1,6 @@
-"use client"
-
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-import { ArrowUpDown } from "lucide-react"
-
-
-import { Button } from "@/components/ui/button"
+import React from 'react';
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,10 +8,22 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {MoreHorizontal} from "lucide-react";
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import StatusToggle from "./EntityStatusToggle.jsx";  // Import the updated StatusToggle component
 
 export const columns = [
+    {
+        id: "status-toggle",
+        accessorKey: "status",
+        header: () => <div className="text-center">Status toggle</div>,
+        cell: ({ row }) => {
+            const { status } = row.original;
+            console.log(status);
+
+            return <StatusToggle initialStatus={status} />;
+        },
+    },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -26,59 +32,40 @@ export const columns = [
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-
                     >
                         Display name
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
-            )
+            );
         },
     },
     {
         accessorKey: "role",
-        // header: ({ column }) => {
-        //     return (
-        //         <div className="text-center">
-        //         <Button
-        //             variant="ghost"
-        //             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        //
-        //         >
-        //             Role
-        //             <ArrowUpDown className="ml-2 h-4 w-4" />
-        //         </Button>
-        //         </div>
-        //     )
-        // },
         header: () => <div className="text-center">Role</div>,
     },
-
-    {
-        accessorKey: "status",
-        // header: () => <div className="text-center">Status</div>,
-        header: ({ column }) => {
-            return (
-                <div className="text-center">
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-
-                >
-                    Status
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-                </div>
-            )
-        },
-    },
-
+    // {
+    //     accessorKey: "status",
+    //     header: ({ column }) => {
+    //         return (
+    //             <div className="text-center">
+    //                 <Button
+    //                     variant="ghost"
+    //                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    //                 >
+    //                     Status
+    //                     <ArrowUpDown className="ml-2 h-4 w-4" />
+    //                 </Button>
+    //             </div>
+    //         );
+    //     },
+    // },
     {
         id: "actions",
-        accessorKey: "Actions",
+        accessorKey: "actions",
         header: () => <div className="text-center">Actions</div>,
         cell: ({ row }) => {
-            const payment = row.original
+            const { id } = row.original;
 
             return (
                 <DropdownMenu>
@@ -90,9 +77,7 @@ export const columns = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
-                        >
+                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>
                             Copy entity ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -101,7 +86,7 @@ export const columns = [
                         <DropdownMenuItem>Restart entity</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            )
+            );
         },
     },
-]
+];
