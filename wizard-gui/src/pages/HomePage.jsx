@@ -12,30 +12,60 @@ import usePageTour from "../hooks/usePageTour.jsx";
 const steps = [
     {
         element: '#navbar',
-        popover: {title: 'Navigation', description: 'Here are the cards for navigation.', side: "left", align: 'start'}
+        popover: {
+            title: 'Navigation Bar',
+            description: 'The navigation bar contains links to all key sections of the site, including Logs, Cron Tab, and Contact Details. This is your main access point for navigating through different configurations and settings.',
+            side: 'left',
+            align: 'start'
+        }
     },
     {
         element: '#home-cards',
-        popover: {title: 'Home Cards', description: 'Here are the cards for navigation.', side: "left", align: 'start'}
+        popover: {
+            title: 'Home Cards Overview',
+            description: 'These cards provide quick access to different functionalities and settings of your instance. You can manage roles, remote entities, sources, and proxy configurations directly from here.',
+            side: 'left',
+            align: 'start'
+        }
     },
     {
         element: '#roles',
-        popover: {title: 'Home Cards', description: 'Here are the cards for navigation.', side: "left", align: 'start'}
+        popover: {
+            title: 'My Roles',
+            description: 'This section allows you to configure the deployment identity by adding roles such as SAML IdP, OIDC OP, SAML SP, or OIDC RP. You can set a Display Name and Logo for each role and configure additional settings based on the selected role.',
+            side: 'left',
+            align: 'start'
+        }
     },
     {
         element: '#remotes',
-        popover: {title: 'Home Cards', description: 'Here are the cards for navigation.', side: "left", align: 'start'}
+        popover: {
+            title: 'Remote Entities',
+            description: 'Manage and add metadata for remote entities that your deployment should trust. Depending on the configured roles, you can add metadata for SAML SPs, OIDC OPs, or other entities from files or URLs, and configure redirect URIs for OIDC clients.',
+            side: 'left',
+            align: 'start'
+        }
     },
     {
         element: '#sources',
-        popover: {title: 'Home Cards', description: 'Here are the cards for navigation.', side: "left", align: 'start'}
+        popover: {
+            title: 'Sources',
+            description: 'Here you can add and manage data sources such as MDQ sources. This allows your instance to trust and retrieve data from specified sources. Future versions may include additional features for managing advanced data sources.',
+            side: 'left',
+            align: 'start'
+        }
     },
     {
         element: '#proxy',
-        popover: {title: 'Home Cards', description: 'Here are the cards for navigation.', side: "left", align: 'start'}
+        popover: {
+            title: 'Proxy Settings',
+            description: 'Configure proxy settings if you have at least one SAML IdP or OIDC OP role and one SAML SP or OIDC RP role. You can set up identity and profile attribute mappings, allowing your instance to act as a proxy between different roles and federations.',
+            side: 'left',
+            align: 'start'
+        }
     },
-    // Add more steps as needed
 ];
+
 
 function HomePage() {
     const {t, i18n} = useTranslation();
