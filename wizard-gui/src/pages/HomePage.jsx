@@ -14,7 +14,7 @@ const steps = [
         element: '#navbar',
         popover: {
             title: 'Navigation Bar',
-            description: 'The navigation bar contains links to all key sections of the site, including Logs, Cron Tab, and Contact Details. This is your main access point for navigating through different configurations and settings.',
+            description: 'The navigation bar contains links to all key sections of the site, including settings and main application components. This is your main access point for navigating through different configurations and settings.',
             side: 'left',
             align: 'start'
         }
