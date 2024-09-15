@@ -1,7 +1,7 @@
 {
   "description": "API response for a single entity object (local role / remote entity)",
   "entityId": "alpe4.incubator.geant.org/saml-idp-very-very-long-id-sample-sample-sa",
-  "displayName": "Mock IDP",
+  "displayName": "IDP Role",
   "logoSource": "srcURL string",
   "protocol": "SAML",
   "entityType": "SAML_IDP",

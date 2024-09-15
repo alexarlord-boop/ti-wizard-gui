@@ -1,7 +1,7 @@
 {
   "description": "API response for a single entity object (local role / remote entity)",
   "entityId": "alpe4.incubator.geant.org/saml-sp-very-very-long-id",
-  "displayName": "Mock SP",
+  "displayName": "SP Role",
   "logoSource": "srcURL string",
   "protocol": "SAML",
   "entityType": "SAML_SP",

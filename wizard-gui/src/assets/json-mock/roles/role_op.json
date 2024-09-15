@@ -1,7 +1,7 @@
 {
   "description": "API response for a single entity object (local role / remote entity)",
   "entityId": "alpe4.incubator.geant.org/oidc-op-very-very-long-id-sample-sample-sa",
-  "displayName": "Mock OP",
+  "displayName": "OP Role",
   "logoSource": "srcURL string",
   "protocol": "OIDC",
   "entityType": "OIDC_OP",

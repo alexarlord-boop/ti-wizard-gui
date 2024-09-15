@@ -69,7 +69,6 @@ const steps = [
 
 function HomePage() {
     const {t, i18n} = useTranslation();
-    const {setStartTour} = useTour();
 
     usePageTour(steps);  // Use the custom hook with steps
 
