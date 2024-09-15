@@ -17,7 +17,7 @@ import {GearIcon} from "@radix-ui/react-icons";
 export default function NavBar() {
 
     return (
-        <NavigationMenu>
+        <NavigationMenu id="navbar">
             <NavigationMenuList>
                 <NavigationMenuItem>
                     <NavigationMenuLinkItem href="/">Home</NavigationMenuLinkItem>

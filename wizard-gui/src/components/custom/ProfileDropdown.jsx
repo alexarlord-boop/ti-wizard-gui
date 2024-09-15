@@ -27,7 +27,7 @@ export default function ProfileDropdown({ children }) {
             <DropdownMenuTrigger className="focus:outline-none">{children}</DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleTour}>{t('navbar.startTour')}</DropdownMenuItem>
+                <DropdownMenuItem className="bg-green-100" onClick={handleTour}>{t('navbar.startTour')}</DropdownMenuItem>
                 <DropdownMenuItem>{t('navbar.logs')}</DropdownMenuItem>
                 <DropdownMenuItem>{t('navbar.cronTab')}</DropdownMenuItem>
                 <DropdownMenuItem>{t('navbar.contactDetails')}</DropdownMenuItem>

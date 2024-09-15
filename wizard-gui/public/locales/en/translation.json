@@ -1,4 +1,12 @@
 {
+  "navbar": {
+    "startTour": "Start tour for this page",
+    "logs": "Logs",
+    "cronTab": "Cron tab",
+    "contactDetails": "Contact details"
+  },
+
+
   "home": {
     "header": "Landing / intro page",
     "description": "",
@@ -17,7 +25,7 @@
     },
     "proxyCard": {
       "title": "Proxy",
-      "content": null
+      "content": "Set up attribute mappings."
     }
   },
 
