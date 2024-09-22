@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Switch } from "@/components/ui/switch";
+import React, {useState} from 'react';
+import {Switch} from "@/components/ui/switch";
 import {Spinner} from "../../components/ui/Loader.jsx";
+import {cn} from "../../lib/utils.js";
 
-const StatusToggle = ({ initialStatus }) => {
+const StatusToggle = ({initialStatus}) => {
     const [status, setStatus] = useState(initialStatus);
     const [loading, setLoading] = useState(false);
 
@@ -24,18 +25,16 @@ const StatusToggle = ({ initialStatus }) => {
 
     return (
         <div className="flex items-center justify-center">
-            {loading ? (
-                <Spinner size="sm" />
-            ) : (
-                <>
-                    <Switch
-                        checked={status === 'on'}
-                        onClick={handleToggle}
-                    />
-                    <span className="ml-2">{status}</span>
-                </>
 
-            )}
+            <>
+                <Switch
+                    checked={status === 'on'}
+                    onClick={handleToggle}
+                    className={cn("")}
+                />
+                <span className="ml-2">{status}</span>
+            </>
+
 
         </div>
     );

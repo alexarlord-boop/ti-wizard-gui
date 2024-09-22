@@ -13,17 +13,7 @@ import { MoreHorizontal } from "lucide-react";
 import StatusToggle from "./EntityStatusToggle.jsx";  // Import the updated StatusToggle component
 
 export const columns = [
-    {
-        id: "status-toggle",
-        accessorKey: "status",
-        header: () => <div className="text-center">Status toggle</div>,
-        cell: ({ row }) => {
-            const { status } = row.original;
-            console.log(status);
 
-            return <StatusToggle initialStatus={status} />;
-        },
-    },
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -60,6 +50,17 @@ export const columns = [
     //         );
     //     },
     // },
+    {
+        id: "status-toggle",
+        accessorKey: "status",
+        header: () => <div className="text-center">Status</div>,
+        cell: ({ row }) => {
+            const { status } = row.original;
+            console.log(status);
+
+            return <StatusToggle initialStatus={status} />;
+        },
+    },
     {
         id: "actions",
         accessorKey: "actions",
