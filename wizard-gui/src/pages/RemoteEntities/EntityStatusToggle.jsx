@@ -32,7 +32,9 @@ const StatusToggle = ({initialStatus}) => {
                     onClick={handleToggle}
                     className={cn("")}
                 />
-                <span className="ml-2">{status}</span>
+                {
+                    loading ? (<Spinner size="sm" className="mx-auto" />) : (<span className="ml-2">{status}</span>)
+                }
             </>
 
 
