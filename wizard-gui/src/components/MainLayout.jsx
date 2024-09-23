@@ -6,7 +6,7 @@ export default function MainLayout({children}) {
     return (
         <TourProvider>
             <NavBar/>
-            <main className="h-dvh container mx-auto p-4">
+            <main className=" container mx-auto p-4">
                 {children}
             </main>
         </TourProvider>

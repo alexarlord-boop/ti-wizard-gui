@@ -4,6 +4,8 @@ import {DataTable} from "./RemoteEntities/data-table.jsx";
 import {columns} from './RemoteEntities/columns.jsx';
 import {Button} from "../components/ui/button.jsx";
 import usePageTour from "../hooks/usePageTour.jsx";
+import {Link} from "react-router-dom";
+import {entityTypes} from "../constants.js";
 
 const steps = [
     {
@@ -119,10 +121,10 @@ function RolesPage() {
             <Breadcrumbs
                 itemList={[{path: '/', label: 'Home'}, {path: '/remotes-entities', label: 'Remote Entities'}]}/>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4" id="add-row">
-                <Button variant="">+ IDP</Button>
-                <Button variant="">+ SP</Button>
-                <Button variant="outline">+ OP</Button>
-                <Button variant="outline">+ RP</Button>
+                <Button variant=""><Link to={`/remote-entities/add/${entityTypes.saml_idp}`}> + IDP</Link></Button>
+                <Button variant=""><Link to={`/remote-entities/add/${entityTypes.saml_sp}`}> + SP</Link></Button>
+                <Button variant="outline"><Link to={`/remote-entities/add/${entityTypes.oidc_op}`}> + OP</Link></Button>
+                <Button variant="outline"><Link to={`/remote-entities/add/${entityTypes.oidc_rp}`}> + RP</Link></Button>
             </div>
             <br/>
 

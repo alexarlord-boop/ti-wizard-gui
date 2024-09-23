@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage.jsx";
 import RolesPage from "./pages/RolesPage.jsx";
 import RemotePage from "./pages/RemotePage.jsx";
 import RoleEditPage from "./pages/RoleEditPage.jsx";
+import FederationSelectionPage from "./pages/FederationSelectionPage.jsx";
 
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
                     <Route path="/roles" element={<RolesPage/>}/>
                     <Route path="/roles/edit/:entityType" element={<RoleEditPage/>}/>
                     <Route path="/remote-entities" element={<RemotePage/>}/>
+                    {/*<Route path="/remote-entities/add/:entityType" element={}/>*/}
+                    <Route path="/sources/federations" element={<FederationSelectionPage/>}/>
 
 
                     {/* Catch-all route for unknown paths */}
