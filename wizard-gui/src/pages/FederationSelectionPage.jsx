@@ -1,75 +1,70 @@
-import { useState } from 'react';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {useState} from 'react';
+import {ScrollArea} from "@/components/ui/scroll-area";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+import {useTranslation} from "react-i18next";
+import {useParams} from "react-router-dom";
+import {useQuery} from "react-query";
 import Breadcrumbs from "../components/custom/Breadcrumbs.jsx";
-import { Switch } from "@/components/ui/switch";  // Import Switch from ShadCN
-import { Input } from "@/components/ui/input";
-import { Spinner } from "../components/ui/Loader.jsx";  // Import Spinner
+import {Switch} from "@/components/ui/switch";  // Import Switch from ShadCN
+import {Input} from "@/components/ui/input";
+import {Spinner} from "../components/ui/Loader.jsx";
+import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
+import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.jsx";  // Import Spinner
 
 const FederationSelectionPage = () => {
-    const { t, i18n } = useTranslation();
-    let { entityType } = useParams();
+    const {t, i18n} = useTranslation();
+    let {entityType} = useParams();
     const [selectedEntities, setSelectedEntities] = useState({});
     const [activeFederations, setActiveFederations] = useState({}); // State to manage active federations
     const [searchTerm, setSearchTerm] = useState(''); // State to manage search term
+    const [loadingFederations, setLoadingFederations] = useState({}); // State to manage loading status of each federation
 
 
-    const handleFederationToggle = (federation) => {
-        setActiveFederations(prev => ({
-            ...prev,
-            [federation]: !prev[federation],
-        }));
-    };
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value.toLowerCase());
     };
 
-    // TODO:- populate with attribute isActive, store in global state
-    const fetchFederations = async () => {
-        const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    };
+    const {status, data} = useFederationsQuery();
+    const updateFederationMutation = useUpdateFederationMutation()
 
-    const { data: federations, isLoading, error } = useQuery(['federations'], fetchFederations);
-
-    // Check if the query has successfully fetched data before mapping
-    const federationArray = federations ? Object.entries(federations).map(([url, details]) => ({
-        url,
-        ...details
-    })) : [];
-
-    // Filter federations based on the search term
-    const filteredFederations = federationArray.filter(federation =>
+    // Filter federations based on search term
+    const filteredFederations = data?.filter(federation =>
         federation.name.toLowerCase().includes(searchTerm)
-    );
+    ) || [];
+
+    const handleSwitchChange = (federation) => {
+        setLoadingFederations(prev => ({ ...prev, [federation.url]: true }));
+        updateFederationMutation.mutate({
+            id: federation.url,
+            status: !federation.isActive
+        }, {
+            onSettled: () => {
+                setLoadingFederations(prev => ({ ...prev, [federation.url]: false }));
+            }
+        });
+    };
 
     return (
         <>
             <Breadcrumbs
                 itemList={[
-                    { path: '/', label: 'Home' },
-                    { path: '/sources', label: 'Sources' },
-                    { path: '/sources/federations', label: 'National Federations' }
+                    {path: '/', label: 'Home'},
+                    {path: '/sources', label: 'Sources'},
+                    {path: '/sources/federations', label: 'National Federations'}
                 ]}
             />
 
             {
-                isLoading ? (
-                    <Spinner size="sm" />
-                ) : error ? (
-                    <div>Error: {error.message}</div>
+                status === "loading" ? (
+                    <Spinner size="sm"/>
+                ) : status === "error" ? (
+                    <div>Error!</div>
                 ) : (
                     <div className="w-2/3 mx-auto">
                         {/* Search Input */}
@@ -89,10 +84,15 @@ const FederationSelectionPage = () => {
                                     <AccordionItem key={federation.url} value={federation.url}>
                                         <div className="flex justify-between items-center p-2">
                                             <AccordionTrigger>{federation.name}</AccordionTrigger>
-                                            <Switch
-                                                checked={activeFederations[federation.url] || false}
-                                                onCheckedChange={() => handleFederationToggle(federation.url)}
-                                            />
+                                            {loadingFederations[federation.url] ? (
+                                                <Spinner size="sm" />
+                                            ) : (
+                                                <Switch
+                                                    key={federation.url}
+                                                    checked={federation.isActive}
+                                                    onCheckedChange={() => handleSwitchChange(federation)}
+                                                />
+                                            )}
                                         </div>
                                         <AccordionContent>
                                             <div className="entity-list">
