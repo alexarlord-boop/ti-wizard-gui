@@ -33,15 +33,22 @@ const buttonVariants = cva(
   }
 )
 
-const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button"
+const Button = React.forwardRef(({ className, variant, size, asChild = false, disabled, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
   return (
-    (<Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref}
-      {...props} />)
+      <Comp
+          className={cn(
+              buttonVariants({ variant, size, className }),
+              disabled ? "bg-gray-200 text-gray-500 cursor-not-allowed" : ""
+          )}
+          ref={ref}
+          disabled={disabled}
+          aria-disabled={disabled}
+          onClick={disabled ? (e) => e.preventDefault() : undefined}
+          {...props}
+      />
   );
-})
-Button.displayName = "Button"
+});
+Button.displayName = "Button";
 
 export { Button, buttonVariants }
