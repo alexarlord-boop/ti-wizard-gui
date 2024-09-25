@@ -1,3 +1,8 @@
+import roleIdpData from '../assets/json-mock/roles/role_idp.json';
+import roleSpData from '../assets/json-mock/roles/role_sp.json';
+import roleOpData from '../assets/json-mock/roles/role_op.json';
+import roleRpData from '../assets/json-mock/roles/role_rp.json';
+
 export const federationsApi = {
     async list() {
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
@@ -18,7 +23,7 @@ export const federationsApi = {
     },
 
 
-    async update({ id, status }) {
+    async update({id, status}) {
         await new Promise(resolve => setTimeout(resolve, 300));
         // Simulate updating the federation status
         console.log(`Federation ${id} status updated to ${status}`);
@@ -34,5 +39,35 @@ export const federationsApi = {
             }
         }
         localStorage.setItem('activeFederations', JSON.stringify(activeFederations));
+    }
+}
+
+export const rolesApi = {
+
+    list() {
+        const activeRoles = JSON.parse(localStorage.getItem('activeRoles') || '[]');
+        console.log(activeRoles)
+
+        return [
+            {type: 'SAML_IDP', data: roleIdpData, isActive: activeRoles.includes("SAML_IDP")},
+            {type: 'SAML_SP', data: roleSpData, isActive: activeRoles.includes("SAML_SP")},
+            {type: 'OIDC_OP', data: roleOpData, isActive: activeRoles.includes("OIDC_OP")},
+            {type: 'OIDC_RP', data: roleRpData, isActive: activeRoles.includes("OIDC_RP")},
+        ];
+
+    },
+    update({entityType, status}) {
+        // update activeRoles depending on role type
+        const activeRoles = JSON.parse(localStorage.getItem('activeRoles') || '[]');
+        if (status) {
+            activeRoles.push(entityType);
+        } else {
+            const index = activeRoles.indexOf(entityType);
+            if (index > -1) {
+                activeRoles.splice(index, 1);
+            }
+        }
+        localStorage.setItem('activeRoles', JSON.stringify(activeRoles));
+
     }
 }

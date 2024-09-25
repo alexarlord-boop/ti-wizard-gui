@@ -20,36 +20,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator} from "../ui/dropdown-menu.jsx";
+import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
 
-export default function RoleCard({data, entityType, id}) {
+export default function RoleCard({data, isActive, entityType, id}) {
     const {t} = useTranslation();
-    const [isActive, setActive] = useState(data[data.entityType].isActive);
+    console.log(isActive)
+    // const [isActive, setActive] = useState(isActive);
     const [loading, setLoading] = useState(false); // New loading state
 
-    function handleToggle(isActive) {
-        setLoading(true);
-        setTimeout(() => {
-            const btnText = isActive ? "roles.card.removed" : "roles.card.added";
-            setActive(isActive => !isActive);
-            setLoading(false);
-            toast(t(btnText),
-                {
-                    // description: "description description",
-                    action: {
-                        label: "OK",
-                        onClick: () => console.log("OK"),
-                    },
-                }
-            );
-        }, 1500)
-    }
+    const updateRoleMutation = useUpdateRoleMutation()
 
-    const handleAdd = () => {
-        handleToggle(isActive);
-    };
-
-    const handleRemove = () => {
-       handleToggle(isActive);
+    const handleSwitchChange = (entityType) => {
+        console.log(entityType)
+        updateRoleMutation.mutate({
+            entityType: entityType,
+            status: !isActive
+        });
     };
 
     return (
@@ -84,7 +70,7 @@ export default function RoleCard({data, entityType, id}) {
                     </Button>
                 ) : isActive ? (
                     <>
-                        <Button variant="destructive" onClick={handleRemove}>
+                        <Button variant="destructive" onClick={() => {handleSwitchChange(entityType)}}>
                             {t('roles.cardBtn.delete')}
                         </Button>
 
@@ -111,7 +97,7 @@ export default function RoleCard({data, entityType, id}) {
 
                     </>
                 ) : (
-                    <Button onClick={handleAdd}>{t('roles.cardBtn.create')}</Button>
+                    <Button onClick={() => {handleSwitchChange(entityType)}}>{t('roles.cardBtn.create')}</Button>
                 )}
             </CardFooter>
         </Card>

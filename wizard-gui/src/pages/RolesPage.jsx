@@ -5,6 +5,10 @@ import Breadcrumbs from "../components/custom/Breadcrumbs.jsx";
 import { getRolesData } from "../services/roleService.js";
 import { Spinner } from "../components/ui/Loader.jsx";
 import usePageTour from "../hooks/usePageTour.jsx";
+import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
+import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.jsx";
+import {useRolesQuery} from "../hooks/useRolesQuery.jsx";
+import {useUpdateRoleMutation} from "../hooks/useUpdateRoleMutation.jsx";
 
 const steps = [
     {
@@ -57,24 +61,26 @@ const steps = [
 
 
 function RolesPage() {
-    const { data: roles, isLoading, isError } = useQuery('roles', getRolesData);
+    // const { data: roles, isLoading, isError } = useQuery('roles', getRolesData);
     usePageTour(steps);  // Use the custom hook with steps
 
+    const {status, data: roles} = useRolesQuery();
 
-    if (isLoading) {
+
+    if (status === "loading") {
         return <Spinner size="small" className="mt-20" />;
     }
 
-    if (isError) {
+    if (status === "error") {
         return <div>Error fetching roles</div>;
     }
-
+    console.log(roles);
     return (
         <>
             <Breadcrumbs itemList={[{ path: '/', label: 'Home' }, { path: '/roles', label: 'My Roles' }]} />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4" id="role-cards">
                 {roles.map((role, index) => (
-                    <RoleCard key={index} data={role.data} entityType={role.type} id={role.type}/>
+                    <RoleCard key={index} data={role.data} isActive={role.isActive} entityType={role.type} id={role.type}/>
                 ))}
             </div>
         </>
