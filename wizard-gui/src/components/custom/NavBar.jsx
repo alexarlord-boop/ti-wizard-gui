@@ -41,6 +41,9 @@ export default function NavBar() {
                             <ListItem href="/sources/federations" title="National Federations">
                                 Registration Authorities (RAs)
                             </ListItem>
+                            <ListItem href="/sources/federations" title="Local entities">
+                                Local file
+                            </ListItem>
                             {/*<ListItem href="/source/xml" title="+ MDX Source">*/}
                             {/*    Remote XML file for SAML*/}
                             {/*</ListItem>*/}

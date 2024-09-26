@@ -25,8 +25,6 @@ export const federationsApi = {
 
     async update({id, status}) {
         await new Promise(resolve => setTimeout(resolve, 300));
-        // Simulate updating the federation status
-        console.log(`Federation ${id} status updated to ${status}`);
 
         // Update localStorage
         const activeFederations = JSON.parse(localStorage.getItem('activeFederations') || '[]');
@@ -46,7 +44,6 @@ export const rolesApi = {
 
     list() {
         const activeRoles = JSON.parse(localStorage.getItem('activeRoles') || '[]');
-        console.log(activeRoles)
 
         return [
             {type: 'SAML_IDP', data: roleIdpData, isActive: activeRoles.includes("SAML_IDP")},

@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import Breadcrumbs from "../components/custom/Breadcrumbs.jsx";
-import { DataTable } from "./RemoteEntities/data-table.jsx";
-import { columns } from './RemoteEntities/columns.jsx';
-import { Button } from "../components/ui/button.jsx";
-import { Spinner } from "../components/ui/Loader.jsx";
+import {DataTable} from "./RemoteEntities/data-table.jsx";
+import {columns} from './RemoteEntities/columns.jsx';
+import {Button} from "../components/ui/button.jsx";
+import {Spinner} from "../components/ui/Loader.jsx";
 import usePageTour from "../hooks/usePageTour.jsx";
-import { entityTypes } from "../constants.js";
-import { useRolesQuery } from "../hooks/useRolesQuery.jsx";
+import {entityTypes} from "../constants.js";
+import {useRolesQuery} from "../hooks/useRolesQuery.jsx";
 
 import {
     Dialog,
@@ -16,8 +16,20 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
 import {Separator} from "@radix-ui/react-select";
+import {ScrollArea} from "@radix-ui/react-scroll-area";
+import {useQuery} from "react-query";
+import {cn} from "../lib/utils.js";
 
 const steps = [
     {
@@ -33,26 +45,59 @@ const steps = [
 
 function RolesPage() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedEntityType, setSelectedEntityType] = useState(null);
-    const [entities, setEntities] = useState([]);
     const [selectedFederation, setSelectedFederation] = useState(null);
+    const [searchFederation, setSearchFederation] = useState("");
+    const [searchEntity, setSearchEntity] = useState("");
+
 
     usePageTour(steps);  // Use the custom hook with steps
-    const { status, data: roles } = useRolesQuery();
+    const {status, data: roles} = useRolesQuery();
 
     const {fedStatus, data: fedData} = useFederationsQuery();
-    const filteredFederations = fedData?.filter(federation=> federation.isActive) || [];
+    // Filter federations based on the search input
+    const filteredFederations = fedData?.filter(federation =>
+        federation.isActive && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || [];
+
+
+    const fetchEntities = async (entityType) => {
+        console.log(selectedFederation);
+
+        const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${selectedFederation.toLowerCase()}/${entityType.toLowerCase()}.json`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    };
+
+    const handleFederationClick = (federationName) => {
+        if (federationName) {
+            setSelectedFederation(federationName);
+        }
+    };
+
+    // React Query fetch based on selected federation
+    const {data: entities, refetch} = useQuery(
+        ['entities', selectedFederation, selectedEntityType],
+        () => fetchEntities(selectedEntityType),
+        {
+            enabled: false,  // Disable automatic fetching
+        }
+    );
+
+    useEffect(() => {
+        if (selectedFederation) {
+            refetch();  // Manually trigger the query only when a federation is selected
+        }
+    }, [selectedFederation, refetch]);
 
     if (status === "loading" || fedStatus === "loading") {
-        return <Spinner size="sm" />;
+        return <Spinner size="sm"/>;
     }
     if (status === "error" || fedStatus === "error") {
         return <div>Error fetching roles</div>;
     }
-
-    console.log(fedStatus, fedData)
 
 
     const getAvailableOptions = (roles) => {
@@ -60,16 +105,16 @@ function RolesPage() {
         roles.forEach(role => {
             switch (role.type) {
                 case 'SAML_IDP':
-                    options.push({ entityType: 'SAML_SP', value: role.isActive });
+                    options.push({entityType: 'SAML_SP', value: role.isActive});
                     break;
                 case 'SAML_SP':
-                    options.push({ entityType: 'SAML_IDP', value: role.isActive });
+                    options.push({entityType: 'SAML_IDP', value: role.isActive});
                     break;
                 case 'OIDC_OP':
-                    options.push({ entityType: 'OIDC_RP', value: role.isActive });
+                    options.push({entityType: 'OIDC_RP', value: role.isActive});
                     break;
                 case 'OIDC_RP':
-                    options.push({ entityType: 'OIDC_OP', value: role.isActive });
+                    options.push({entityType: 'OIDC_OP', value: role.isActive});
                     break;
                 default:
                     break;
@@ -97,58 +142,87 @@ function RolesPage() {
     };
 
 
-    // const handleFederationClick = (federation) => {
-    //     setSelectedFederation(federation);
-    //     const url = `/md/fed/${federation.toLowerCase()}/${selectedEntityType.toLowerCase()}.json`; // API call based on entity type
-    //     fetchEntities(url).then(setEntities);
-    // };
-
     return (
         <>
             <Breadcrumbs
-                itemList={[{ path: '/', label: 'Home' }, { path: '/remotes-entities', label: 'Remote Entities' }]} />
+                itemList={[{path: '/', label: 'Home'}, {path: '/remotes-entities', label: 'Remote Entities'}]}/>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4" id="add-row">
-                <Button variant={getButtonVariant('SAML_IDP', options)} disabled={isDisabled('SAML_IDP', options)} onClick={() => handleButtonClick('IDP')}>+ IDP</Button>
-                <Button variant={getButtonVariant('SAML_SP', options)} disabled={isDisabled('SAML_SP', options)} onClick={() => handleButtonClick('SP')}>+ SP</Button>
-                <Button variant={getButtonVariant('OIDC_OP', options)} disabled={isDisabled('OIDC_OP', options)} onClick={() => handleButtonClick('OP')}>+ OP</Button>
-                <Button variant={getButtonVariant('OIDC_RP', options)} disabled={isDisabled('OIDC_RP', options)} onClick={() => handleButtonClick('RP')}>+ RP</Button>
+                <Button variant={getButtonVariant('SAML_IDP', options)} disabled={isDisabled('SAML_IDP', options)}
+                        onClick={() => handleButtonClick('idps')}>+ IDP</Button>
+                <Button variant={getButtonVariant('SAML_SP', options)} disabled={isDisabled('SAML_SP', options)}
+                        onClick={() => handleButtonClick('sps')}>+ SP</Button>
+                <Button variant={getButtonVariant('OIDC_OP', options)} disabled={isDisabled('OIDC_OP', options)}
+                        onClick={() => handleButtonClick('ops')}>+ OP</Button>
+                <Button variant={getButtonVariant('OIDC_RP', options)} disabled={isDisabled('OIDC_RP', options)}
+                        onClick={() => handleButtonClick('rps')}>+ RP</Button>
             </div>
+
 
             {/* Dialog window */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                     <span></span>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className={cn("max-w-[85%]", "min-h-[70%]", "block")}>
                     <DialogHeader>
                         <DialogTitle>Select Federation and Preview Entities</DialogTitle>
                         <DialogDescription>
                             Choose a federation to preview the {selectedEntityType} entities.
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div className="max-h-80 overflow-y-auto">
-                            <h3>Federations</h3>
-                            <ul>
-                                {filteredFederations && filteredFederations.map(fed => (
-                                    <li
-                                        key={fed.url}
-                                        // onClick={() => handleFederationClick(fed)}
-                                        className="cursor-pointer p-2 hover:bg-gray-200"
-                                    >
-                                        {fed.name}
-                                    </li>
-                                ))}
-                            </ul>
+
+                    {/* Federation Search and List */}
+                    <div className="grid grid-cols-2 gap-5 mt-5">
+                        <div className="grid grid-cols-1 gap-10 mt-5">
+                            <div>
+                                <h3>Active Federations ({filteredFederations.length})</h3>
+                                <input
+                                    type="text"
+                                    placeholder="Search federations..."
+                                    className="p-2 border outline-black mb-2 w-full"
+                                    value={searchFederation}
+                                    onChange={(e) => setSearchFederation(e.target.value)}
+                                />
+                                <ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">
+                                    <ul>
+                                        {filteredFederations.map(fed => (
+                                            <li
+                                                key={fed.url}
+                                                onClick={() => handleFederationClick(fed.name)}
+                                                className="cursor-pointer p-2 hover:bg-gray-200"
+                                            >
+                                                {fed.name}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </ScrollArea>
+                            </div>
+
+                            {/* Entities Search and Preview */}
+                            <div>
+                                <h3>{selectedEntityType} ({entities?.length || 0})</h3>
+                                <input
+                                    type="text"
+                                    placeholder="Search entities..."
+                                    className="p-2 border outline-black mb-2 w-full"
+                                    value={searchEntity}
+                                    onChange={(e) => setSearchEntity(e.target.value)}
+                                />
+                                <ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">
+                                    <ul>
+                                        {entities && entities
+                                            .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
+                                            .map(entity => (
+                                                <li key={entity.id} className="cursor-pointer p-2 hover:bg-gray-200">
+                                                    {entity.resourceName}
+                                                </li>
+                                            ))
+                                        }
+                                    </ul>
+                                </ScrollArea>
+                            </div>
                         </div>
-                        <div>
-                            <h3>Entities Preview ({selectedEntityType})</h3>
-                            <ul>
-                                {entities.map(entity => (
-                                    <li key={entity}>{entity.name}</li>
-                                ))}
-                            </ul>
-                        </div>
+                        <div>Entity info after selection</div>
                     </div>
                 </DialogContent>
             </Dialog>
