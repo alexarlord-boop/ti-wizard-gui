@@ -151,7 +151,7 @@ function RolesPage() {
                                             {entities && entities
                                                 .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
                                                 .map(entity => (
-                                                    <li key={entity.id} className="cursor-pointer p-2 hover:bg-gray-200"
+                                                    <li key={entity.id} className={`cursor-pointer p-2  hover:bg-gray-200 ${selectedEntity.id === entity.id ? "bg-gray-100" : ""}`}
                                                         onClick={() => handleEntityClick(entity)}>
                                                         {entity.resourceName}
                                                     </li>
