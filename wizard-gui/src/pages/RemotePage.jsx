@@ -43,11 +43,17 @@ const steps = [
     },
 ];
 
+const titles = {
+    idps: 'SAML IdPs',
+    sps: 'SAML SPs',
+}
+
 function RolesPage() {
     const [data, setData] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedEntityType, setSelectedEntityType] = useState(null);
     const [selectedFederation, setSelectedFederation] = useState(null);
+    const [selectedEntity, setSelectedEntity] = useState(null);
     const [searchFederation, setSearchFederation] = useState("");
     const [searchEntity, setSearchEntity] = useState("");
 
@@ -76,6 +82,12 @@ function RolesPage() {
             setSelectedFederation(federationName);
         }
     };
+
+    const handleEntityClick = (entity) => {
+        if (entity) {
+            setSelectedEntity(entity);
+        }
+    }
 
     // React Query fetch based on selected federation
     const {data: entities, refetch} = useQuery(
@@ -163,66 +175,59 @@ function RolesPage() {
                 <DialogTrigger asChild>
                     <span></span>
                 </DialogTrigger>
-                <DialogContent className={cn("max-w-[85%]", "min-h-[70%]", "block")}>
+                <DialogContent className={cn("max-w-[85%]", "h-[80%]", "block")}>
                     <DialogHeader>
-                        <DialogTitle>Select Federation and Preview Entities</DialogTitle>
+                        <DialogTitle>Add Remote Entities</DialogTitle>
                         <DialogDescription>
                             Choose a federation to preview the {selectedEntityType} entities.
                         </DialogDescription>
                     </DialogHeader>
 
                     {/* Federation Search and List */}
-                    <div className="grid grid-cols-2 gap-5 mt-5">
-                        <div className="grid grid-cols-1 gap-10 mt-5">
+                    <div className="max-h-80 grid grid-cols-2 gap-5 mt-5">
+                        <div className="grid grid-cols-1">
                             <div>
-                                <h3>Active Federations ({filteredFederations.length})</h3>
-                                <input
-                                    type="text"
-                                    placeholder="Search federations..."
-                                    className="p-2 border outline-black mb-2 w-full"
-                                    value={searchFederation}
-                                    onChange={(e) => setSearchFederation(e.target.value)}
-                                />
-                                <ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">
-                                    <ul>
-                                        {filteredFederations.map(fed => (
-                                            <li
-                                                key={fed.url}
-                                                onClick={() => handleFederationClick(fed.name)}
-                                                className="cursor-pointer p-2 hover:bg-gray-200"
-                                            >
-                                                {fed.name}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </ScrollArea>
-                            </div>
-
-                            {/* Entities Search and Preview */}
-                            <div>
-                                <h3>{selectedEntityType} ({entities?.length || 0})</h3>
-                                <input
-                                    type="text"
-                                    placeholder="Search entities..."
-                                    className="p-2 border outline-black mb-2 w-full"
-                                    value={searchEntity}
-                                    onChange={(e) => setSearchEntity(e.target.value)}
-                                />
-                                <ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">
-                                    <ul>
-                                        {entities && entities
-                                            .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
-                                            .map(entity => (
-                                                <li key={entity.id} className="cursor-pointer p-2 hover:bg-gray-200">
-                                                    {entity.resourceName}
-                                                </li>
-                                            ))
-                                        }
-                                    </ul>
-                                </ScrollArea>
+                                <h3 className="font-bold">Active Federations ({filteredFederations.length}):</h3>
+                                <FederationSelect items={filteredFederations}
+                                                  onItemClick={handleFederationClick}/>
+                                {/* Entities Search and Preview */}
+                                <div className="mt-10">
+                                    <h3 className="font-bold">{titles[selectedEntityType]} ({entities?.length || 0}):</h3>
+                                    <input
+                                        type="text"
+                                        placeholder="Search entities..."
+                                        className="p-2 border outline-black mb-2 w-full"
+                                        value={searchEntity}
+                                        onChange={(e) => setSearchEntity(e.target.value)}
+                                    />
+                                    <ScrollArea className="h-80 overflow-y-scroll rounded-md border">
+                                        <ul>
+                                            {entities && entities
+                                                .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
+                                                .map(entity => (
+                                                    <li key={entity.id} className="cursor-pointer p-2 hover:bg-gray-200"
+                                                        onClick={() => handleEntityClick(entity)}>
+                                                        {entity.resourceName}
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
+                                    </ScrollArea>
+                                </div>
                             </div>
                         </div>
-                        <div>Entity info after selection</div>
+                        <div className="">
+
+                            <h3 className="font-bold">{selectedEntity?.resourceName}:</h3>
+
+                            <ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">
+                                    <pre>
+                                        {selectedEntity && JSON.stringify(selectedEntity, null, 2)}
+                                    </pre>
+                            </ScrollArea>
+
+
+                        </div>
                     </div>
                 </DialogContent>
             </Dialog>
@@ -231,6 +236,28 @@ function RolesPage() {
             <br/>
             <DataTable columns={columns} data={data}/>
         </>
+    );
+}
+
+function FederationSelect({items, onItemClick}) {
+    return (
+        <Select onValueChange={onItemClick}> {/* consumes value from select item */}
+            <SelectTrigger>
+                <SelectValue placeholder="Select a federation"/>
+            </SelectTrigger>
+            <SelectContent>
+                <SelectGroup>
+                    {items.map(fed => (
+                        <SelectItem
+                            value={fed.name}
+                            key={fed.url}
+                        >
+                            {fed.name}
+                        </SelectItem>
+                    ))}
+                </SelectGroup>
+            </SelectContent>
+        </Select>
     );
 }
 
