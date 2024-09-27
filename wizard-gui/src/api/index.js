@@ -68,3 +68,16 @@ export const rolesApi = {
 
     }
 }
+
+export const remoteEntitiesApi = {
+    async list(federation, entityType) {
+
+        console.log(federation);
+
+        const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entityType.toLowerCase()}.json`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }
+}

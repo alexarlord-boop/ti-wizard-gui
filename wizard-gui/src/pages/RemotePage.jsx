@@ -5,7 +5,6 @@ import {columns} from './RemoteEntities/columns.jsx';
 import {Button} from "../components/ui/button.jsx";
 import {Spinner} from "../components/ui/Loader.jsx";
 import usePageTour from "../hooks/usePageTour.jsx";
-import {entityTypes} from "../constants.js";
 import {useRolesQuery} from "../hooks/useRolesQuery.jsx";
 
 import {
@@ -16,20 +15,17 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+
 import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
-import {Separator} from "@radix-ui/react-select";
 import {ScrollArea} from "@radix-ui/react-scroll-area";
 import {useQuery} from "react-query";
 import {cn} from "../lib/utils.js";
+import FederationSelect from "../components/custom/FederationSelect.jsx";
+import {
+    getAvailableOptions,
+    isDisabled
+} from "../lib/remote_page_utils.js";
+import {useEntitiesQuery} from "../hooks/useEntitiesQuery.jsx";
 
 const steps = [
     {
@@ -67,16 +63,6 @@ function RolesPage() {
         federation.isActive && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || [];
 
 
-    const fetchEntities = async (entityType) => {
-        console.log(selectedFederation);
-
-        const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${selectedFederation.toLowerCase()}/${entityType.toLowerCase()}.json`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    };
-
     const handleFederationClick = (federationName) => {
         if (federationName) {
             setSelectedFederation(federationName);
@@ -89,14 +75,7 @@ function RolesPage() {
         }
     }
 
-    // React Query fetch based on selected federation
-    const {data: entities, refetch} = useQuery(
-        ['entities', selectedFederation, selectedEntityType],
-        () => fetchEntities(selectedEntityType),
-        {
-            enabled: false,  // Disable automatic fetching
-        }
-    );
+    const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 
     useEffect(() => {
         if (selectedFederation) {
@@ -112,61 +91,27 @@ function RolesPage() {
     }
 
 
-    const getAvailableOptions = (roles) => {
-        let options = [];
-        roles.forEach(role => {
-            switch (role.type) {
-                case 'SAML_IDP':
-                    options.push({entityType: 'SAML_SP', value: role.isActive});
-                    break;
-                case 'SAML_SP':
-                    options.push({entityType: 'SAML_IDP', value: role.isActive});
-                    break;
-                case 'OIDC_OP':
-                    options.push({entityType: 'OIDC_RP', value: role.isActive});
-                    break;
-                case 'OIDC_RP':
-                    options.push({entityType: 'OIDC_OP', value: role.isActive});
-                    break;
-                default:
-                    break;
-            }
-        });
-        return options;
-    };
-
     const options = getAvailableOptions(roles);
 
-    const getButtonVariant = (entityType, options) => {
-        const option = options.find(opt => opt.entityType === entityType);
-        return option && option.value ? "" : "outline";
-    };
-
-    const isDisabled = (entityType, options) => {
-        const option = options.find(opt => opt.entityType === entityType);
-        return !(option && option.value);
-    };
-
-    const handleButtonClick = (entityType) => {
+    const handleAddEntityButtonClick = (entityType) => {
         setSelectedEntityType(entityType);
         setIsDialogOpen(true);
 
     };
-
 
     return (
         <>
             <Breadcrumbs
                 itemList={[{path: '/', label: 'Home'}, {path: '/remotes-entities', label: 'Remote Entities'}]}/>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4" id="add-row">
-                <Button variant={getButtonVariant('SAML_IDP', options)} disabled={isDisabled('SAML_IDP', options)}
-                        onClick={() => handleButtonClick('idps')}>+ IDP</Button>
-                <Button variant={getButtonVariant('SAML_SP', options)} disabled={isDisabled('SAML_SP', options)}
-                        onClick={() => handleButtonClick('sps')}>+ SP</Button>
-                <Button variant={getButtonVariant('OIDC_OP', options)} disabled={isDisabled('OIDC_OP', options)}
-                        onClick={() => handleButtonClick('ops')}>+ OP</Button>
-                <Button variant={getButtonVariant('OIDC_RP', options)} disabled={isDisabled('OIDC_RP', options)}
-                        onClick={() => handleButtonClick('rps')}>+ RP</Button>
+                <Button disabled={isDisabled('SAML_IDP', options)}
+                        onClick={() => handleAddEntityButtonClick('idps')}>+ IDP</Button>
+                <Button disabled={isDisabled('SAML_SP', options)}
+                        onClick={() => handleAddEntityButtonClick('sps')}>+ SP</Button>
+                <Button disabled={isDisabled('OIDC_OP', options)}
+                        onClick={() => handleAddEntityButtonClick('ops')}>+ OP</Button>
+                <Button disabled={isDisabled('OIDC_RP', options)}
+                        onClick={() => handleAddEntityButtonClick('rps')}>+ RP</Button>
             </div>
 
 
@@ -239,26 +184,5 @@ function RolesPage() {
     );
 }
 
-function FederationSelect({items, onItemClick}) {
-    return (
-        <Select onValueChange={onItemClick}> {/* consumes value from select item */}
-            <SelectTrigger>
-                <SelectValue placeholder="Select a federation"/>
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    {items.map(fed => (
-                        <SelectItem
-                            value={fed.name}
-                            key={fed.url}
-                        >
-                            {fed.name}
-                        </SelectItem>
-                    ))}
-                </SelectGroup>
-            </SelectContent>
-        </Select>
-    );
-}
 
 export default RolesPage;
