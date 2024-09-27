@@ -26,6 +26,7 @@ import {
     isDisabled
 } from "../lib/remote_page_utils.js";
 import {useEntitiesQuery} from "../hooks/useEntitiesQuery.jsx";
+import EntityDetails from "../components/custom/EntityDetails.jsx";
 
 const steps = [
     {
@@ -162,14 +163,13 @@ function RolesPage() {
                             </div>
                         </div>
                         <div className="">
+                            <h3 className="font-bold">Selected entity:</h3>
+                            <EntityDetails entity={selectedEntity}></EntityDetails>
 
-                            <h3 className="font-bold">{selectedEntity?.resourceName}:</h3>
+                            {/*<ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">*/}
+                            {/*     */}
 
-                            <ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">
-                                    <pre>
-                                        {selectedEntity && JSON.stringify(selectedEntity, null, 2)}
-                                    </pre>
-                            </ScrollArea>
+                            {/*</ScrollArea>*/}
 
 
                         </div>
