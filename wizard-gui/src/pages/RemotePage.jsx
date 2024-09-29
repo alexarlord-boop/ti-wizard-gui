@@ -27,6 +27,8 @@ import {
 } from "../lib/remote_page_utils.js";
 import {useEntitiesQuery} from "../hooks/useEntitiesQuery.jsx";
 import EntityDetails from "../components/custom/EntityDetails.jsx";
+import {DialogFooter} from "../components/ui/dialog.jsx";
+import {Select, SelectContent, SelectGroup, SelectItem} from "@radix-ui/react-select";
 
 const steps = [
     {
@@ -67,6 +69,7 @@ function RolesPage() {
     const handleFederationClick = (federationName) => {
         if (federationName) {
             setSelectedFederation(federationName);
+            setSelectedEntity(null);
         }
     };
 
@@ -128,7 +131,6 @@ function RolesPage() {
                             Choose a federation to preview the {selectedEntityType} entities.
                         </DialogDescription>
                     </DialogHeader>
-
                     {/* Federation Search and List */}
                     <div className="max-h-80 grid grid-cols-2 gap-5 mt-5">
                         <div className="grid grid-cols-1">
@@ -136,6 +138,7 @@ function RolesPage() {
                                 <h3 className="font-bold">Active Federations ({filteredFederations.length}):</h3>
                                 <FederationSelect items={filteredFederations}
                                                   onItemClick={handleFederationClick}/>
+                                {/* Entities Search and Preview */}
                                 {/* Entities Search and Preview */}
                                 <div className="mt-10">
                                     <h3 className="font-bold">{titles[selectedEntityType]} ({entities?.length || 0}):</h3>
@@ -147,33 +150,37 @@ function RolesPage() {
                                         onChange={(e) => setSearchEntity(e.target.value)}
                                     />
                                     <ScrollArea className="h-80 overflow-y-scroll rounded-md border">
-                                        <ul>
-                                            {entities && entities
-                                                .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
-                                                .map(entity => (
-                                                    <li key={entity.id} className={`cursor-pointer p-2  hover:bg-gray-200 ${selectedEntity.id === entity.id ? "bg-gray-100" : ""}`}
-                                                        onClick={() => handleEntityClick(entity)}>
-                                                        {entity.resourceName}
-                                                    </li>
-                                                ))
-                                            }
-                                        </ul>
+                                        {entities && entities
+                                            .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
+                                            .map(entity => (
+                                                <div
+                                                    key={entity.id}
+                                                    className={cn(
+                                                        "cursor-pointer p-2 hover:bg-gray-200",
+                                                        selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
+                                                    )}
+                                                    onClick={() => handleEntityClick(entity)}
+                                                >
+                                                    {entity.resourceName}
+                                                </div>
+                                            ))
+                                        }
                                     </ScrollArea>
                                 </div>
+
                             </div>
                         </div>
                         <div className="">
                             <h3 className="font-bold">Selected entity:</h3>
                             <EntityDetails entity={selectedEntity}></EntityDetails>
 
-                            {/*<ScrollArea className="max-h-80 overflow-y-scroll rounded-md border">*/}
-                            {/*     */}
-
-                            {/*</ScrollArea>*/}
-
-
                         </div>
                     </div>
+                    <DialogFooter>
+                        {selectedEntity && (
+                            <Button>Add</Button>
+                        )}
+                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 
