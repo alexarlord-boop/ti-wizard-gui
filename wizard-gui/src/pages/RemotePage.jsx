@@ -43,7 +43,7 @@ const steps = [
 ];
 
 const titles = {
-    idps: 'SAML IdPs',
+    idps: 'SAML IDPs',
     sps: 'SAML SPs',
 }
 
@@ -135,7 +135,7 @@ function RolesPage() {
                     <div className="max-h-80 grid grid-cols-2 gap-5 mt-5">
                         <div className="grid grid-cols-1">
                             <div>
-                                <h3 className="font-bold">Active Federations ({filteredFederations.length}):</h3>
+                                <h3 className="font-bold">Federations ({filteredFederations.length}):</h3>
                                 <FederationSelect items={filteredFederations}
                                                   onItemClick={handleFederationClick}/>
                                 {/* Entities Search and Preview */}
@@ -150,8 +150,9 @@ function RolesPage() {
                                         onChange={(e) => setSearchEntity(e.target.value)}
                                     />
                                     <ScrollArea className="h-80 overflow-y-scroll rounded-md border">
-                                        {entities && entities
-                                            .filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
+                                        {entityStatus === "success" &&
+
+                                            (entities.filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
                                             .map(entity => (
                                                 <div
                                                     key={entity.id}
@@ -163,7 +164,7 @@ function RolesPage() {
                                                 >
                                                     {entity.resourceName}
                                                 </div>
-                                            ))
+                                            )))
                                         }
                                     </ScrollArea>
                                 </div>
