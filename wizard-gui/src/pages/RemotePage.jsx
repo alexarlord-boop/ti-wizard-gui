@@ -29,6 +29,7 @@ import {useEntitiesQuery} from "../hooks/useEntitiesQuery.jsx";
 import EntityDetails from "../components/custom/EntityDetails.jsx";
 import {DialogFooter} from "../components/ui/dialog.jsx";
 import {Select, SelectContent, SelectGroup, SelectItem} from "@radix-ui/react-select";
+import {CheckCircle} from "lucide-react";
 
 const steps = [
     {
@@ -85,7 +86,25 @@ function RolesPage() {
         if (selectedFederation) {
             refetch();  // Manually trigger the query only when a federation is selected
         }
+
+
     }, [selectedFederation, refetch]);
+
+    useEffect(() => {
+        setSelectedFederation(null)
+        setSelectedEntity(null)
+
+        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        let dt = activeEntities?.map(entity => {
+            return {
+                id: entity.id,
+                name: entity.resourceName,
+                status: entity.isActive ? "on" : "off",
+
+            };
+        });
+        setData(dt);
+    }, [isDialogOpen]);
 
     if (status === "loading" || fedStatus === "loading") {
         return <Spinner size="sm"/>;
@@ -153,18 +172,22 @@ function RolesPage() {
                                         {entityStatus === "success" &&
 
                                             (entities.filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
-                                            .map(entity => (
-                                                <div
-                                                    key={entity.id}
-                                                    className={cn(
-                                                        "cursor-pointer p-2 hover:bg-gray-200",
-                                                        selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
-                                                    )}
-                                                    onClick={() => handleEntityClick(entity)}
-                                                >
-                                                    {entity.resourceName}
-                                                </div>
-                                            )))
+                                                .map(entity => (
+                                                    <div
+                                                        key={entity.id}
+                                                        className={cn(
+                                                            "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
+                                                            selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
+                                                        )}
+                                                        onClick={() => handleEntityClick(entity)}
+                                                    >
+                                                        <span>{entity.resourceName}</span>
+                                                        <span
+                                                            className="flex items-center align-middle ">{entity.isActive ?
+                                                            <CheckCircle size="15" className="mr-5"/>
+                                                            : ""}</span>
+                                                    </div>
+                                                )))
                                         }
                                     </ScrollArea>
                                 </div>
@@ -177,11 +200,6 @@ function RolesPage() {
 
                         </div>
                     </div>
-                    <DialogFooter>
-                        {selectedEntity && (
-                            <Button>Add</Button>
-                        )}
-                    </DialogFooter>
                 </DialogContent>
             </Dialog>
 

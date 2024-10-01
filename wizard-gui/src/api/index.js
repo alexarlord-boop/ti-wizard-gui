@@ -71,13 +71,37 @@ export const rolesApi = {
 
 export const remoteEntitiesApi = {
     async list(federation, entityType) {
-
-        console.log(federation);
-
         const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entityType.toLowerCase()}.json`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.json();
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const data = await response.json();
+        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        return data ? Object.entries(data).map(([id, details]) => {
+
+            const isActive = activeEntities.some(activeEntity => activeEntity.id === details.id);
+            return {
+                id,
+                isActive,
+                ...details
+            };
+        }) : [];
+    },
+
+    async update(entity, status) {
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+
+        if (status && !activeEntities.some(activeEntity => activeEntity.id === entity.id)) {
+            activeEntities.push(entity);
+        } else {
+            const index = activeEntities.findIndex(activeEntity => activeEntity.id === entity.id);
+            if (index > -1) {
+                activeEntities.splice(index, 1);
+            }
+        }
+        localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
     }
 }

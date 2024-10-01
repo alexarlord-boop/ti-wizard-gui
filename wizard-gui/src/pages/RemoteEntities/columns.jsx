@@ -56,8 +56,6 @@ export const columns = [
         header: () => <div className="text-center">Status</div>,
         cell: ({ row }) => {
             const { status } = row.original;
-            console.log(status);
-
             return <StatusToggle initialStatus={status} />;
         },
     },

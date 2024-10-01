@@ -1,69 +1,99 @@
-import {Link} from "react-router-dom";
-import {Card, CardContent, CardFooter, CardHeader, CardTitle} from "../ui/card.jsx";
-import {Avatar, AvatarFallback, AvatarImage} from "../ui/avatar.jsx";
-import {Separator} from "@radix-ui/react-select";
-import {Button} from "../ui/button.jsx";
-import {Spinner} from "../ui/Loader.jsx"; // Assuming you're using React Router for routing
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardFooter, CardHeader } from "../ui/card.jsx";
+import { Avatar, AvatarFallback } from "../ui/avatar.jsx";
+import { useUpdateEntityMutation } from "../../hooks/useUpdateEntityMutation.jsx";
+import { Button } from "../ui/button.jsx";
+import { toast } from "sonner";
 
+const EntityDetails = ({ entity }) => {
+    const updateEntityMutation = useUpdateEntityMutation();
 
-const EntityDetails = ({entity}) => {
-    // Add a conditional check to make sure entity is defined
+    const [entityState, setEntityState] = useState({
+        isActive: entity?.isActive || false,
+        resourceName: entity?.resourceName || "",
+        resourceProvider: entity?.resourceProvider || {},
+        entityID: entity?.entityID || "",
+        id: entity?.id || "",
+        resourceContacts: entity?.resourceContacts || {},
+        logo: entity?.logo || ""
+    });
+
+    useEffect(() => {
+        if (entity) {
+            setEntityState({
+                isActive: entity.isActive,
+                resourceName: entity.resourceName,
+                resourceProvider: entity.resourceProvider,
+                entityID: entity.entityID,
+                id: entity.id,
+                resourceContacts: entity.resourceContacts,
+                logo: entity.logo
+            });
+        }
+    }, [entity]);
+
     if (!entity) {
         return <p>No entity data available.</p>;
     }
 
-    console.log(entity);
 
-    const {
-        resourceName,
-        resourceProvider,
-        entityID,
-        resourceContacts,
-        logo,
-    } = entity;
+    const handleAdd = () => {
+        updateEntityMutation.mutate(
+            {
+                entity: entity,
+                status: !entityState.isActive,
+            },
+            {
+                onSuccess: () => {
+                    setEntityState((prevState) => ({
+                        ...prevState,
+                        isActive: !prevState.isActive
+                    }));
+                    toast("Entity updated successfully");
+                },
+                onError: () => {
+                    toast("Failed to update entity");
+                },
+            }
+        );
+    };
 
     return (
         <Card>
             <CardHeader>
-                <h1 className="font-bold">{resourceName}</h1>
+                <h1 className="font-bold">{entityState.resourceName}</h1>
+                <Button onClick={handleAdd}>{entityState.isActive ? "- Remove" : "+ Add"}</Button>
             </CardHeader>
             <CardContent>
-                <p><strong>Entity ID:</strong> {entityID}</p>
+                <p><strong>Entity ID:</strong> {entityState.entityID}</p>
                 <p>
-                    <strong>Provider Name:</strong>{' '}
-                    {resourceProvider?.name?.en || 'Not available'}
+                    <strong>Provider Name:</strong>{" "}
+                    {entityState.resourceProvider?.name?.en || "Not available"}
                 </p>
                 <p>
-                    <strong>Provider URL:</strong>{' '}
-                    {resourceProvider?.url?.en || 'Not available'}
+                    <strong>Provider URL:</strong>{" "}
+                    {entityState.resourceProvider?.url?.en || "Not available"}
                 </p>
 
                 <h3>Contacts</h3>
                 <p>
-                    <strong>Technical:</strong> {resourceContacts?.technical?.name || 'N/A'} - {resourceContacts?.technical?.email || 'N/A'}
+                    <strong>Technical:</strong> {entityState.resourceContacts?.technical?.name || "N/A"} - {entityState.resourceContacts?.technical?.email || "N/A"}
                 </p>
                 <p>
-                    <strong>Support:</strong> {resourceContacts?.support?.name || 'N/A'} - {resourceContacts?.support?.email || 'N/A'}
+                    <strong>Support:</strong> {entityState.resourceContacts?.support?.name || "N/A"} - {entityState.resourceContacts?.support?.email || "N/A"}
                 </p>
             </CardContent>
             <CardFooter className="flex mx-auto justify-center">
-                <>
-                    {logo ? (
-                            <img src={logo} alt={`${resourceName}`} className="max-h-[100px] "/>
-                        ) :
-                        (
-                            <Avatar className="scale-2">
-
-                                <AvatarFallback>{resourceName?.[0] || 'E'}</AvatarFallback>
-
-                            </Avatar>
-                        )
-                    }
-                </>
+                {entityState.logo ? (
+                    <img src={entityState.logo} alt={`${entityState.resourceName}`} className="max-h-[100px]" />
+                ) : (
+                    <Avatar className="scale-2">
+                        <AvatarFallback>{entityState.resourceName?.[0] || "E"}</AvatarFallback>
+                    </Avatar>
+                )}
             </CardFooter>
         </Card>
     );
 };
-
 
 export default EntityDetails;

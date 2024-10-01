@@ -6,8 +6,5 @@ export const useEntitiesQuery = (federation, entityType) => useQuery(
     {
         queryKey: ['entities', federation, entityType],
         queryFn: () => remoteEntitiesApi.list(federation, entityType),
-    },
-    {
-        enabled: false,
     }
 );
