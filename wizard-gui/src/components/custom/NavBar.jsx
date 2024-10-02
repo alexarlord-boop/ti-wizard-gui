@@ -41,7 +41,7 @@ export default function NavBar() {
                             <ListItem href="/sources/federations" title="National Federations">
                                 Registration Authorities (RAs)
                             </ListItem>
-                            <ListItem href="/sources/federations" title="Local entities">
+                            <ListItem href="/sources/federations" title="Individual entities">
                                 Local file
                             </ListItem>
                             {/*<ListItem href="/source/xml" title="+ MDX Source">*/}
