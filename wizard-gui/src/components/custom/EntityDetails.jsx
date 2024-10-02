@@ -5,7 +5,7 @@ import { useUpdateEntityMutation } from "../../hooks/useUpdateEntityMutation.jsx
 import { Button } from "../ui/button.jsx";
 import { toast } from "sonner";
 
-const EntityDetails = ({ entity }) => {
+const EntityDetails = ({ entity, entityType }) => {
     const updateEntityMutation = useUpdateEntityMutation();
 
     const [entityState, setEntityState] = useState({
@@ -21,6 +21,7 @@ const EntityDetails = ({ entity }) => {
     useEffect(() => {
         if (entity) {
             setEntityState({
+                entityType: entityType,
                 isActive: entity.isActive,
                 resourceName: entity.resourceName,
                 resourceProvider: entity.resourceProvider,

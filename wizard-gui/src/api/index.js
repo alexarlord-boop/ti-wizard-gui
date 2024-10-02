@@ -79,11 +79,11 @@ export const remoteEntitiesApi = {
         const data = await response.json();
         const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
         return data ? Object.entries(data).map(([id, details]) => {
-
             const isActive = activeEntities.some(activeEntity => activeEntity.id === details.id);
             return {
                 id,
                 isActive,
+                entityType,
                 ...details
             };
         }) : [];

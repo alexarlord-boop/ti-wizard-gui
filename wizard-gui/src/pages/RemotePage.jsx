@@ -44,8 +44,8 @@ const steps = [
 ];
 
 const titles = {
-    idps: 'SAML IDPs',
-    sps: 'SAML SPs',
+    idps: 'SAML IDP',
+    sps: 'SAML SP',
 }
 
 function RolesPage() {
@@ -95,10 +95,13 @@ function RolesPage() {
         setSelectedEntity(null)
 
         const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        console.log(activeEntities);
         let dt = activeEntities?.map(entity => {
             return {
                 id: entity.id,
                 name: entity.resourceName,
+                role: titles[entity.entityType],
+                registrationAuthority: entity.ra,
                 status: entity.isActive ? "on" : "off",
 
             };
@@ -196,7 +199,7 @@ function RolesPage() {
                         </div>
                         <div className="">
                             <h3 className="font-bold">Selected entity:</h3>
-                            <EntityDetails entity={selectedEntity}></EntityDetails>
+                            <EntityDetails entity={selectedEntity} entityType={selectedEntityType}></EntityDetails>
 
                         </div>
                     </div>
