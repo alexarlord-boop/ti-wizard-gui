@@ -111,7 +111,7 @@ function RolesPage() {
                 id: entity.id,
                 name: entity.resourceName,
                 role: titles[entity.entityType],
-                registrationAuthority: entity.ra,
+                RA: entity.ra,
                 status: entity.isActive ? "on" : "off",
 
             };
@@ -221,6 +221,8 @@ function RolesPage() {
             <DataTable columns={columns(handleViewDetails)} data={data} />
 
             <Dialog open={isEntityDetailsOpen} onOpenChange={setIsEntityDetailsOpen}>
+                <DialogTitle></DialogTitle>
+                <DialogDescription></DialogDescription>
                 <DialogContent className="max-w-[50%] p-10">
                     {selectedEntity && <EntityDetails entity={selectedEntity} />}
                 </DialogContent>

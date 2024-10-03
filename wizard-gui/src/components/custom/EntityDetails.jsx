@@ -4,6 +4,7 @@ import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
 import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
 import {Button} from "../ui/button.jsx";
 import {toast} from "sonner";
+import {Divide} from "lucide-react";
 
 const EntityDetails = ({entity, entityType, withAction}) => {
     const updateEntityMutation = useUpdateEntityMutation();
@@ -62,11 +63,11 @@ const EntityDetails = ({entity, entityType, withAction}) => {
     return (
         <Card>
             <CardHeader>
-                <h1 className="font-bold">{entityState.resourceName}</h1>
+                <h1 className="font-bold text-xl">{entityState.resourceName}</h1>
                 {withAction &&
                     <Button onClick={handleAdd}>{entityState.isActive ? "- Remove" : "+ Add"}</Button>}
             </CardHeader>
-            <br/>
+
             <CardContent>
                 <p><strong>Entity ID:</strong> {entityState.entityID}</p>
                 <p>
@@ -77,9 +78,8 @@ const EntityDetails = ({entity, entityType, withAction}) => {
                     <strong>Provider URL:</strong>{" "}
                     {entityState.resourceProvider?.url?.en || "Not available"}
                 </p>
-
                 <br/>
-                <h3 className="text-xl">Contacts</h3>
+                <h3 className="text-lg font-bold">Contacts</h3>
                 <p>
                     <strong>Technical:</strong> {entityState.resourceContacts?.technical?.name || "N/A"} - {entityState.resourceContacts?.technical?.email || "N/A"}
                 </p>

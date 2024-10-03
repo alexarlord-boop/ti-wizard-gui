@@ -89,23 +89,25 @@ export function DataTable({
                     className="max-w-sm"
                 />
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline">Filter by role</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                        {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
-                            <DropdownMenuCheckboxItem
-                                key={role}
-                                checked={selectedRoles.includes(role)}
-                                onCheckedChange={() => handleRoleChange(role)}
+                <div className="ms-4">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Filter by role</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
+                                <DropdownMenuCheckboxItem
+                                    key={role}
+                                    checked={selectedRoles.includes(role)}
+                                    onCheckedChange={() => handleRoleChange(role)}
 
-                            >
-                                {role}
-                            </DropdownMenuCheckboxItem>
-                        ))}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                                >
+                                    {role}
+                                </DropdownMenuCheckboxItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

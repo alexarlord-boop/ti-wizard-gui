@@ -27,15 +27,20 @@ export const columns = (handleViewDetails) => [
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                        Resource name
+                        Resource Name
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
             );
         },
+        cell: ({ row }) => {
+            const entity = row.original;
+            const { name } = row.original;
+            return <a href="#" className="hover:underline text-left flex" onClick={() => handleViewDetails(entity)}>{name}</a>;
+        },
     },
     {
-        accessorKey: "registrationAuthority",
+        accessorKey: "RA",
         header: () => <div className="text-center">Registration Authority</div>,
     },
     {
@@ -59,7 +64,7 @@ export const columns = (handleViewDetails) => [
     //     },
     // },
     {
-        id: "status-toggle",
+        id: "status",
         accessorKey: "status",
         header: () => <div className="text-center">Status</div>,
         cell: ({ row }) => {
@@ -84,9 +89,6 @@ export const columns = (handleViewDetails) => [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => handleViewDetails(entity)}>
-                            View Details
-                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>
                             Copy entity ID
                         </DropdownMenuItem>
