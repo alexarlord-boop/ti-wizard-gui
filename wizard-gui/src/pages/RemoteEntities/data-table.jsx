@@ -23,10 +23,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { Input } from "@/components/ui/input"
+import {Input} from "@/components/ui/input"
 
-import React from "react";
-import { Button } from "../../components/ui/button.jsx";
+import React, {useEffect} from "react";
+import {Button} from "../../components/ui/button.jsx";
+import {Checkbox} from "../../components/ui/checkbox.jsx";
+import {Select, SelectContent, SelectLabel, SelectTrigger, SelectValue} from "@radix-ui/react-select";
+import {SelectGroup, SelectItem} from "../../components/ui/select.jsx";
+import {DropdownMenuLabel, DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
 
 export function DataTable({
                               columns,
@@ -35,9 +39,30 @@ export function DataTable({
     const [sorting, setSorting] = React.useState([])
     const [columnFilters, setColumnFilters] = React.useState([])
     const [columnVisibility, setColumnVisibility] = React.useState({})
+    const [selectedRoles, setSelectedRoles] = React.useState([]);
+    const [filteredData, setFilteredData] = React.useState(data);
+
+    useEffect(() => {
+        setFilteredData(data);
+    }, [data]);
+
+    const handleRoleChange = (role) => {
+        const updatedRoles = selectedRoles.includes(role)
+            ? selectedRoles.filter((r) => r !== role)
+            : [...selectedRoles, role];
+
+        setSelectedRoles(updatedRoles);
+
+        const newFilteredData = data.filter((row) =>
+            updatedRoles.length === 0 || updatedRoles.includes(row.role)
+        );
+
+        setFilteredData(newFilteredData);
+    };
+
 
     const table = useReactTable({
-        data,
+        data: filteredData,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
@@ -63,6 +88,25 @@ export function DataTable({
                     }
                     className="max-w-sm"
                 />
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline">Filter by role</Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
+                            <DropdownMenuCheckboxItem
+                                key={role}
+                                checked={selectedRoles.includes(role)}
+                                onCheckedChange={() => handleRoleChange(role)}
+
+                            >
+                                {role}
+                            </DropdownMenuCheckboxItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
@@ -116,30 +160,30 @@ export function DataTable({
 
                     <TableBody className="overflow-y-auto max-h-[400px]">
 
-                            {table.getRowModel().rows?.length ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={columns.length} className="h-24 text-center">
-                                        No results.
-                                    </TableCell>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
-                            )}
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
 
                     </TableBody>
 
-        </Table>
+                </Table>
             </div>
         </div>
     )
