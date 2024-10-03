@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card.jsx";
-import { Avatar, AvatarFallback } from "../ui/avatar.jsx";
-import { useUpdateEntityMutation } from "../../hooks/useUpdateEntityMutation.jsx";
-import { Button } from "../ui/button.jsx";
-import { toast } from "sonner";
+import {useEffect, useState} from "react";
+import {Card, CardContent, CardFooter, CardHeader} from "../ui/card.jsx";
+import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
+import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
+import {Button} from "../ui/button.jsx";
+import {toast} from "sonner";
 
-const EntityDetails = ({ entity, entityType }) => {
+const EntityDetails = ({entity, entityType, withAction}) => {
     const updateEntityMutation = useUpdateEntityMutation();
 
     const [entityState, setEntityState] = useState({
@@ -63,8 +63,10 @@ const EntityDetails = ({ entity, entityType }) => {
         <Card>
             <CardHeader>
                 <h1 className="font-bold">{entityState.resourceName}</h1>
-                <Button onClick={handleAdd}>{entityState.isActive ? "- Remove" : "+ Add"}</Button>
+                {withAction &&
+                    <Button onClick={handleAdd}>{entityState.isActive ? "- Remove" : "+ Add"}</Button>}
             </CardHeader>
+            <br/>
             <CardContent>
                 <p><strong>Entity ID:</strong> {entityState.entityID}</p>
                 <p>
@@ -76,7 +78,8 @@ const EntityDetails = ({ entity, entityType }) => {
                     {entityState.resourceProvider?.url?.en || "Not available"}
                 </p>
 
-                <h3>Contacts</h3>
+                <br/>
+                <h3 className="text-xl">Contacts</h3>
                 <p>
                     <strong>Technical:</strong> {entityState.resourceContacts?.technical?.name || "N/A"} - {entityState.resourceContacts?.technical?.email || "N/A"}
                 </p>
@@ -86,7 +89,7 @@ const EntityDetails = ({ entity, entityType }) => {
             </CardContent>
             <CardFooter className="flex mx-auto justify-center">
                 {entityState.logo ? (
-                    <img src={entityState.logo} alt={`${entityState.resourceName}`} className="max-h-[100px]" />
+                    <img src={entityState.logo} alt={`${entityState.resourceName}`} className="max-h-[100px]"/>
                 ) : (
                     <Avatar className="scale-2">
                         <AvatarFallback>{entityState.resourceName?.[0] || "E"}</AvatarFallback>

@@ -12,7 +12,11 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import StatusToggle from "./EntityStatusToggle.jsx";  // Import the updated StatusToggle component
 
-export const columns = [
+
+const onDetailsClick = (entity) => {
+    console.log(entity);
+}
+export const columns = (handleViewDetails) => [
 
     {
         accessorKey: "name",
@@ -68,7 +72,7 @@ export const columns = [
         accessorKey: "actions",
         header: () => <div className="text-center">Actions</div>,
         cell: ({ row }) => {
-            const { id } = row.original;
+            const entity = row.original;
 
             return (
                 <DropdownMenu>
@@ -80,7 +84,10 @@ export const columns = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>
+                        <DropdownMenuItem onClick={() => handleViewDetails(entity)}>
+                            View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>
                             Copy entity ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />

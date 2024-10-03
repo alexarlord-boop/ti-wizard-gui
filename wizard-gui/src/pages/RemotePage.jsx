@@ -50,6 +50,7 @@ const titles = {
 
 function RolesPage() {
     const [data, setData] = useState([]);
+    const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedEntityType, setSelectedEntityType] = useState(null);
     const [selectedFederation, setSelectedFederation] = useState(null);
@@ -79,6 +80,15 @@ function RolesPage() {
             setSelectedEntity(entity);
         }
     }
+
+    const handleViewDetails = (entity) => {
+        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        const activeEntity = activeEntities.find(e => e.id === entity.id);
+        console.log(activeEntity);
+        setSelectedEntity(activeEntity);
+        setSelectedEntityType(activeEntity.entityType);
+        setIsEntityDetailsOpen(true);
+    };
 
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 
@@ -199,7 +209,7 @@ function RolesPage() {
                         </div>
                         <div className="">
                             <h3 className="font-bold">Selected entity:</h3>
-                            <EntityDetails entity={selectedEntity} entityType={selectedEntityType}></EntityDetails>
+                            <EntityDetails entity={selectedEntity} entityType={selectedEntityType} withAction></EntityDetails>
 
                         </div>
                     </div>
@@ -208,7 +218,13 @@ function RolesPage() {
 
 
             <br/>
-            <DataTable columns={columns} data={data}/>
+            <DataTable columns={columns(handleViewDetails)} data={data} />
+
+            <Dialog open={isEntityDetailsOpen} onOpenChange={setIsEntityDetailsOpen}>
+                <DialogContent className="max-w-[50%] p-10">
+                    {selectedEntity && <EntityDetails entity={selectedEntity} />}
+                </DialogContent>
+            </Dialog>
         </>
     );
 }
