@@ -91,7 +91,6 @@ export const columns = (handleViewDetails) => [
                             Copy entity ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>View entity details</DropdownMenuItem>
                         <DropdownMenuItem>Export configuration</DropdownMenuItem>
                         <DropdownMenuItem>Restart entity</DropdownMenuItem>
                     </DropdownMenuContent>
