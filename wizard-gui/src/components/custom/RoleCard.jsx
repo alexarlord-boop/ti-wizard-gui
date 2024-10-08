@@ -22,21 +22,12 @@ import {
 import {DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator} from "../ui/dropdown-menu.jsx";
 import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
 
-export default function RoleCard({data, isActive, entityType, id}) {
+export default function RoleCard({data, isActive, entityType, id, handleSwitchChange}) {
     const {t} = useTranslation();
-    console.log(isActive)
     // const [isActive, setActive] = useState(isActive);
     const [loading, setLoading] = useState(false); // New loading state
 
-    const updateRoleMutation = useUpdateRoleMutation()
 
-    const handleSwitchChange = (entityType) => {
-        console.log(entityType)
-        updateRoleMutation.mutate({
-            entityType: entityType,
-            status: !isActive
-        });
-    };
 
     return (
         <Card className={cn(isActive && "border border-black bg-accent")} id={id}>
@@ -45,14 +36,14 @@ export default function RoleCard({data, isActive, entityType, id}) {
                     <>
                         <CardTitle>
                             <RolePreviewDialog>{data.displayName}</RolePreviewDialog>
-                            <Badge variant="outline" className="border-black float-end">{entityType}</Badge>
+                            <Badge variant="outline" className="border-black float-end">{entityType.split("_").join(" ")}</Badge>
                         </CardTitle>
                     </>
                 ) : (
                     <>
                         <CardTitle>
                             {t('roles.card.displayName')}
-                            <Badge variant="outline" className="border-black float-end">{entityType}</Badge>
+                            <Badge variant="outline" className="border-black float-end">{entityType.split("_").join(" ")}</Badge>
                         </CardTitle>
                     </>
                 )}
@@ -70,7 +61,7 @@ export default function RoleCard({data, isActive, entityType, id}) {
                     </Button>
                 ) : isActive ? (
                     <>
-                        <Button variant="destructive" onClick={() => {handleSwitchChange(entityType)}}>
+                        <Button variant="destructive" onClick={() => {handleSwitchChange(entityType, isActive)}}>
                             {t('roles.cardBtn.delete')}
                         </Button>
 
@@ -97,7 +88,7 @@ export default function RoleCard({data, isActive, entityType, id}) {
 
                     </>
                 ) : (
-                    <Button onClick={() => {handleSwitchChange(entityType)}}>{t('roles.cardBtn.create')}</Button>
+                    <Button onClick={() => {handleSwitchChange(entityType, isActive)}}>{t('roles.cardBtn.create')}</Button>
                 )}
             </CardFooter>
         </Card>
