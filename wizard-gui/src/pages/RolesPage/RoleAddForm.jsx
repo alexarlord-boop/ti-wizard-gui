@@ -38,6 +38,7 @@ const FormSchema = z.object({
     displayName: z.string().min(2, {
         message: "Display name must be at least 2 characters.",
     }),
+    // TODO:- improve file format validation
     imageUrl: z.string().url({
         message: "Invalid file format",
     }),
@@ -88,6 +89,7 @@ export default function RoleAddForm(
             reader.onload = (e) => {
                 setImageUrl(e.target.result);
                 form.setValue("imageUrl", e.target.result); // Set the image URL in the form state
+                form.clearErrors("imageUrl");
             };
             reader.readAsDataURL(file);
         }
@@ -147,11 +149,12 @@ export default function RoleAddForm(
                                                     name="imageUrl"
                                                     render={({field}) => (
                                                         <FormItem>
-                                                            <FormLabel htmlFor="image-url">Logo URL</FormLabel>
+                                                            <FormLabel htmlFor="image-url">Logo Image</FormLabel>
                                                             <FormControl>
                                                                 <Input
                                                                     id="image-url"
                                                                     type="file"
+                                                                    accept="image/png, image/gif, image/jpeg"
                                                                     placeholder={t("Select image logo")}
                                                                     onChange={handleFileChange} // Use handleFileChange
                                                                 />
