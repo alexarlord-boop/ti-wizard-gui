@@ -5,7 +5,7 @@ import './App.css'
 import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
 import MainLayout from "./components/MainLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import RolesPage from "./pages/RolesPage.jsx";
+import RolesPage from "./pages/RolesPage/RolesPage.jsx";
 import RemotePage from "./pages/RemotePage.jsx";
 import RoleEditPage from "./pages/RoleEditPage.jsx";
 import FederationSelectionPage from "./pages/FederationSelectionPage.jsx";

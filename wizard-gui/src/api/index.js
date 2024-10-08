@@ -42,30 +42,43 @@ export const federationsApi = {
 
 export const rolesApi = {
 
-    list() {
-        const activeRoles = JSON.parse(localStorage.getItem('activeRoles') || '[]');
+    defaultRoles: [
+        { entityType: 'SAML_IDP', isActive: false, displayName: '', imageUrl: '' },
+        { entityType: 'SAML_SP', isActive: false, displayName: '', imageUrl: '' },
+        { entityType: 'OIDC_OP', isActive: false, displayName: '', imageUrl: '' },
+        { entityType: 'OIDC_RP', isActive: false, displayName: '', imageUrl: '' }
+    ],
 
-        return [
-            {type: 'SAML_IDP', data: roleIdpData, isActive: activeRoles.includes("SAML_IDP")},
-            {type: 'SAML_SP', data: roleSpData, isActive: activeRoles.includes("SAML_SP")},
-            {type: 'OIDC_OP', data: roleOpData, isActive: activeRoles.includes("OIDC_OP")},
-            {type: 'OIDC_RP', data: roleRpData, isActive: activeRoles.includes("OIDC_RP")},
-        ];
-
-    },
-    update({entityType, status}) {
-        // update activeRoles depending on role type
-        const activeRoles = JSON.parse(localStorage.getItem('activeRoles') || '[]');
-        if (status) {
-            activeRoles.push(entityType);
-        } else {
-            const index = activeRoles.indexOf(entityType);
-            if (index > -1) {
-                activeRoles.splice(index, 1);
-            }
+    initializeRoles() {
+        if (!localStorage.getItem('roles')) {
+            localStorage.setItem('roles', JSON.stringify(this.defaultRoles));
         }
-        localStorage.setItem('activeRoles', JSON.stringify(activeRoles));
+    },
 
+    list: () => {
+        rolesApi.initializeRoles();
+        const roles = JSON.parse(localStorage.getItem('roles') || '[]');
+        return roles;
+    },
+
+    update({ entityType, isActive, displayName, imageUrl }) {
+        console.log(displayName);
+        const roles = JSON.parse(localStorage.getItem('roles') || '[]');
+        const roleIndex = roles.findIndex(role => role.entityType === entityType);
+
+        if (roleIndex > -1) {
+            roles[roleIndex] = { entityType, isActive, displayName, imageUrl };
+        } else {
+            roles.push({ entityType, isActive, displayName, imageUrl });
+        }
+
+        localStorage.setItem('roles', JSON.stringify(roles));
+    },
+
+    delete(entityType) {
+        let roles = JSON.parse(localStorage.getItem('roles') || '[]');
+        roles = roles.filter(role => role.entityType !== entityType);
+        localStorage.setItem('roles', JSON.stringify(roles));
     }
 }
 

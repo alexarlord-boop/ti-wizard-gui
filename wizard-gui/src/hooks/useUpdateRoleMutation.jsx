@@ -5,7 +5,7 @@ import {rolesApi} from "../api/index.js";
 export const useUpdateRoleMutation = () => {
     const queryClient = useQueryClient();
     return useMutation(
-        ({entityType, status}) => rolesApi.update({entityType, status}),
+        ({entityType, isActive, displayName, imageUrl}) => rolesApi.update({entityType, isActive, displayName, imageUrl}),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries('roles');
