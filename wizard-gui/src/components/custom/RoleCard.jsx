@@ -6,25 +6,21 @@ import {
 } from "@/components/ui/card";
 import {cn} from "../../lib/utils.js";
 import {Button} from "../ui/button.jsx";
-import {MoreHorizontal, Settings} from "lucide-react";
+import {MoreHorizontal, Pen, Pencil, Settings, Space, Trash2Icon} from "lucide-react";
 import RolePreviewDialog from "./RolePreviewDialog.jsx";
 import {useTranslation} from "react-i18next";
-import {toast} from "sonner";
 import { Badge } from "@/components/ui/badge"
 import {ReloadIcon} from "@radix-ui/react-icons"; // Assuming you have a Spinner component
 
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator} from "../ui/dropdown-menu.jsx";
-import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
 
-export default function RoleCard({role, handleSwitchChange}) {
+export default function RoleCard({role, onAdd, onDelete}) {
     const {t} = useTranslation();
-    // const [isActive, setActive] = useState(isActive);
     const [loading, setLoading] = useState(false); // New loading state
 
 
@@ -48,9 +44,6 @@ export default function RoleCard({role, handleSwitchChange}) {
                 )}
             </CardHeader>
 
-            {/*<CardContent>*/}
-            {/*    {isActive ? <p>{data.entityId}</p> : <p>{t('roles.card.entityId')}</p>}*/}
-            {/*</CardContent>*/}
 
             <CardFooter className={cn("flex justify-between")}>
                 {loading ? (
@@ -60,11 +53,6 @@ export default function RoleCard({role, handleSwitchChange}) {
                     </Button>
                 ) : role.isActive ? (
                     <>
-                        {/*<Button variant="destructive" onClick={() => {handleSwitchChange(role.entityType, role.isActive)}}>*/}
-                        {/*    {t('roles.cardBtn.delete')}*/}
-                        {/*</Button>*/}
-
-
 
                         {role.imageUrl && <img src={role.imageUrl} alt="Role Logo" className="max-w-[100px] max-h-[80px]" />}
 
@@ -78,7 +66,8 @@ export default function RoleCard({role, handleSwitchChange}) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem> <Link to={`/roles/edit/${role.entityType}`}>Edit Role</Link></DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {console.log("editing")}}><Pen size="16"/> Edit Role</DropdownMenuItem>
+                                <DropdownMenuItem onClick={onDelete} className="text-red-500 cursor-pointer"><Trash2Icon size="16"/> Delete Role</DropdownMenuItem>
 
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
@@ -93,7 +82,7 @@ export default function RoleCard({role, handleSwitchChange}) {
 
                     </>
                 ) : (
-                    <Button onClick={() => {handleSwitchChange(role.entityType, role.isActive)}}>{t('roles.cardBtn.create')}</Button>
+                    <Button onClick={() => {onAdd(role.entityType)}}>{t('roles.cardBtn.create')}</Button>
                 )}
             </CardFooter>
         </Card>

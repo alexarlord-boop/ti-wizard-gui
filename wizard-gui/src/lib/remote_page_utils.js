@@ -1,9 +1,10 @@
 
 /* defines what type of remote entities user can add */
 export const getAvailableOptions = (roles) => {
+    console.log(roles);
     let options = [];
     roles.forEach(role => {
-        switch (role.type) {
+        switch (role.entityType) {
             case 'SAML_IDP':
                 options.push({entityType: 'SAML_SP', value: role.isActive});
                 break;

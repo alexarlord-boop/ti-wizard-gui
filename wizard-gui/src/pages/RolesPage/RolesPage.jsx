@@ -7,6 +7,7 @@ import usePageTour from "../../hooks/usePageTour.jsx";
 import {useRolesQuery} from "../../hooks/useRolesQuery.jsx";
 
 import RoleAddForm from "./RoleAddForm.jsx";
+import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
 
 const steps = [
     {
@@ -70,11 +71,20 @@ function RolesPage() {
     }
 
 
-    const handleSwitchChange = (entityType, isActive) => {
-        console.log("open");
+    const handleAddRole = (entityType) => {
         setIsRoleDetailsOpen(true);
         setEntityType(entityType);
     };
+
+    const updateRoleMutation = useUpdateRoleMutation()
+    const handleDeleteRole = (entityType) => {
+        updateRoleMutation.mutate({
+            entityType: entityType,
+            isActive: false,
+            displayName: "",
+            imageUrl: "",
+        });
+    }
 
 
     if (status === "loading") {
@@ -92,8 +102,11 @@ function RolesPage() {
                     <RoleCard
                         key={index}
                         role={role}
-                        handleSwitchChange={() => {
-                            handleSwitchChange(role.entityType, role.isActive)
+                        onAdd={() => {
+                            handleAddRole(role.entityType)
+                        }}
+                        onDelete={() => {
+                            handleDeleteRole(role.entityType)
                         }}
                     />
                 ))}
