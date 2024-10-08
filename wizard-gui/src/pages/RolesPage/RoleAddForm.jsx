@@ -54,6 +54,11 @@ export default function RoleAddForm(
     const [imageUrl, setImageUrl] = useState("");
     const [displayName, setDisplayName] = useState("");
 
+    const handleModalTermination = () => {
+        setDisplayName("");
+        setImageUrl("");
+        form.reset();
+    }
     const handleAddRole = (formData) => {
         console.log(`add role: ${entityType}`);
         updateRoleMutation.mutate({
@@ -76,6 +81,8 @@ export default function RoleAddForm(
     function onSubmit(data) {
         console.log(data);
         handleAddRole(data);
+        handleModalTermination();
+        setIsRoleDetailsOpen(false);
     }
 
 
@@ -96,9 +103,7 @@ export default function RoleAddForm(
     };
 
     useEffect(() => {
-        setDisplayName("");
-        setImageUrl("");
-        form.reset();
+       handleModalTermination();
     }, [entityType]);
 
 
