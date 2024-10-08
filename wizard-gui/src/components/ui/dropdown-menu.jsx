@@ -80,6 +80,13 @@ const DropdownMenuCheckboxItem = React.forwardRef(({ className, children, checke
       className
     )}
     checked={checked}
+    onClick={(e) => {
+        e.preventDefault(); // Prevent the default action
+        e.stopPropagation(); // Stop the event from propagating
+        if (props.onCheckedChange) {
+            props.onCheckedChange(!checked); // Toggle the checked state
+        }
+    }}
     {...props}>
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <DropdownMenuPrimitive.ItemIndicator>
