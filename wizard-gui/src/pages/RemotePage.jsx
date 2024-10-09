@@ -30,6 +30,7 @@ import EntityDetails from "../components/custom/EntityDetails.jsx";
 import {DialogFooter} from "../components/ui/dialog.jsx";
 import {Select, SelectContent, SelectGroup, SelectItem} from "@radix-ui/react-select";
 import {CheckCircle} from "lucide-react";
+import {getRemoteEntityName} from "../services/remoteEntityService.js";
 
 const steps = [
     {
@@ -78,6 +79,7 @@ function RemotePage() {
     const handleEntityClick = (entity) => {
         if (entity) {
             setSelectedEntity(entity);
+            console.log(entity);
         }
     }
 
@@ -110,7 +112,7 @@ function RemotePage() {
         let dt = activeEntities?.map(entity => {
             return {
                 id: entity.id,
-                name: entity.resourceName,
+                name: getRemoteEntityName(entity),
                 role: titles[entity.entityType],
                 RA: entity.ra,
                 status: entity.isActive ? "on" : "off",
@@ -184,7 +186,7 @@ function RemotePage() {
 
                                             entityStatus === "success" &&
 
-                                            (entities.filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
+                                            (entities.filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
                                                 .map(entity => (
                                                     <div
                                                         key={entity.id}
@@ -194,7 +196,7 @@ function RemotePage() {
                                                         )}
                                                         onClick={() => handleEntityClick(entity)}
                                                     >
-                                                        <span>{entity.resourceName}</span>
+                                                        <span>{getRemoteEntityName(entity)}</span>
                                                         <span
                                                             className="flex items-center align-middle ">{entity.isActive ?
                                                             <CheckCircle size="15" className="mr-5"/>
