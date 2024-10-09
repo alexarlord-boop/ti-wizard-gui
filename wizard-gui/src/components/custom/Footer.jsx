@@ -2,8 +2,8 @@ import logo from "../../assets/incubator_logo.jpg";
 export function SiteFooter() {
     let siteConfig = {
         links: {
-            twitter: "https://twitter.com/shadcn",
-            github: "",
+            website: "https://stage.trustidentity.geant.org/ti-incubator/",
+            github: "https://github.com/alexarlord-boop/ti-wizard-gui",
         },
     };
     return (
@@ -12,7 +12,7 @@ export function SiteFooter() {
                 <p className="text-balance text-center text-sm leading-loose text-muted-foreground md:text-left">
                     Built by{" "}
                     <a
-                        href={siteConfig.links.twitter}
+                        href={siteConfig.links.website}
                         target="_blank"
                         rel="noreferrer"
                         className="font-medium underline underline-offset-4"
