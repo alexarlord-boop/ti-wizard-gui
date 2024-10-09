@@ -36,7 +36,7 @@ export const columns = (handleViewDetails) => [
         cell: ({ row }) => {
             const entity = row.original;
             const { name } = row.original;
-            return <a href="#" className="hover:underline text-left flex" onClick={() => handleViewDetails(entity)}>{name}</a>;
+            return <a href="#" className="hover:underline text-left flex max-w-md" onClick={() => handleViewDetails(entity)}>{name}</a>;
         },
     },
     {
