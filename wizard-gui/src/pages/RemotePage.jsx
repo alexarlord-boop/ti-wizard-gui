@@ -153,9 +153,6 @@ function RemotePage() {
 
             {/* Dialog window */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                    <span></span>
-                </DialogTrigger>
                 <DialogContent className={cn("max-w-[85%]", "h-[80%]", "block")}>
                     <DialogHeader>
                         <DialogTitle>Add Remote Entities</DialogTitle>
@@ -171,7 +168,6 @@ function RemotePage() {
                                 <FederationSelect items={filteredFederations}
                                                   onItemClick={handleFederationClick}/>
                                 {/* Entities Search and Preview */}
-                                {/* Entities Search and Preview */}
                                 <div className="mt-10">
                                     <h3 className="font-bold">{titles[selectedEntityType]} ({entities?.length || 0}):</h3>
                                     <input
@@ -182,7 +178,10 @@ function RemotePage() {
                                         onChange={(e) => setSearchEntity(e.target.value)}
                                     />
                                     <ScrollArea className="h-80 overflow-y-scroll rounded-md border">
-                                        {entityStatus === "success" &&
+                                        {
+                                            entityStatus === "loading" && <Spinner size="sm" className="mt-20"/> ||
+
+                                            entityStatus === "success" &&
 
                                             (entities.filter(entity => entity.resourceName.toLowerCase().includes(searchEntity.toLowerCase()))
                                                 .map(entity => (

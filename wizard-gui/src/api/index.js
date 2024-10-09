@@ -38,10 +38,10 @@ export const federationsApi = {
 export const rolesApi = {
 
     defaultRoles: [
-        { entityType: 'SAML_IDP', isActive: false, displayName: '', imageUrl: '' },
-        { entityType: 'SAML_SP', isActive: false, displayName: '', imageUrl: '' },
-        { entityType: 'OIDC_OP', isActive: false, displayName: '', imageUrl: '' },
-        { entityType: 'OIDC_RP', isActive: false, displayName: '', imageUrl: '' }
+        {entityType: 'SAML_IDP', isActive: false, displayName: '', imageUrl: ''},
+        {entityType: 'SAML_SP', isActive: false, displayName: '', imageUrl: ''},
+        {entityType: 'OIDC_OP', isActive: false, displayName: '', imageUrl: ''},
+        {entityType: 'OIDC_RP', isActive: false, displayName: '', imageUrl: ''}
     ],
 
     initializeRoles() {
@@ -56,15 +56,15 @@ export const rolesApi = {
         return roles;
     },
 
-    update({ entityType, isActive, displayName, imageUrl }) {
+    update({entityType, isActive, displayName, imageUrl}) {
         console.log(displayName);
         const roles = JSON.parse(localStorage.getItem('roles') || '[]');
         const roleIndex = roles.findIndex(role => role.entityType === entityType);
 
         if (roleIndex > -1) {
-            roles[roleIndex] = { entityType, isActive, displayName, imageUrl };
+            roles[roleIndex] = {entityType, isActive, displayName, imageUrl};
         } else {
-            roles.push({ entityType, isActive, displayName, imageUrl });
+            roles.push({entityType, isActive, displayName, imageUrl});
         }
 
         localStorage.setItem('roles', JSON.stringify(roles));
@@ -79,22 +79,25 @@ export const rolesApi = {
 
 export const remoteEntitiesApi = {
     async list(federation, entityType) {
-        const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entityType.toLowerCase()}.json`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+        if (federation && entityType) {
+            const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entityType.toLowerCase()}.json`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const data = await response.json();
+            const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+            return data ? Object.entries(data).map(([id, details]) => {
+                const isActive = activeEntities.some(activeEntity => activeEntity.id === details.id);
+                return {
+                    id,
+                    isActive,
+                    entityType,
+                    ...details
+                };
+            }) : [];
         }
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const data = await response.json();
-        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-        return data ? Object.entries(data).map(([id, details]) => {
-            const isActive = activeEntities.some(activeEntity => activeEntity.id === details.id);
-            return {
-                id,
-                isActive,
-                entityType,
-                ...details
-            };
-        }) : [];
+        return [];
     },
 
     async update(entity, status) {
