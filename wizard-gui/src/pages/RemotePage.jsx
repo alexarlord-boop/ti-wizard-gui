@@ -48,7 +48,7 @@ const titles = {
     sps: 'SAML SP',
 }
 
-function RolesPage() {
+function RemotePage() {
     const [data, setData] = useState([]);
     const [isEntityDetailsOpen, setIsEntityDetailsOpen] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -232,4 +232,4 @@ function RolesPage() {
 }
 
 
-export default RolesPage;
+export default RemotePage;
