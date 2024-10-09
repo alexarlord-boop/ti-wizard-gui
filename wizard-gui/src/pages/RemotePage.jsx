@@ -101,8 +101,9 @@ function RemotePage() {
     }, [selectedFederation, refetch]);
 
     useEffect(() => {
-        setSelectedFederation(null)
-        setSelectedEntity(null)
+        setSelectedFederation(null);
+        setSelectedEntity(null);
+        setSearchEntity("");
 
         const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
         console.log(activeEntities);
@@ -153,7 +154,7 @@ function RemotePage() {
 
             {/* Dialog window */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className={cn("max-w-[85%]", "h-[80%]", "block")}>
+                <DialogContent className={cn("max-w-[85%]", "h-[75%]", "block")}>
                     <DialogHeader>
                         <DialogTitle>Add Remote Entities</DialogTitle>
                         <DialogDescription>
