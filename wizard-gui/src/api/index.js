@@ -1,8 +1,3 @@
-import roleIdpData from '../assets/json-mock/roles/role_idp.json';
-import roleSpData from '../assets/json-mock/roles/role_sp.json';
-import roleOpData from '../assets/json-mock/roles/role_op.json';
-import roleRpData from '../assets/json-mock/roles/role_rp.json';
-
 export const federationsApi = {
     async list() {
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
