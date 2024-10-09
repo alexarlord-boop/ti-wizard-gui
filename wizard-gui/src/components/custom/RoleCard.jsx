@@ -18,6 +18,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator} from "../ui/dropdown-menu.jsx";
+import {getEntityTypeString} from "../../services/roleService.js";
 
 export default function RoleCard({role, onAdd, onDelete}) {
     const {t} = useTranslation();
@@ -31,14 +32,14 @@ export default function RoleCard({role, onAdd, onDelete}) {
                     <>
                         <CardTitle>
                             <RolePreviewDialog>{role.displayName}</RolePreviewDialog>
-                            <Badge variant="outline" className="border-black float-end">{role.entityType.split("_").join(" ")}</Badge>
+                            <Badge variant="outline" className="border-black float-end">{getEntityTypeString(role.entityType)}</Badge>
                         </CardTitle>
                     </>
                 ) : (
                     <>
                         <CardTitle>
-                            {t('roles.card.displayName')}
-                            <Badge variant="outline" className="border-black float-end">{role.entityType.split("_").join(" ")}</Badge>
+                            {getEntityTypeString(role.entityType)}
+                            <Badge variant="outline" className="border-black float-end">{getEntityTypeString(role.entityType)}</Badge>
                         </CardTitle>
                     </>
                 )}

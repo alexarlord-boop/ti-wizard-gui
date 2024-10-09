@@ -29,3 +29,7 @@ export const getRolesData = async () => {
         }, 1000); // Simulate a 1-second delay
     });
 };
+
+export const getEntityTypeString = (roleType) => {
+    return roleType.split('_').join(' ');
+}
