@@ -28,9 +28,10 @@ const StatusToggle = ({initialStatus}) => {
 
             <div className="flex w-[50px]">
                 <Switch
+
                     checked={status === 'on'}
                     onClick={handleToggle}
-                    className={cn("")}
+                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
                 />
                 {
                     loading && <Spinner size="sm" className="mx-auto" />
