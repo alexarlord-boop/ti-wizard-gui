@@ -22,6 +22,7 @@ const onDetailsClick = (entity) => {
 }
 export const columns = (handleViewDetails, handleDelete) => [
     {
+        id: "Entity",
         accessorKey: "name",
         header: ({ column }) => {
             return (
@@ -30,7 +31,7 @@ export const columns = (handleViewDetails, handleDelete) => [
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                        Resource Name
+                        Entity
                         <ArrowUpDown className="ml-2 h-4 w-4" />
                     </Button>
                 </div>
