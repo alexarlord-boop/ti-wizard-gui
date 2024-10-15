@@ -26,16 +26,16 @@ const StatusToggle = ({initialStatus}) => {
     return (
         <div className="flex items-center justify-center">
 
-            <>
+            <div className="flex w-[50px]">
                 <Switch
                     checked={status === 'on'}
                     onClick={handleToggle}
                     className={cn("")}
                 />
                 {
-                    loading ? (<Spinner size="sm" className="mx-auto" />) : (<span className="ml-2">{status}</span>)
+                    loading && <Spinner size="sm" className="mx-auto" />
                 }
-            </>
+            </div>
 
 
         </div>
