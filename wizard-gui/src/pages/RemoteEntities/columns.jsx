@@ -43,8 +43,9 @@ export const columns = (handleViewDetails, handleDelete) => [
         },
     },
     {
+        id: "Registered in",
         accessorKey: "RA",
-        header: () => <div className="text-center">Registration Authority</div>,
+        header: () => <div className="text-center">Registered in</div>,
     },
     {
         accessorKey: "role",
