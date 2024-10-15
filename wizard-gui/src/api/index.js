@@ -114,5 +114,11 @@ export const remoteEntitiesApi = {
             }
         }
         localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
+    },
+
+    delete(id) {
+        let activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        activeEntities = activeEntities.filter(activeEntity => activeEntity.id !== id);
+        localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
     }
 }

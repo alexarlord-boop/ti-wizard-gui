@@ -1,4 +1,5 @@
 import React from 'react';
+import {useMutation, useQueryClient} from "react-query";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,14 +11,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import StatusToggle from "./EntityStatusToggle.jsx";  // Import the updated StatusToggle component
+import StatusToggle from "./EntityStatusToggle.jsx";
+import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
+import {toast} from "sonner";
+import {remoteEntitiesApi} from "../../api/index.js";  // Import the updated StatusToggle component
 
 
 const onDetailsClick = (entity) => {
     console.log(entity);
 }
-export const columns = (handleViewDetails) => [
-
+export const columns = (handleViewDetails, handleDelete) => [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -91,6 +94,9 @@ export const columns = (handleViewDetails) => [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>
                             Copy entity ID
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleDelete(entity.id)} className="text-red-500">
+                            Delete
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>Export configuration</DropdownMenuItem>

@@ -18,7 +18,7 @@ import {
 
 import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
 import {ScrollArea} from "@radix-ui/react-scroll-area";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import {cn} from "../lib/utils.js";
 import FederationSelect from "../components/custom/FederationSelect.jsx";
 import {
@@ -31,6 +31,8 @@ import {DialogFooter} from "../components/ui/dialog.jsx";
 import {Select, SelectContent, SelectGroup, SelectItem} from "@radix-ui/react-select";
 import {CheckCircle} from "lucide-react";
 import {getRemoteEntityName} from "../services/remoteEntityService.js";
+import {remoteEntitiesApi} from "../api/index.js";
+import {toast} from "sonner";
 
 const steps = [
     {
@@ -138,6 +140,23 @@ function RemotePage() {
 
     };
 
+    const handleDelete = (entityId) => {
+        // delete from localStorage with confirmation dialog
+        const confirmed = window.confirm("Are you sure you want to delete this entity?");
+        if (confirmed) {
+            remoteEntitiesApi.delete(entityId);
+            toast("Entity deleted");
+            // trigger page reload
+            // Update the data state to remove the deleted entity
+            setData(prevData => prevData.filter(entity => entity.id !== entityId));
+
+            // Optionally, invalidate queries to refetch data if needed
+            // queryClient.invalidateQueries("remoteEntities");
+
+        }
+
+    };
+
     return (
         <>
             <Breadcrumbs
@@ -220,7 +239,7 @@ function RemotePage() {
 
 
             <br/>
-            <DataTable columns={columns(handleViewDetails)} data={data} />
+            <DataTable columns={columns(handleViewDetails, handleDelete)} data={data} />
 
             <Dialog open={isEntityDetailsOpen} onOpenChange={setIsEntityDetailsOpen}>
                 <DialogTitle></DialogTitle>
