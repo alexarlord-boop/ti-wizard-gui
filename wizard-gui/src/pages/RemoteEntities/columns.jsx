@@ -99,15 +99,22 @@ export const columns = (handleViewDetails, handleDelete) => [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(entity.id)}>
+                        <DropdownMenuItem onClick={
+                            () => {
+                                navigator.clipboard.writeText(entity.id);
+                                toast("Entity ID copied to clipboard");
+                            }
+
+                        }>
                             Copy entity ID
                         </DropdownMenuItem>
+                        <DropdownMenuItem>Refresh metadata</DropdownMenuItem>
+                        <DropdownMenuItem>Restart entity</DropdownMenuItem>
+                        <DropdownMenuSeparator/>
                         <DropdownMenuItem onClick={() => handleDelete(entity.id)} className="text-red-500">
                             Delete
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator/>
-                        <DropdownMenuItem>Export configuration</DropdownMenuItem>
-                        <DropdownMenuItem>Restart entity</DropdownMenuItem>
+
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
