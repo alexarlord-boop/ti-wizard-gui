@@ -31,6 +31,7 @@ import {Checkbox} from "../../components/ui/checkbox.jsx";
 import {Select, SelectContent, SelectLabel, SelectTrigger, SelectValue} from "@radix-ui/react-select";
 import {SelectGroup, SelectItem} from "../../components/ui/select.jsx";
 import {DropdownMenuLabel, DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
+import {ScrollArea} from "@radix-ui/react-scroll-area";
 
 export function DataTable({
                               columns,
@@ -79,6 +80,7 @@ export function DataTable({
 
     return (
         <div>
+            {/* TABLE HEADER */}
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter names..."
@@ -139,9 +141,10 @@ export function DataTable({
                 </DropdownMenu>
             </div>
 
-            <div className="rounded-md border overflow-x-auto">
+            {/* TABLE */}
+            <ScrollArea className="h-[60dvh] overflow-y-scroll rounded-md border">
                 <Table>
-                    <TableHeader>
+                    <TableHeader className="sticky top-0 bg-secondary z-10">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
@@ -159,8 +162,7 @@ export function DataTable({
                             </TableRow>
                         ))}
                     </TableHeader>
-
-                    <TableBody className="overflow-y-auto max-h-[400px]">
+                    <TableBody>
 
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
@@ -184,9 +186,9 @@ export function DataTable({
                         )}
 
                     </TableBody>
-
                 </Table>
-            </div>
+            </ScrollArea>
+
         </div>
     )
 }
