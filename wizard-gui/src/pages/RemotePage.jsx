@@ -33,6 +33,7 @@ import {CheckCircle} from "lucide-react";
 import {getRemoteEntityName} from "../services/remoteEntityService.js";
 import {remoteEntitiesApi} from "../api/index.js";
 import {toast} from "sonner";
+import EntityNameWithTooltip from "../components/custom/EntityNameTooltip.jsx";
 
 const steps = [
     {
@@ -215,7 +216,7 @@ function RemotePage() {
                                                         )}
                                                         onClick={() => handleEntityClick(entity)}
                                                     >
-                                                        <span>{getRemoteEntityName(entity)}</span>
+                                                        <EntityNameWithTooltip entityName={getRemoteEntityName(entity)} />
                                                         <span
                                                             className="flex items-center align-middle ">{entity.isActive ?
                                                             <CheckCircle size="15" className="mr-5"/>

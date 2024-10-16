@@ -1,7 +1,7 @@
 import React from 'react';
 import {useMutation, useQueryClient} from "react-query";
-import { ArrowUpDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {ArrowUpDown} from "lucide-react";
+import {Button} from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,11 +10,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import {MoreHorizontal} from "lucide-react";
 import StatusToggle from "./EntityStatusToggle.jsx";
 import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
 import {toast} from "sonner";
-import {remoteEntitiesApi} from "../../api/index.js";  // Import the updated StatusToggle component
+import {remoteEntitiesApi} from "../../api/index.js";
+import EntityNameWithTooltip from "../../components/custom/EntityNameTooltip.jsx";  // Import the updated StatusToggle component
 
 
 const onDetailsClick = (entity) => {
@@ -22,25 +23,29 @@ const onDetailsClick = (entity) => {
 }
 export const columns = (handleViewDetails, handleDelete) => [
     {
-        id: "Entity",
+        id: "name",
         accessorKey: "name",
-        header: ({ column }) => {
+        header: ({column}) => {
             return (
                 <div className="text-center">
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
-                        Entity
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        Name
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
                     </Button>
                 </div>
             );
         },
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const entity = row.original;
-            const { name } = row.original;
-            return <a href="#" className="hover:underline text-left flex max-w-md" onClick={() => handleViewDetails(entity)}>{name}</a>;
+            const {name} = row.original;
+            return <div className="text-left truncate max-w-md hover:underline cursor-pointer">
+                {/*<span className="truncate flex max-w-sm"*/}
+                {/*      onClick={() => handleViewDetails(entity)}>{name}</span>*/}
+                <span onClick={() => handleViewDetails(entity)}><EntityNameWithTooltip entityName={name}/></span>
+            </div>;
         },
     },
     {
@@ -72,16 +77,16 @@ export const columns = (handleViewDetails, handleDelete) => [
         id: "status",
         accessorKey: "status",
         header: () => <div className="text-center">Status</div>,
-        cell: ({ row }) => {
-            const { status } = row.original;
-            return <StatusToggle initialStatus={status} />;
+        cell: ({row}) => {
+            const {status} = row.original;
+            return <StatusToggle initialStatus={status}/>;
         },
     },
     {
         id: "actions",
         accessorKey: "actions",
         header: () => <div className="text-center">Actions</div>,
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const entity = row.original;
 
             return (
@@ -89,7 +94,7 @@ export const columns = (handleViewDetails, handleDelete) => [
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
+                            <MoreHorizontal className="h-4 w-4"/>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -100,7 +105,7 @@ export const columns = (handleViewDetails, handleDelete) => [
                         <DropdownMenuItem onClick={() => handleDelete(entity.id)} className="text-red-500">
                             Delete
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator/>
                         <DropdownMenuItem>Export configuration</DropdownMenuItem>
                         <DropdownMenuItem>Restart entity</DropdownMenuItem>
                     </DropdownMenuContent>
