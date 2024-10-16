@@ -204,25 +204,29 @@ function RemotePage() {
                                         {
                                             entityStatus === "loading" && <Spinner size="sm" className="mt-20"/> ||
 
-                                            entityStatus === "success" &&
-
-                                            (entities.filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
-                                                .map(entity => (
-                                                    <div
-                                                        key={entity.id}
-                                                        className={cn(
-                                                            "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
-                                                            selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
-                                                        )}
-                                                        onClick={() => handleEntityClick(entity)}
-                                                    >
-                                                        <EntityNameWithTooltip entityName={getRemoteEntityName(entity)} />
-                                                        <span
-                                                            className="flex items-center align-middle ">{entity.isActive ?
-                                                            <CheckCircle size="15" className="mr-5"/>
-                                                            : ""}</span>
-                                                    </div>
-                                                )))
+                                            entityStatus === "success" && (
+                                                entities.length === 0 ? (
+                                                    <div className="text-center p-4">No entities found</div>
+                                                ) : (
+                                                    entities.filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
+                                                        .map(entity => (
+                                                            <div
+                                                                key={entity.id}
+                                                                className={cn(
+                                                                    "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
+                                                                    selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
+                                                                )}
+                                                                onClick={() => handleEntityClick(entity)}
+                                                            >
+                                                                <EntityNameWithTooltip
+                                                                    entityName={getRemoteEntityName(entity)}/>
+                                                                <span className="flex items-center align-middle ">
+                                {entity.isActive ? <CheckCircle size="15" className="mr-5"/> : ""}
+                            </span>
+                                                            </div>
+                                                        ))
+                                                )
+                                            )
                                         }
                                     </ScrollArea>
                                 </div>
@@ -231,7 +235,8 @@ function RemotePage() {
                         </div>
                         <div className="">
                             <h3 className="font-bold">Selected entity:</h3>
-                            <EntityDetails entity={selectedEntity} entityType={selectedEntityType} withAction></EntityDetails>
+                            <EntityDetails entity={selectedEntity} entityType={selectedEntityType}
+                                           withAction></EntityDetails>
 
                         </div>
                     </div>
@@ -240,13 +245,13 @@ function RemotePage() {
 
 
             <br/>
-            <DataTable columns={columns(handleViewDetails, handleDelete)} data={data} />
+            <DataTable columns={columns(handleViewDetails, handleDelete)} data={data}/>
 
             <Dialog open={isEntityDetailsOpen} onOpenChange={setIsEntityDetailsOpen}>
                 <DialogTitle></DialogTitle>
                 <DialogDescription></DialogDescription>
                 <DialogContent className="max-w-[50%] p-10">
-                    {selectedEntity && <EntityDetails entity={selectedEntity} />}
+                    {selectedEntity && <EntityDetails entity={selectedEntity}/>}
                 </DialogContent>
             </Dialog>
         </>

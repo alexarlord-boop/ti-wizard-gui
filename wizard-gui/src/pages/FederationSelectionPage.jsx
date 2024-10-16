@@ -25,7 +25,6 @@ const FederationSelectionPage = () => {
     const [loadingFederations, setLoadingFederations] = useState({}); // State to manage loading status of each federation
 
 
-
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value.toLowerCase());
     };
@@ -39,13 +38,13 @@ const FederationSelectionPage = () => {
     ) || [];
 
     const handleSwitchChange = (federation) => {
-        setLoadingFederations(prev => ({ ...prev, [federation.url]: true }));
+        setLoadingFederations(prev => ({...prev, [federation.url]: true}));
         updateFederationMutation.mutate({
             id: federation.url,
             status: !federation.isActive
         }, {
             onSettled: () => {
-                setLoadingFederations(prev => ({ ...prev, [federation.url]: false }));
+                setLoadingFederations(prev => ({...prev, [federation.url]: false}));
             }
         });
     };
@@ -85,7 +84,7 @@ const FederationSelectionPage = () => {
                                         <div className="flex justify-between items-center p-2">
                                             <AccordionTrigger>{federation.name}</AccordionTrigger>
                                             {loadingFederations[federation.url] ? (
-                                                <Spinner size="sm" />
+                                                <Spinner size="sm"/>
                                             ) : (
                                                 <Switch
                                                     key={federation.url}
@@ -95,11 +94,14 @@ const FederationSelectionPage = () => {
                                             )}
                                         </div>
                                         <AccordionContent>
-                                            <div className="entity-list">
+                                            <div className="entity-list text-left ms-10">
                                                 {federation.md_url.map((entity, index) => (
-                                                    <label key={index}>
-                                                        {entity}
-                                                    </label>
+                                                    <>
+                                                        <label key={index}>
+                                                            {entity}
+                                                        </label>
+                                                        <br/>
+                                                    </>
                                                 ))}
                                             </div>
                                         </AccordionContent>
