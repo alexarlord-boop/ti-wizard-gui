@@ -56,7 +56,7 @@ const EntityDialog = ({ isDialogOpen, setIsDialogOpen, selectedEntityType, filte
                                                 >
                                                     <EntityNameWithTooltip entityName={getRemoteEntityName(entity)} />
                                                     <span className="flex items-center align-middle ">
-                                                        {entity.isActive ? <CheckCircle size="15" className="mr-5" /> : ""}
+                                                        {entity.isActive ? <CheckCircle size="15" className="mr-3 text-green-600" /> : ""}
                                                     </span>
                                                 </div>
                                             ))
