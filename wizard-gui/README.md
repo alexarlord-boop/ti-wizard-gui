@@ -38,5 +38,5 @@ After running the Docker container, open your web browser and navigate to `http:
 
 ## Configuration
 
-The application is configured to run on port 8080. You can change the port by updating the `vite.config.js` file and the Docker commands accordingly.
+The application is configured to run on port 3000. You can change the port by updating the `vite.config.js` file and the Docker commands accordingly.
 
