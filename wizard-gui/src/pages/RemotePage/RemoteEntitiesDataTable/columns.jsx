@@ -1,5 +1,4 @@
 import React from 'react';
-import {useMutation, useQueryClient} from "react-query";
 import {ArrowUpDown} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {
@@ -12,16 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {MoreHorizontal} from "lucide-react";
 import StatusToggle from "./EntityStatusToggle.jsx";
-import {useUpdateEntityMutation} from "../../../hooks/useUpdateEntityMutation.jsx";
 import {toast} from "sonner";
-import {remoteEntitiesApi} from "../../../api/index.js";
 import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.jsx";
 import {DropdownMenuCheckboxItem} from "@radix-ui/react-dropdown-menu";  // Import the updated StatusToggle component
 
 
-const onDetailsClick = (entity) => {
-    console.log(entity);
-}
 export const columns = (handleViewDetails, handleDelete, ...args) => [
     {
         id: "name",
@@ -56,11 +50,10 @@ export const columns = (handleViewDetails, handleDelete, ...args) => [
     },
     {
         accessorKey: "role",
-        header: ({ column }) => {
+        header: ({column}) => {
 
             return (
                 <div className="text-center">
-                    {/*<Button variant="outline" className="" onClick={() => {console.log('role title')}}>Role</Button>*/}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">Filter by role</Button>
@@ -82,22 +75,6 @@ export const columns = (handleViewDetails, handleDelete, ...args) => [
             )
         },
     },
-    // {
-    //     accessorKey: "status",
-    //     header: ({ column }) => {
-    //         return (
-    //             <div className="text-center">
-    //                 <Button
-    //                     variant="ghost"
-    //                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    //                 >
-    //                     Status
-    //                     <ArrowUpDown className="ml-2 h-4 w-4" />
-    //                 </Button>
-    //             </div>
-    //         );
-    //     },
-    // },
     {
         id: "status",
         accessorKey: "status",

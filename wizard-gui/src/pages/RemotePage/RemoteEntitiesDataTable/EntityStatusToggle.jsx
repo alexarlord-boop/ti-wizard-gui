@@ -8,7 +8,6 @@ const StatusToggle = ({initialStatus, onStatusChange}) => {
     const [loading, setLoading] = useState(false);
 
     const handleToggle = async () => {
-        console.log("toggling")
         setLoading(true);
         try {
             // Simulate a network request or async operation

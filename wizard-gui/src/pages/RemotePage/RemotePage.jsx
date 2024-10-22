@@ -86,7 +86,6 @@ function RemotePage() {
     const handleViewDetails = (entity) => {
         const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
         const activeEntity = activeEntities.find(e => e.id === entity.id);
-        console.log(activeEntity);
         setSelectedEntity(activeEntity);
         setSelectedEntityType(activeEntity.entityType);
         setIsEntityDetailsOpen(true);
