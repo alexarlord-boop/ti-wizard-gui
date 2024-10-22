@@ -37,8 +37,8 @@ import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.
 import StatusToggle from "./EntityStatusToggle.jsx";
 import {toast} from "sonner";
 
-export function DataTable({ handleViewDetails, handleDelete, data }) {
-    const [sorting, setSorting] = useState([{ id: "status", desc: false }]);
+export function DataTable({handleViewDetails, handleDelete, data}) {
+    const [sorting, setSorting] = useState([{id: "status", desc: false}]);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnVisibility, setColumnVisibility] = useState({});
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -65,7 +65,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
 
     const handleStatusChange = (rowId, newStatus) => {
         const updatedData = filteredData.map((row) =>
-            row.id === rowId ? { ...row, status: newStatus } : row
+            row.id === rowId ? {...row, status: newStatus} : row
         );
         setFilteredData(updatedData);
     };
@@ -74,24 +74,24 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "name",
             accessorKey: "name",
-            header: ({ column }) => (
+            header: ({column}) => (
                 <div className="text-center">
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Name
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
                     </Button>
                 </div>
             ),
-            cell: ({ row }) => {
+            cell: ({row}) => {
                 const entity = row.original;
-                const { name } = row.original;
+                const {name} = row.original;
                 return (
                     <div className="text-left truncate max-w-md hover:underline cursor-pointer">
                         <span onClick={() => handleViewDetails(entity)}>
-                            <EntityNameWithTooltip entityName={name} />
+                            <EntityNameWithTooltip entityName={name}/>
                         </span>
                     </div>
                 );
@@ -104,7 +104,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         },
         {
             accessorKey: "role",
-            header: ({ column }) => (
+            header: ({column}) => (
                 <div className="text-center">
                     <DropdownMenu open={isRoleDropdownOpen} onOpenChange={setIsRoleDropdownOpen}>
                         <DropdownMenuTrigger asChild>
@@ -129,9 +129,10 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
             id: "status",
             accessorKey: "status",
             header: () => <div className="text-center">Status</div>,
-            cell: ({ row }) => {
-                const { status, id } = row.original;
-                return <StatusToggle initialStatus={status} onStatusChange={(newStatus) => handleStatusChange(id, newStatus)} />;
+            cell: ({row}) => {
+                const {status, id} = row.original;
+                return <StatusToggle initialStatus={status}
+                                     onStatusChange={(newStatus) => handleStatusChange(id, newStatus)}/>;
             },
             sortingFn: (rowA, rowB) => {
                 const statusA = rowA.original.status;
@@ -145,32 +146,35 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
             id: "actions",
             accessorKey: "actions",
             header: () => <div className="text-center">Actions</div>,
-            cell: ({ row }) => {
+            cell: ({row}) => {
                 const entity = row.original;
+
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
                                 <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
+                                <MoreHorizontal className="h-4 w-4"/>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem
-                                onClick={() => {
+                            <DropdownMenuItem onClick={
+                                () => {
                                     navigator.clipboard.writeText(entity.id);
                                     toast("Entity ID copied to clipboard");
-                                }}
-                            >
+                                }
+
+                            }>
                                 Copy entity ID
                             </DropdownMenuItem>
                             <DropdownMenuItem>Refresh metadata</DropdownMenuItem>
                             <DropdownMenuItem>Restart entity</DropdownMenuItem>
-                            <DropdownMenuSeparator />
+                            <DropdownMenuSeparator/>
                             <DropdownMenuItem onClick={() => handleDelete(entity.id)} className="text-red-500">
                                 Delete
                             </DropdownMenuItem>
+
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );

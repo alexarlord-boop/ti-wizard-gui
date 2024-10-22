@@ -57,7 +57,6 @@ export const rolesApi = {
     },
 
     update({entityType, isActive, displayName, imageUrl}) {
-        console.log(displayName);
         const roles = JSON.parse(localStorage.getItem('roles') || '[]');
         const roleIndex = roles.findIndex(role => role.entityType === entityType);
 

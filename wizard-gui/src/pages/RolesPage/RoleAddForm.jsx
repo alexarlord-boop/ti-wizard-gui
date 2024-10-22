@@ -60,7 +60,6 @@ export default function RoleAddForm(
         form.reset();
     }
     const handleAddRole = (formData) => {
-        console.log(`add role: ${entityType}`);
         updateRoleMutation.mutate({
             entityType: entityType,
             isActive: true,
@@ -79,7 +78,6 @@ export default function RoleAddForm(
 
 
     function onSubmit(data) {
-        console.log(data);
         handleAddRole(data);
         handleModalTermination();
         setIsRoleDetailsOpen(false);

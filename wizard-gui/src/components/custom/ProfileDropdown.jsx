@@ -15,7 +15,6 @@ export default function ProfileDropdown({ children }) {
 
     const handleTour = () => {
         if (startTour) {
-            console.log("Tour is being triggered");  // Add this log for debugging
             startTour();  // Trigger the tour for the current page
         } else {
             console.log("No tour is set for this page");
