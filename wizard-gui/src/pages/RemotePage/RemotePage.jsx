@@ -1,22 +1,22 @@
 // RemotePage.jsx
 import {useState, useEffect} from "react";
 import {useQuery} from "react-query";
-import {useRolesQuery} from "../hooks/useRolesQuery.jsx";
-import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
-import {useEntitiesQuery} from "../hooks/useEntitiesQuery.jsx";
-import {getAvailableOptions, isDisabled} from "../lib/remote_page_utils.js";
-import {getRemoteEntityName} from "../services/remoteEntityService.js";
-import {remoteEntitiesApi} from "../api/index.js";
+import {useRolesQuery} from "../../hooks/useRolesQuery.jsx";
+import {useFederationsQuery} from "../../hooks/useFederationsQuery.jsx";
+import {useEntitiesQuery} from "../../hooks/useEntitiesQuery.jsx";
+import {getAvailableOptions, isDisabled} from "../../lib/remote_page_utils.js";
+import {getRemoteEntityName} from "../../services/remoteEntityService.js";
+import {remoteEntitiesApi} from "../../api/index.js";
 import {toast} from "sonner";
 
-import {DataTable} from "./RemotePage/RemoteEntitiesDataTable/data-table.jsx";
-import {columns} from './RemotePage/RemoteEntitiesDataTable/columns.jsx';
-import {Spinner} from "../components/ui/Loader.jsx";
-import BreadcrumbsComponent from "./RemotePage/Breadcrumbs.jsx";
-import AddEntityButtons from "./RemotePage/AddEntityButtons.jsx";
-import EntityDialog from "./RemotePage/EntityDialog.jsx";
-import EntityDetails from "../components/custom/EntityDetails.jsx";
-import DetailsDIalog from "./RemotePage/DetailsDIalog.jsx";
+import {DataTable} from "./RemoteEntitiesDataTable/data-table.jsx";
+import {columns} from './RemoteEntitiesDataTable/columns.jsx';
+import {Spinner} from "../../components/ui/Loader.jsx";
+import BreadcrumbsComponent from "./Breadcrumbs.jsx";
+import AddEntityButtons from "./AddEntityButtons.jsx";
+import EntityDialog from "./EntityDialog.jsx";
+import EntityDetails from "../../components/custom/EntityDetails.jsx";
+import DetailsDIalog from "./DetailsDIalog.jsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const titles = {
