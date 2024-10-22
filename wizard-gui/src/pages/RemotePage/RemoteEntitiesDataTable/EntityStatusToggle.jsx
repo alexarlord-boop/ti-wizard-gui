@@ -3,7 +3,7 @@ import {Switch} from "@/components/ui/switch";
 import {Spinner} from "../../../components/ui/Loader.jsx";
 import {cn} from "../../../lib/utils.js";
 
-const StatusToggle = ({initialStatus}) => {
+const StatusToggle = ({initialStatus, onStatusChange}) => {
     const [status, setStatus] = useState(initialStatus);
     const [loading, setLoading] = useState(false);
 
@@ -15,6 +15,7 @@ const StatusToggle = ({initialStatus}) => {
             await new Promise(resolve => setTimeout(resolve, 500));
 
             setStatus(prevStatus => !prevStatus);
+            onStatusChange(status);
         } catch (error) {
             console.error('Error toggling status:', error);
         } finally {

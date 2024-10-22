@@ -37,16 +37,12 @@ import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.
 import StatusToggle from "./EntityStatusToggle.jsx";
 import {toast} from "sonner";
 
-export function DataTable({
-                              handleViewDetails,
-                              handleDelete,
-                              data,
-                          }) {
-    const [sorting, setSorting] = React.useState([])
-    const [columnFilters, setColumnFilters] = React.useState([])
-    const [columnVisibility, setColumnVisibility] = React.useState({})
-    const [selectedRoles, setSelectedRoles] = React.useState([]);
-    const [filteredData, setFilteredData] = React.useState(data);
+export function DataTable({ handleViewDetails, handleDelete, data }) {
+    const [sorting, setSorting] = useState([{ id: "status", desc: false }]);
+    const [columnFilters, setColumnFilters] = useState([]);
+    const [columnVisibility, setColumnVisibility] = useState({});
+    const [selectedRoles, setSelectedRoles] = useState([]);
+    const [filteredData, setFilteredData] = useState(data);
     const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
 
     useEffect(() => {
@@ -67,32 +63,38 @@ export function DataTable({
         setFilteredData(newFilteredData);
     };
 
+    const handleStatusChange = (rowId, newStatus) => {
+        const updatedData = filteredData.map((row) =>
+            row.id === rowId ? { ...row, status: newStatus } : row
+        );
+        setFilteredData(updatedData);
+    };
 
     const columns = [
         {
             id: "name",
             accessorKey: "name",
-            header: ({column}) => {
+            header: ({ column }) => (
+                <div className="text-center">
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Name
+                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                    </Button>
+                </div>
+            ),
+            cell: ({ row }) => {
+                const entity = row.original;
+                const { name } = row.original;
                 return (
-                    <div className="text-center">
-                        <Button
-                            variant="ghost"
-                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                        >
-                            Name
-                            <ArrowUpDown className="ml-2 h-4 w-4"/>
-                        </Button>
+                    <div className="text-left truncate max-w-md hover:underline cursor-pointer">
+                        <span onClick={() => handleViewDetails(entity)}>
+                            <EntityNameWithTooltip entityName={name} />
+                        </span>
                     </div>
                 );
-            },
-            cell: ({row}) => {
-                const entity = row.original;
-                const {name} = row.original;
-                return <div className="text-left truncate max-w-md hover:underline cursor-pointer">
-                    {/*<span className="truncate flex max-w-sm"*/}
-                    {/*      onClick={() => handleViewDetails(entity)}>{name}</span>*/}
-                    <span onClick={() => handleViewDetails(entity)}><EntityNameWithTooltip entityName={name}/></span>
-                </div>;
             },
         },
         {
@@ -102,97 +104,79 @@ export function DataTable({
         },
         {
             accessorKey: "role",
-            header: ({column}) => {
-
-                return (
-                    <div className="text-center">
-                        {/*<Button variant="outline" className="" onClick={() => {console.log('role title')}}>Role</Button>*/}
-                        <DropdownMenu open={isRoleDropdownOpen} onOpenChange={setIsRoleDropdownOpen}>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline">Role</Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56">
-                                {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={role}
-                                        checked={selectedRoles.includes(role)}
-                                        onCheckedChange={() => handleRoleChange(role)}
-
-                                    >
-                                        {role}
-                                    </DropdownMenuCheckboxItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                )
-            },
+            header: ({ column }) => (
+                <div className="text-center">
+                    <DropdownMenu open={isRoleDropdownOpen} onOpenChange={setIsRoleDropdownOpen}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Role</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
+                                <DropdownMenuCheckboxItem
+                                    key={role}
+                                    checked={selectedRoles.includes(role)}
+                                    onCheckedChange={() => handleRoleChange(role)}
+                                >
+                                    {role}
+                                </DropdownMenuCheckboxItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            ),
         },
-        // {
-        //     accessorKey: "status",
-        //     header: ({ column }) => {
-        //         return (
-        //             <div className="text-center">
-        //                 <Button
-        //                     variant="ghost"
-        //                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        //                 >
-        //                     Status
-        //                     <ArrowUpDown className="ml-2 h-4 w-4" />
-        //                 </Button>
-        //             </div>
-        //         );
-        //     },
-        // },
         {
             id: "status",
             accessorKey: "status",
             header: () => <div className="text-center">Status</div>,
-            cell: ({row}) => {
-                const {status} = row.original;
-                return <StatusToggle initialStatus={status}/>;
+            cell: ({ row }) => {
+                const { status, id } = row.original;
+                return <StatusToggle initialStatus={status} onStatusChange={(newStatus) => handleStatusChange(id, newStatus)} />;
+            },
+            sortingFn: (rowA, rowB) => {
+                const statusA = rowA.original.status;
+                const statusB = rowB.original.status;
+                if (statusA === "active" && statusB !== "active") return -1;
+                if (statusA !== "active" && statusB === "active") return 1;
+                return 0;
             },
         },
         {
             id: "actions",
             accessorKey: "actions",
             header: () => <div className="text-center">Actions</div>,
-            cell: ({row}) => {
+            cell: ({ row }) => {
                 const entity = row.original;
-
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
                                 <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4"/>
+                                <MoreHorizontal className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={
-                                () => {
+                            <DropdownMenuItem
+                                onClick={() => {
                                     navigator.clipboard.writeText(entity.id);
                                     toast("Entity ID copied to clipboard");
-                                }
-
-                            }>
+                                }}
+                            >
                                 Copy entity ID
                             </DropdownMenuItem>
                             <DropdownMenuItem>Refresh metadata</DropdownMenuItem>
                             <DropdownMenuItem>Restart entity</DropdownMenuItem>
-                            <DropdownMenuSeparator/>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => handleDelete(entity.id)} className="text-red-500">
                                 Delete
                             </DropdownMenuItem>
-
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
             },
         },
     ];
-
 
     const table = useReactTable({
         data: filteredData,
@@ -208,41 +192,35 @@ export function DataTable({
             columnFilters,
             columnVisibility,
         },
-    })
+    });
 
     return (
         <div>
-            {/* TABLE HEADER */}
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter names..."
-                    value={(table.getColumn("name")?.getFilterValue()) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
-                    }
+                    value={table.getColumn("name")?.getFilterValue() ?? ""}
+                    onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />
-
-                {/*<div className="ms-4">*/}
-                {/*    <DropdownMenu>*/}
-                {/*        <DropdownMenuTrigger asChild>*/}
-                {/*            <Button variant="outline">Filter by role</Button>*/}
-                {/*        </DropdownMenuTrigger>*/}
-                {/*        <DropdownMenuContent className="w-56">*/}
-                {/*            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (*/}
-                {/*                <DropdownMenuCheckboxItem*/}
-                {/*                    key={role}*/}
-                {/*                    checked={selectedRoles.includes(role)}*/}
-                {/*                    onCheckedChange={() => handleRoleChange(role)}*/}
-
-                {/*                >*/}
-                {/*                    {role}*/}
-                {/*                </DropdownMenuCheckboxItem>*/}
-                {/*            ))}*/}
-                {/*        </DropdownMenuContent>*/}
-                {/*    </DropdownMenu>*/}
-                {/*</div>*/}
-
+                <div className="ms-4">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Filter by role</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
+                                <DropdownMenuCheckboxItem
+                                    key={role}
+                                    checked={selectedRoles.includes(role)}
+                                    onCheckedChange={() => handleRoleChange(role)}
+                                >
+                                    {role}
+                                </DropdownMenuCheckboxItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" className="ml-auto">
@@ -252,56 +230,39 @@ export function DataTable({
                     <DropdownMenuContent align="end">
                         {table
                             .getAllColumns()
-                            .filter(
-                                (column) => column.getCanHide()
-                            )
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) =>
-                                            column.toggleVisibility(!!value)
-                                        }
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                )
-                            })}
+                            .filter((column) => column.getCanHide())
+                            .map((column) => (
+                                <DropdownMenuCheckboxItem
+                                    key={column.id}
+                                    className="capitalize"
+                                    checked={column.getIsVisible()}
+                                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                >
+                                    {column.id}
+                                </DropdownMenuCheckboxItem>
+                            ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
-
-            {/* TABLE */}
             <ScrollArea className="h-[60dvh] overflow-y-scroll rounded-md border">
                 <Table>
                     <TableHeader className="sticky top-0 bg-secondary z-10">
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                    </TableHead>
+                                ))}
                             </TableRow>
                         ))}
                     </TableHeader>
                     <TableBody>
-
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
+                                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -316,11 +277,9 @@ export function DataTable({
                                 </TableCell>
                             </TableRow>
                         )}
-
                     </TableBody>
                 </Table>
             </ScrollArea>
-
         </div>
-    )
+    );
 }
