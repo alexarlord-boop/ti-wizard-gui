@@ -26,10 +26,10 @@ import {
 import {Input} from "@/components/ui/input"
 
 import React, {useEffect} from "react";
-import {Button} from "../../components/ui/button.jsx";
-import {Checkbox} from "../../components/ui/checkbox.jsx";
+import {Button} from "../../../components/ui/button.jsx";
+import {Checkbox} from "../../../components/ui/checkbox.jsx";
 import {Select, SelectContent, SelectLabel, SelectTrigger, SelectValue} from "@radix-ui/react-select";
-import {SelectGroup, SelectItem} from "../../components/ui/select.jsx";
+import {SelectGroup, SelectItem} from "../../../components/ui/select.jsx";
 import {DropdownMenuLabel, DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
 import {ScrollArea} from "@radix-ui/react-scroll-area";
 

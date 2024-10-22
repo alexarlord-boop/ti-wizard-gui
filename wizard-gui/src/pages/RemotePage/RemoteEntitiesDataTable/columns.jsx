@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {MoreHorizontal} from "lucide-react";
 import StatusToggle from "./EntityStatusToggle.jsx";
-import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
+import {useUpdateEntityMutation} from "../../../hooks/useUpdateEntityMutation.jsx";
 import {toast} from "sonner";
-import {remoteEntitiesApi} from "../../api/index.js";
-import EntityNameWithTooltip from "../../components/custom/EntityNameTooltip.jsx";  // Import the updated StatusToggle component
+import {remoteEntitiesApi} from "../../../api/index.js";
+import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.jsx";  // Import the updated StatusToggle component
 
 
 const onDetailsClick = (entity) => {

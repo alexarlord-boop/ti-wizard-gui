@@ -9,8 +9,8 @@ import {getRemoteEntityName} from "../services/remoteEntityService.js";
 import {remoteEntitiesApi} from "../api/index.js";
 import {toast} from "sonner";
 
-import {DataTable} from "./RemoteEntities/data-table.jsx";
-import {columns} from './RemoteEntities/columns.jsx';
+import {DataTable} from "./RemotePage/RemoteEntitiesDataTable/data-table.jsx";
+import {columns} from './RemotePage/RemoteEntitiesDataTable/columns.jsx';
 import {Spinner} from "../components/ui/Loader.jsx";
 import BreadcrumbsComponent from "./RemotePage/Breadcrumbs.jsx";
 import AddEntityButtons from "./RemotePage/AddEntityButtons.jsx";

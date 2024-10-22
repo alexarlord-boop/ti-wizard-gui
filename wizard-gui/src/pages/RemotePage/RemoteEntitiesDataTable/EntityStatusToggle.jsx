@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Switch} from "@/components/ui/switch";
-import {Spinner} from "../../components/ui/Loader.jsx";
-import {cn} from "../../lib/utils.js";
+import {Spinner} from "../../../components/ui/Loader.jsx";
+import {cn} from "../../../lib/utils.js";
 
 const StatusToggle = ({initialStatus}) => {
     const [status, setStatus] = useState(initialStatus);
