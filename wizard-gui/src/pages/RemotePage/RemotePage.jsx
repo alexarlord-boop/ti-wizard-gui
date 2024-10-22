@@ -55,7 +55,7 @@ function RemotePage() {
             name: getRemoteEntityName(entity),
             role: titles[entity.entityType],
             RA: entity.ra,
-            status: entity.isActive ? "on" : "off",
+            isActive: entity.isActive,
         }));
         setData(dt);
     }, [isDialogOpen]);

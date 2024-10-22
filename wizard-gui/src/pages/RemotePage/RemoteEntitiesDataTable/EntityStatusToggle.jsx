@@ -14,8 +14,7 @@ const StatusToggle = ({initialStatus}) => {
             // Simulate a network request or async operation
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Toggle status between 'on' and 'off'
-            setStatus(prevStatus => (prevStatus === 'off' ? 'on' : 'off'));
+            setStatus(prevStatus => !prevStatus);
         } catch (error) {
             console.error('Error toggling status:', error);
         } finally {
@@ -29,7 +28,7 @@ const StatusToggle = ({initialStatus}) => {
             <div className="flex w-[50px]">
                 <Switch
 
-                    checked={status === 'on'}
+                    checked={status}
                     onClick={handleToggle}
                     className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
                 />

@@ -25,7 +25,7 @@ import {
 
 import {Input} from "@/components/ui/input"
 
-import React, {useEffect} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {Button} from "../../../components/ui/button.jsx";
 import {Checkbox} from "../../../components/ui/checkbox.jsx";
 import {Select, SelectContent, SelectLabel, SelectTrigger, SelectValue} from "@radix-ui/react-select";
@@ -47,6 +47,7 @@ export function DataTable({
     const [columnVisibility, setColumnVisibility] = React.useState({})
     const [selectedRoles, setSelectedRoles] = React.useState([]);
     const [filteredData, setFilteredData] = React.useState(data);
+    const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
 
     useEffect(() => {
         setFilteredData(data);
@@ -106,9 +107,9 @@ export function DataTable({
                 return (
                     <div className="text-center">
                         {/*<Button variant="outline" className="" onClick={() => {console.log('role title')}}>Role</Button>*/}
-                        <DropdownMenu>
+                        <DropdownMenu open={isRoleDropdownOpen} onOpenChange={setIsRoleDropdownOpen}>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline">Filter by role</Button>
+                                <Button variant="outline">Role</Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-56">
                                 {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
@@ -222,25 +223,25 @@ export function DataTable({
                     className="max-w-sm"
                 />
 
-                <div className="ms-4">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline">Filter by role</Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56">
-                            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
-                                <DropdownMenuCheckboxItem
-                                    key={role}
-                                    checked={selectedRoles.includes(role)}
-                                    onCheckedChange={() => handleRoleChange(role)}
+                {/*<div className="ms-4">*/}
+                {/*    <DropdownMenu>*/}
+                {/*        <DropdownMenuTrigger asChild>*/}
+                {/*            <Button variant="outline">Filter by role</Button>*/}
+                {/*        </DropdownMenuTrigger>*/}
+                {/*        <DropdownMenuContent className="w-56">*/}
+                {/*            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (*/}
+                {/*                <DropdownMenuCheckboxItem*/}
+                {/*                    key={role}*/}
+                {/*                    checked={selectedRoles.includes(role)}*/}
+                {/*                    onCheckedChange={() => handleRoleChange(role)}*/}
 
-                                >
-                                    {role}
-                                </DropdownMenuCheckboxItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+                {/*                >*/}
+                {/*                    {role}*/}
+                {/*                </DropdownMenuCheckboxItem>*/}
+                {/*            ))}*/}
+                {/*        </DropdownMenuContent>*/}
+                {/*    </DropdownMenu>*/}
+                {/*</div>*/}
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
