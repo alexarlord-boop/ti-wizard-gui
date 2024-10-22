@@ -15,13 +15,14 @@ import StatusToggle from "./EntityStatusToggle.jsx";
 import {useUpdateEntityMutation} from "../../../hooks/useUpdateEntityMutation.jsx";
 import {toast} from "sonner";
 import {remoteEntitiesApi} from "../../../api/index.js";
-import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.jsx";  // Import the updated StatusToggle component
+import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.jsx";
+import {DropdownMenuCheckboxItem} from "@radix-ui/react-dropdown-menu";  // Import the updated StatusToggle component
 
 
 const onDetailsClick = (entity) => {
     console.log(entity);
 }
-export const columns = (handleViewDetails, handleDelete) => [
+export const columns = (handleViewDetails, handleDelete, ...args) => [
     {
         id: "name",
         accessorKey: "name",
@@ -55,7 +56,31 @@ export const columns = (handleViewDetails, handleDelete) => [
     },
     {
         accessorKey: "role",
-        header: () => <div className="text-center">Role</div>,
+        header: ({ column }) => {
+
+            return (
+                <div className="text-center">
+                    {/*<Button variant="outline" className="" onClick={() => {console.log('role title')}}>Role</Button>*/}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline">Filter by role</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56">
+                            {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
+                                <DropdownMenuCheckboxItem
+                                    key={role}
+                                    checked={selectedRoles.includes(role)}
+                                    onCheckedChange={() => handleRoleChange(role)}
+
+                                >
+                                    {role}
+                                </DropdownMenuCheckboxItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            )
+        },
     },
     // {
     //     accessorKey: "status",

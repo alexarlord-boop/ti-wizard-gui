@@ -110,7 +110,7 @@ function RemotePage() {
                 setSearchEntity={setSearchEntity}
                 selectedEntity={selectedEntity}
             />
-            <DataTable columns={columns(handleViewDetails, handleDelete)} data={data}/>
+            <DataTable handleViewDetails={handleViewDetails} handleDelete={handleDelete} data={data}/>
 
             <Dialog open={isEntityDetailsOpen} onOpenChange={setIsEntityDetailsOpen}>
                 <DialogTitle></DialogTitle>
