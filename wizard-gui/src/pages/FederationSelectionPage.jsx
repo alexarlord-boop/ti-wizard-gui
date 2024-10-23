@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {
     Accordion,
@@ -83,15 +83,20 @@ const FederationSelectionPage = () => {
                                     <AccordionItem key={federation.url} value={federation.url}>
                                         <div className="flex justify-between items-center p-2">
                                             <AccordionTrigger>{federation.name}</AccordionTrigger>
-                                            {loadingFederations[federation.url] ? (
-                                                <Spinner size="sm"/>
-                                            ) : (
-                                                <Switch
-                                                    key={federation.url}
-                                                    checked={federation.isActive}
-                                                    onCheckedChange={() => handleSwitchChange(federation)}
-                                                />
-                                            )}
+
+                                            <div className="flex w-[50px] me-5">
+                                            <Switch
+                                                key={federation.url}
+                                                checked={federation.isActive}
+                                                onCheckedChange={() => handleSwitchChange(federation)}
+                                                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                                            />
+                                            {
+                                                loadingFederations[federation.url] &&
+                                                <Spinner size="sm" className="mx-auto"/>
+                                            }
+                                            </div>
+
                                         </div>
                                         <AccordionContent>
                                             <div className="entity-list text-left ms-10">
