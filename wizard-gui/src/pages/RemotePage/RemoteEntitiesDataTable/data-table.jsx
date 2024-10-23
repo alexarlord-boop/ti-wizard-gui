@@ -54,12 +54,16 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         setFilteredData(updatedData);
     };
 
+    const nameColWidth = "w-[40em]";
+    const mdColWidth = "w-[9em]";
+    const smColWidth = "w-[6em]";
+
     const columns = [
         {
             id: "name",
             accessorKey: "name",
             header: ({ column }) => (
-                <div className="text-center">
+                <div className={` text-center ${nameColWidth}`}>
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -84,12 +88,12 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "Registered in",
             accessorKey: "RA",
-            header: () => <div className="text-center">Registered in</div>,
+            header: () => <div className={`text-center ${mdColWidth}`}>Registered in</div>,
         },
         {
             accessorKey: "role",
             header: ({ column }) => (
-                <div className="text-center">
+                <div className={`text-center ${mdColWidth}`}>
                     <RoleFilter
                         selectedRoles={selectedRoles}
                         handleRoleChange={handleRoleChange}
@@ -102,7 +106,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "status",
             accessorKey: "status",
-            header: () => <div className="text-center">Status</div>,
+            header: () => <div className={`text-center ${smColWidth}`}>Status</div>,
             cell: ({ row }) => {
                 const { status, id } = row.original;
                 return <StatusToggle initialStatus={status} onStatusChange={(newStatus) => handleStatusChange(id, newStatus)} />;
@@ -118,7 +122,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "actions",
             accessorKey: "actions",
-            header: () => <div className="text-center">Actions</div>,
+            header: () => <div className={`text-center ${smColWidth}`}>Actions</div>,
             cell: ({ row }) => {
                 const entity = row.original;
 
