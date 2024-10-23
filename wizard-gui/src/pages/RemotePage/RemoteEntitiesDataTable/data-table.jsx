@@ -82,6 +82,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const smColWidth = "w-[6em]";
 
     const availableRegistrations = [...new Set(data.map((row) => row.RA))];
+    const availableRoles = [...new Set(data.map((row) => row.role))];
 
 
     const columns = [
@@ -124,7 +125,18 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                         availableRegistrations={availableRegistrations}
                     />
                 </div>
-            ),        },
+            ),
+            cell: ({ row }) => {
+
+                const { RA } = row.original;
+                return (
+                    <div className="text-center truncate w-[12em]">
+                        {RA}
+                    </div>
+                );
+            },
+        },
+
         {
             accessorKey: "role",
             header: ({ column }) => (
@@ -134,6 +146,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                         handleRoleChange={handleRoleChange}
                         isRoleDropdownOpen={isRoleDropdownOpen}
                         setIsRoleDropdownOpen={setIsRoleDropdownOpen}
+                        availableRoles={availableRoles}
                     />
                 </div>
             ),
