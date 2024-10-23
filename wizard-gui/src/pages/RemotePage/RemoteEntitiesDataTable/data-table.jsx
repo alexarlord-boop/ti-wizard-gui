@@ -23,6 +23,7 @@ import {
 import {Button} from "../../../components/ui/button.jsx";
 import DataTableHeader from "./TableHeader.jsx";
 import DataTableBody from "./TableBody.jsx";
+import RegistrationFilter from "./RegistrationFilter.jsx";
 
 
 export function DataTable({ handleViewDetails, handleDelete, data }) {
@@ -30,8 +31,11 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnVisibility, setColumnVisibility] = useState({});
     const [selectedRoles, setSelectedRoles] = useState([]);
+    const [selectedRegistrations, setSelectedRegistrations] = useState([]);
     const [filteredData, setFilteredData] = useState(data);
     const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+    const [isRegistrationDropdownOpen, setIsRegistrationDropdownOpen] = useState(false);
+
 
     useEffect(() => {
         setFilteredData(data);
@@ -51,6 +55,21 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         setFilteredData(newFilteredData);
     };
 
+    const handleRegistrationChange = (registration) => {
+        const updatedRegistrations = selectedRegistrations.includes(registration)
+            ? selectedRegistrations.filter((r) => r !== registration)
+            : [...selectedRegistrations, registration];
+
+        setSelectedRegistrations(updatedRegistrations);
+
+        const newFilteredData = data.filter((row) =>
+            updatedRegistrations.length === 0 || updatedRegistrations.includes(row.RA)
+        );
+
+        setFilteredData(newFilteredData);
+    };
+
+
     const handleStatusChange = (rowId, newStatus) => {
         const updatedData = filteredData.map((row) =>
             row.id === rowId ? { ...row, status: newStatus } : row
@@ -61,6 +80,9 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const nameColWidth = "w-[40em]";
     const mdColWidth = "w-[9em]";
     const smColWidth = "w-[6em]";
+
+    const availableRegistrations = [...new Set(data.map((row) => row.RA))];
+
 
     const columns = [
         {
@@ -92,8 +114,17 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "Registered in",
             accessorKey: "RA",
-            header: () => <div className={`text-center ${mdColWidth}`}>Registered in</div>,
-        },
+            header: ({ column }) => (
+                <div className={`text-center ${mdColWidth}`}>
+                    <RegistrationFilter
+                        selectedRegistrations={selectedRegistrations}
+                        handleRegistrationChange={handleRegistrationChange}
+                        isRegistrationDropdownOpen={isRegistrationDropdownOpen}
+                        setIsRegistrationDropdownOpen={setIsRegistrationDropdownOpen}
+                        availableRegistrations={availableRegistrations}
+                    />
+                </div>
+            ),        },
         {
             accessorKey: "role",
             header: ({ column }) => (
