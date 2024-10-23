@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import { getSortedRowModel, getFilteredRowModel, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Table } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -37,9 +37,33 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const [isRegistrationDropdownOpen, setIsRegistrationDropdownOpen] = useState(false);
 
 
-    useEffect(() => {
-        setFilteredData(data);
-    }, [data]);
+    useLayoutEffect(() => {
+        let newFilteredData = data;
+
+        if (selectedRoles.length > 0) {
+            newFilteredData = newFilteredData.filter((row) =>
+                selectedRoles.includes(row.role)
+            );
+        }
+
+        if (selectedRegistrations.length > 0) {
+            newFilteredData = newFilteredData.filter((row) =>
+                selectedRegistrations.includes(row.RA)
+            );
+        }
+
+        setFilteredData(newFilteredData);
+    }, [data, selectedRoles, selectedRegistrations]);
+
+    useLayoutEffect(() => {
+        const availableRoles = selectedRegistrations.length > 0
+            ? [...new Set(data.filter((row) => selectedRegistrations.includes(row.RA)).map((row) => row.role))]
+            : [...new Set(data.map((row) => row.role))];
+
+        setSelectedRoles((prevSelectedRoles) =>
+            prevSelectedRoles.filter((role) => availableRoles.includes(role))
+        );
+    }, [selectedRegistrations, data]);
 
     const handleRoleChange = (role) => {
         const updatedRoles = selectedRoles.includes(role)
@@ -47,12 +71,6 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
             : [...selectedRoles, role];
 
         setSelectedRoles(updatedRoles);
-
-        const newFilteredData = data.filter((row) =>
-            updatedRoles.length === 0 || updatedRoles.includes(row.role)
-        );
-
-        setFilteredData(newFilteredData);
     };
 
     const handleRegistrationChange = (registration) => {
@@ -82,7 +100,10 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const smColWidth = "w-[6em]";
 
     const availableRegistrations = [...new Set(data.map((row) => row.RA))];
-    const availableRoles = [...new Set(data.map((row) => row.role))];
+    const availableRoles = selectedRegistrations.length > 0
+        ? [...new Set(data.filter((row) => selectedRegistrations.includes(row.RA)).map((row) => row.role))]
+        : [...new Set(data.map((row) => row.role))];
+
 
 
     const columns = [

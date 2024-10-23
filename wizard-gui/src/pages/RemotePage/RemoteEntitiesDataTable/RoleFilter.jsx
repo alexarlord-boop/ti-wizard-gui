@@ -24,7 +24,7 @@ const RoleFilter = ({selectedRoles, handleRoleChange, isRoleDropdownOpen, setIsR
             {["SAML IDP", "SAML SP", "OIDC OP", "OIDC RP"].map((role) => (
                 <DropdownMenuCheckboxItem
                     key={role}
-                    checked={selectedRoles.includes(role)}
+                    checked={selectedRoles.includes(role) && availableRoles.includes(role)}
                     onCheckedChange={() => handleRoleChange(role)}
                     disabled={!availableRoles.includes(role)}
                 >
