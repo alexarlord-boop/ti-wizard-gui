@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/accordion";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
-import {useQuery} from "react-query";
 import Breadcrumbs from "../components/custom/Breadcrumbs.jsx";
 import {Switch} from "@/components/ui/switch";  // Import Switch from ShadCN
 import {Input} from "@/components/ui/input";
@@ -18,9 +17,6 @@ import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.
 
 const FederationSelectionPage = () => {
     const {t, i18n} = useTranslation();
-    let {entityType} = useParams();
-    const [selectedEntities, setSelectedEntities] = useState({});
-    const [activeFederations, setActiveFederations] = useState({}); // State to manage active federations
     const [searchTerm, setSearchTerm] = useState(''); // State to manage search term
     const [loadingFederations, setLoadingFederations] = useState({}); // State to manage loading status of each federation
 
@@ -40,8 +36,9 @@ const FederationSelectionPage = () => {
     const handleSwitchChange = (federation) => {
         setLoadingFederations(prev => ({...prev, [federation.url]: true}));
         updateFederationMutation.mutate({
-            id: federation.url,
-            status: !federation.isActive
+            id: federation.internalId,
+            status: !federation.isActive,
+            url: federation.url,
         }, {
             onSettled: () => {
                 setLoadingFederations(prev => ({...prev, [federation.url]: false}));
@@ -85,28 +82,28 @@ const FederationSelectionPage = () => {
                                             <AccordionTrigger>{federation.name}</AccordionTrigger>
 
                                             <div className="flex w-[50px] me-5">
-                                            <Switch
-                                                key={federation.url}
-                                                checked={federation.isActive}
-                                                onCheckedChange={() => handleSwitchChange(federation)}
-                                                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-                                            />
-                                            {
-                                                loadingFederations[federation.url] &&
-                                                <Spinner size="sm" className="mx-auto"/>
-                                            }
+                                                <Switch
+                                                    key={federation.url}
+                                                    checked={federation.isActive}
+                                                    onCheckedChange={() => handleSwitchChange(federation)}
+                                                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                                                />
+                                                {
+                                                    loadingFederations[federation.url] &&
+                                                    <Spinner size="sm" className="mx-auto"/>
+                                                }
                                             </div>
 
                                         </div>
                                         <AccordionContent>
                                             <div className="entity-list text-left ms-10">
                                                 {federation.md_url.map((entity, index) => (
-                                                    <>
+                                                    <div key={federation.url}>
                                                         <label key={index}>
                                                             {entity}
                                                         </label>
                                                         <br/>
-                                                    </>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </AccordionContent>

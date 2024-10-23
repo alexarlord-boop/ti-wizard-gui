@@ -1,37 +1,58 @@
+import config from "../../config.js";
+import {comment} from "postcss";
+
+
 export const federationsApi = {
     async list() {
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
+        const backendResponse = await fetch(`${config.backendUrl}/federations/`);
 
-        if (!response.ok) {
+        if (!response.ok || !backendResponse.ok) {
             throw new Error('Network response was not ok');
         }
-        // make a delay to simulate a network request
-        await new Promise(resolve => setTimeout(resolve, 500));
         const data = await response.json();
+        const backendData = await backendResponse.json();
 
         // Ensure data is an array
         return data ? Object.entries(data).map(([url, details]) => ({
             url,
-            isActive: JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
+            internalId: backendData.find(federation => federation.url === url)?.id,
+            // isActive: JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
+
+            isActive: backendData.some(federation => federation.url === url),
+
             ...details
         })) : [];
     },
 
 
-    async update({id, status}) {
-        await new Promise(resolve => setTimeout(resolve, 300));
-
-        // Update localStorage
-        const activeFederations = JSON.parse(localStorage.getItem('activeFederations') || '[]');
+    async update({id, status, url}) {
         if (status) {
-            activeFederations.push(id);
-        } else {
-            const index = activeFederations.indexOf(id);
-            if (index > -1) {
-                activeFederations.splice(index, 1);
+            const response = await fetch(`${config.backendUrl}/federations/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({url}),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
             }
+            return response;
+        } else {
+            const response = await fetch(`${config.backendUrl}/federations/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
         }
-        localStorage.setItem('activeFederations', JSON.stringify(activeFederations));
+
+
     }
 }
 

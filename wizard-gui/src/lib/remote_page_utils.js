@@ -1,7 +1,6 @@
 
 /* defines what type of remote entities user can add */
 export const getAvailableOptions = (roles) => {
-    console.log(roles);
     let options = [];
     roles.forEach(role => {
         switch (role.entityType) {

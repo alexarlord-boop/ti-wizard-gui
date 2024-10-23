@@ -6,7 +6,7 @@ import {toast} from "sonner";
 export const useUpdateFederationMutation = () => {
     const queryClient = useQueryClient();
     return useMutation(
-        ({id, status}) => federationsApi.update({id, status}),
+        ({id, status, url}) => federationsApi.update({id, status, url}),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries('federations');
