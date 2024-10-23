@@ -12,11 +12,15 @@ import ColumnVisibilityToggle from "./ColumnVisibilityToggle";
 
 import {
     DropdownMenu,
+    DropdownMenuCheckboxItem,
     DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
 import {Button} from "../../../components/ui/button.jsx";
-import {DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
 import DataTableHeader from "./TableHeader.jsx";
 import DataTableBody from "./TableBody.jsx";
 
