@@ -1,10 +1,12 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card, CardContent, CardFooter, CardHeader} from "../ui/card.jsx";
 import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
 import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
 import {Button} from "../ui/button.jsx";
 import {toast} from "sonner";
 import {Divide} from "lucide-react";
+import {getRemoteEntityName} from "../../services/remoteEntityService.js";
+import EntityNameWithTooltip from "./EntityNameTooltip.jsx";
 
 const EntityDetails = ({entity, entityType, withAction}) => {
     const updateEntityMutation = useUpdateEntityMutation();
@@ -60,10 +62,14 @@ const EntityDetails = ({entity, entityType, withAction}) => {
         );
     };
 
+    const name = getRemoteEntityName(entity);
+
     return (
         <Card>
             <CardHeader>
-                <h1 className="font-bold text-xl">{entityState.resourceName}</h1>
+                <h1 className="font-bold text-xl truncate">
+                    {name}
+                </h1>
                 {withAction &&
                     <Button onClick={handleAdd}>{entityState.isActive ? "- Remove" : "+ Add"}</Button>}
             </CardHeader>
