@@ -127,7 +127,14 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                 return (
                     <div className="text-left truncate max-w-md hover:underline cursor-pointer">
                         <span onClick={() => handleViewDetails(entity)}>
-                            <EntityNameWithTooltip entityName={name} />
+                            {
+                                name.length > 70 ? (
+                                    <EntityNameWithTooltip
+                                        entityName={name}/>
+                                ) : (
+                                    name
+                                )
+                            }
                         </span>
                     </div>
                 );
