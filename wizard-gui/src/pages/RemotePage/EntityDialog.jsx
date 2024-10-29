@@ -30,7 +30,6 @@ const EntityDialog = ({
                       }) => {
     const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
 
-    console.log(activeEntities);
     const activeEntitiesCount = filteredFederations.reduce((acc, federation) => {
         acc[federation.name.toLowerCase()] = activeEntities.filter(entity => entity.entityType === selectedEntityType && entity.ra === federation.name.toLowerCase()).length;
         return acc;
