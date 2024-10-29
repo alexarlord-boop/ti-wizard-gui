@@ -64,7 +64,9 @@ const EntityDialog = ({
                                         entities.length === 0 ? (
                                             <div className="text-center p-4">No entities found</div>
                                         ) : (
-                                            entities.filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
+                                            entities
+                                                .filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
+                                                .sort((a, b) => b.isActive - a.isActive)
                                                 .map(entity => {
                                                         const entityName = getRemoteEntityName(entity);
 
