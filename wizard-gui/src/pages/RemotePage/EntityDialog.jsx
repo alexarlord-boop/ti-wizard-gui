@@ -46,10 +46,14 @@ const EntityDialog = ({
                 <div className="max-h-80 grid grid-cols-2 gap-5 mt-5">
                     <div className="grid grid-cols-1">
                         <div>
-                            <h3 className="font-bold">Federations ({filteredFederations.length}):</h3>
-                            <FederationSelect items={filteredFederations} onItemClick={handleFederationClick} activeEntitiesCount={activeEntitiesCount}/>
+                            <h3 className="font-bold">Federations <span
+                                className="text-gray-400 text-sm">({filteredFederations.length})</span></h3>
+                            <FederationSelect items={filteredFederations} onItemClick={handleFederationClick}
+                                              activeEntitiesCount={activeEntitiesCount}/>
                             <div className="mt-10">
-                                <h3 className="font-bold">{titles[selectedEntityType]} ({entities?.length || 0}):</h3>
+                                <h3 className="font-bold">{titles[selectedEntityType]} <span
+                                    className="text-gray-400 text-sm">({entities?.length || 0})</span>
+                                </h3>
                                 <input
                                     type="text"
                                     placeholder="Search entities..."
@@ -104,7 +108,8 @@ const EntityDialog = ({
                     </div>
                     <div className="">
                         <h3 className="font-bold">Entity details:</h3>
-                        <EntityDetails entity={selectedEntity} entityType={selectedEntityType} withAction></EntityDetails>
+                        <EntityDetails entity={selectedEntity} entityType={selectedEntityType}
+                                       withAction></EntityDetails>
                     </div>
                 </div>
             </DialogContent>

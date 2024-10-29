@@ -12,13 +12,13 @@ export default function FederationSelect({items, onItemClick, activeEntitiesCoun
                         <SelectItem
                             value={fed.name}
                             key={fed.url}
-                            className="w-full align-baseline justify-between items-center" // updated className
+                            className="w-full cursor-pointer justify-between items-center" // updated className
                         >
                             <div className="inline justify-between">
                                 {fed.name}
                             </div>
                             {activeEntitiesCount[fed.name.toLowerCase()] > 0 && (
-                                <span className="float-end bg-green-500 text-white rounded-full px-2 py-0 text-xs ml-2">
+                                <span className="bg-green-500 text-white rounded-full px-2 py-0 text-xs ml-2">
                                     {activeEntitiesCount[fed.name.toLowerCase()] }
                                 </span>
                             )}
