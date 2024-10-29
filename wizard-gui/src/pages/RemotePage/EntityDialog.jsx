@@ -94,7 +94,7 @@ const EntityDialog = ({
                     </div>
                 </div>
                 <div className="">
-                    <h3 className="font-bold">Selected entity:</h3>
+                    <h3 className="font-bold">Entity details:</h3>
                     <EntityDetails entity={selectedEntity} entityType={selectedEntityType} withAction></EntityDetails>
                 </div>
             </div>

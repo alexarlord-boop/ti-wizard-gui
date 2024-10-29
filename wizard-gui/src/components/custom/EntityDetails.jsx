@@ -37,7 +37,7 @@ const EntityDetails = ({entity, entityType, withAction}) => {
     }, [entity]);
 
     if (!entity) {
-        return <p>No entity data available.</p>;
+        return <p>Select entity to preview details.</p>;
     }
 
 
