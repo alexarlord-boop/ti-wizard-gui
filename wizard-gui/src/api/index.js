@@ -1,28 +1,39 @@
 import config from "../../config.js";
-import {comment} from "postcss";
+import {toast} from "sonner";
 
 
+
+let backendData = null;
 export const federationsApi = {
     async list() {
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
-        const backendResponse = await fetch(`${config.backendUrl}/federations/`);
-
-        if (!response.ok || !backendResponse.ok) {
-            throw new Error('Network response was not ok');
-        }
         const data = await response.json();
-        const backendData = await backendResponse.json();
 
-        // Ensure data is an array
+        try {
+            const backendResponse = await fetch(`${config.backendUrl}/federations/`);
+            backendData = await backendResponse.json();
+
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error('Error fetching active federations',
+
+            );
+        }
+
+
         return data ? Object.entries(data).map(([url, details]) => ({
             url,
-            internalId: backendData.find(federation => federation.url === url)?.id,
+            internalId: backendData?.find(federation => federation.url === url)?.id,
             // isActive: JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
 
-            isActive: backendData.some(federation => federation.url === url),
+            isActive: backendData ? backendData.some(federation => federation.url === url) : JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
 
             ...details
         })) : [];
+
+
+        // Ensure data is an array
+
     },
 
 
