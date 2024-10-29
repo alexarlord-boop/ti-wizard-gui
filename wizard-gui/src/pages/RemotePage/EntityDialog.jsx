@@ -27,79 +27,89 @@ const EntityDialog = ({
                           searchEntity,
                           setSearchEntity,
                           selectedEntity
-                      }) => (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className={cn("max-w-[85%]", "h-[75%]", "block")}>
-            <DialogHeader>
-                <DialogTitle>Add Remote Entities</DialogTitle>
-                <DialogDescription>
-                    Choose a federation to preview the {selectedEntityType} entities.
-                </DialogDescription>
-            </DialogHeader>
-            <div className="max-h-80 grid grid-cols-2 gap-5 mt-5">
-                <div className="grid grid-cols-1">
-                    <div>
-                        <h3 className="font-bold">Federations ({filteredFederations.length}):</h3>
-                        <FederationSelect items={filteredFederations} onItemClick={handleFederationClick}/>
-                        <div className="mt-10">
-                            <h3 className="font-bold">{titles[selectedEntityType]} ({entities?.length || 0}):</h3>
-                            <input
-                                type="text"
-                                placeholder="Search entities..."
-                                className="p-2 border outline-black mb-2 w-full"
-                                value={searchEntity}
-                                onChange={(e) => setSearchEntity(e.target.value)}
-                            />
-                            <ScrollArea className="h-80 overflow-y-scroll rounded-md border">
-                                {entityStatus === "loading" && <Spinner size="sm" className="mt-20"/>}
-                                {entityStatus === "success" && (
-                                    entities.length === 0 ? (
-                                        <div className="text-center p-4">No entities found</div>
-                                    ) : (
-                                        entities.filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
-                                            .map(entity => {
-                                                    const entityName = getRemoteEntityName(entity);
+                      }) => {
+    const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
 
-                                                    return (
-                                                        <div
-                                                            key={entity.id}
-                                                            className={cn(
-                                                                "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
-                                                                selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
-                                                            )}
-                                                            onClick={() => handleEntityClick(entity)}
-                                                        >
-                                                            {
-                                                                entityName.length > 70 ? (
-                                                                    <EntityNameWithTooltip
-                                                                        entityName={entityName}/>
-                                                                ) : (
-                                                                    entityName
-                                                                )
-                                                            }
-                                                            <span className="flex items-center align-middle ">
+    console.log(activeEntities);
+    const activeEntitiesCount = filteredFederations.reduce((acc, federation) => {
+        acc[federation.name.toLowerCase()] = activeEntities.filter(entity => entity.entityType === selectedEntityType && entity.ra === federation.name.toLowerCase()).length;
+        return acc;
+    }, {});
+    return (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogContent className={cn("max-w-[85%]", "h-[75%]", "block")}>
+                <DialogHeader>
+                    <DialogTitle>Add Remote Entities</DialogTitle>
+                    <DialogDescription>
+                        Choose a federation to preview the {selectedEntityType} entities.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="max-h-80 grid grid-cols-2 gap-5 mt-5">
+                    <div className="grid grid-cols-1">
+                        <div>
+                            <h3 className="font-bold">Federations ({filteredFederations.length}):</h3>
+                            <FederationSelect items={filteredFederations} onItemClick={handleFederationClick} activeEntitiesCount={activeEntitiesCount}/>
+                            <div className="mt-10">
+                                <h3 className="font-bold">{titles[selectedEntityType]} ({entities?.length || 0}):</h3>
+                                <input
+                                    type="text"
+                                    placeholder="Search entities..."
+                                    className="p-2 border outline-black mb-2 w-full"
+                                    value={searchEntity}
+                                    onChange={(e) => setSearchEntity(e.target.value)}
+                                />
+                                <ScrollArea className="h-80 overflow-y-scroll rounded-md border">
+                                    {entityStatus === "loading" && <Spinner size="sm" className="mt-20"/>}
+                                    {entityStatus === "success" && (
+                                        entities.length === 0 ? (
+                                            <div className="text-center p-4">No entities found</div>
+                                        ) : (
+                                            entities.filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
+                                                .map(entity => {
+                                                        const entityName = getRemoteEntityName(entity);
+
+                                                        return (
+                                                            <div
+                                                                key={entity.id}
+                                                                className={cn(
+                                                                    "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
+                                                                    selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
+                                                                )}
+                                                                onClick={() => handleEntityClick(entity)}
+                                                            >
+                                                                {
+                                                                    entityName.length > 70 ? (
+                                                                        <EntityNameWithTooltip
+                                                                            entityName={entityName}/>
+                                                                    ) : (
+                                                                        entityName
+                                                                    )
+                                                                }
+                                                                <span className="flex items-center align-middle ">
                                                         {entity.isActive ? <CheckCircle size="15"
                                                                                         className="mr-3 text-green-600"/> : ""}
                                                     </span>
-                                                        </div>
+                                                            </div>
 
-                                                    )
-                                                }
-                                            )
-                                    )
-                                )}
+                                                        )
+                                                    }
+                                                )
+                                        )
+                                    )}
 
-                            </ScrollArea>
+                                </ScrollArea>
+                            </div>
                         </div>
                     </div>
+                    <div className="">
+                        <h3 className="font-bold">Entity details:</h3>
+                        <EntityDetails entity={selectedEntity} entityType={selectedEntityType} withAction></EntityDetails>
+                    </div>
                 </div>
-                <div className="">
-                    <h3 className="font-bold">Entity details:</h3>
-                    <EntityDetails entity={selectedEntity} entityType={selectedEntityType} withAction></EntityDetails>
-                </div>
-            </div>
-        </DialogContent>
-    </Dialog>
-);
+            </DialogContent>
+        </Dialog>
+    );
+
+};
 
 export default EntityDialog;
