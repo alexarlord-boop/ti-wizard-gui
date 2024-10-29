@@ -8,7 +8,9 @@ export default function FederationSelect({items, onItemClick, activeEntitiesCoun
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    {items.map(fed => (
+                    {items
+                        .sort((a, b) => activeEntitiesCount[b.name.toLowerCase()] - activeEntitiesCount[a.name.toLowerCase()])
+                        .map(fed => (
                         <SelectItem
                             value={fed.name}
                             key={fed.url}
