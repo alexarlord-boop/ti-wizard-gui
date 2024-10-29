@@ -47,12 +47,12 @@ const EntityDialog = ({
                     <div className="grid grid-cols-1">
                         <div>
                             <h3 className="font-bold">Federations <span
-                                className="text-gray-400 text-sm">({filteredFederations.length})</span></h3>
+                                className="text-muted-foreground text-sm">({filteredFederations.length})</span></h3>
                             <FederationSelect items={filteredFederations} onItemClick={handleFederationClick}
                                               activeEntitiesCount={activeEntitiesCount}/>
                             <div className="mt-10">
                                 <h3 className="font-bold">{titles[selectedEntityType]} <span
-                                    className="text-gray-400 text-sm">({entities?.length || 0})</span>
+                                    className="text-muted-foreground text-sm">({entities?.length || 0})</span>
                                 </h3>
                                 <input
                                     type="text"
