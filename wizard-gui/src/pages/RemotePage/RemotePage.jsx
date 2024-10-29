@@ -44,6 +44,11 @@ function RemotePage() {
     }, [selectedFederation, refetch]);
 
     useEffect(() => {
+        setSelectedEntity(null);
+
+    }, [selectedFederation]);
+
+    useEffect(() => {
         setSelectedFederation(null);
         setSelectedEntity(null);
         setSearchEntity("");
