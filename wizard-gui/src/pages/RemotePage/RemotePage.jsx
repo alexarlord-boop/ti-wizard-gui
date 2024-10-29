@@ -16,7 +16,6 @@ import BreadcrumbsComponent from "./Breadcrumbs.jsx";
 import AddEntityButtons from "./AddEntityButtons.jsx";
 import EntityDialog from "./EntityDialog.jsx";
 import EntityDetails from "../../components/custom/EntityDetails.jsx";
-import DetailsDIalog from "./DetailsDIalog.jsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const titles = {

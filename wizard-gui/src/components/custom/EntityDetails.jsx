@@ -67,7 +67,7 @@ const EntityDetails = ({entity, entityType, withAction}) => {
     return (
         <Card>
             <CardHeader>
-                <h1 className="font-bold text-xl truncate">
+                <h1 className="font-bold text-xl truncate max-w-[30rem]">
                     {name}
                 </h1>
                 {withAction &&
@@ -82,15 +82,20 @@ const EntityDetails = ({entity, entityType, withAction}) => {
                 </p>
                 <p>
                     <strong>Provider URL:</strong>{" "}
-                    {<a href={entityState.resourceProvider?.url?.en} target="_blank" className="text-blue-700 underline">{entityState.resourceProvider?.url?.en}</a> || "Not available"}
+                    {<a href={entityState.resourceProvider?.url?.en} target="_blank"
+                        className="text-blue-700 underline">{entityState.resourceProvider?.url?.en}</a> || "Not available"}
                 </p>
                 <br/>
                 <h3 className="text-lg font-bold">Contacts</h3>
                 <p>
-                    <strong>Technical:</strong> {entityState.resourceContacts?.technical?.name || "N/A"} - {<a href={'mailto:' + entityState.resourceContacts?.technical?.email} target="_blank" className="text-blue-700 underline">{entityState.resourceContacts?.technical?.email}</a> || "N/A"}
+                    <strong>Technical:</strong> {entityState.resourceContacts?.technical?.name || "N/A"} - {<a
+                    href={'mailto:' + entityState.resourceContacts?.technical?.email} target="_blank"
+                    className="text-blue-700 underline">{entityState.resourceContacts?.technical?.email}</a> || "N/A"}
                 </p>
                 <p>
-                    <strong>Support:</strong> {entityState.resourceContacts?.support?.name || "N/A"} - {<a href={'mailto:' + entityState.resourceContacts?.support?.email} className="text-blue-700 underline" >{entityState.resourceContacts?.support?.email}</a> || "N/A"}
+                    <strong>Support:</strong> {entityState.resourceContacts?.support?.name || "N/A"} - {<a
+                    href={'mailto:' + entityState.resourceContacts?.support?.email}
+                    className="text-blue-700 underline">{entityState.resourceContacts?.support?.email}</a> || "N/A"}
                 </p>
             </CardContent>
             <CardFooter className="flex mx-auto justify-center">
