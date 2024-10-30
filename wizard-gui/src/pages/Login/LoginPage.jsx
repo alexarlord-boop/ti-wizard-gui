@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from "../components/ui/button.jsx";
-import apiClient from "../api/client.js";
+import { Button } from "../../components/ui/button.jsx";
+import apiClient from "../../api/client.js";
+import LoginForm from "./LoginForm.jsx";
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -21,6 +22,8 @@ function Login() {
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
                 alert('Login successful!');
+                // redirect the user to the dashboard page
+                window.location.href = '/';
             }
         } catch (error) {
             if (error.response && error.response.status === 401) {
@@ -33,26 +36,12 @@ function Login() {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <form onSubmit={handleLogin}>
-                <input
-                    type="text"
-                    value={username}
-                    placeholder="Username"
-                    name="username"
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <input
-                    type="password"
-                    value={password}
-                    placeholder="Password"
-                    name="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <Button type="submit">Login</Button>
-            </form>
+        <div className="grid grid-cols-2 items-center justify-center h-[90dvh] ">
+            <div className="text-4xl">Trust & Identity Wizard</div>
+            <div className=" bg-white p-6 rounded-lg border-2 shadow-xl w-full max-w-md">
+                <h1 className="text-2xl font-semibold mb-4 text-center">Login</h1>
+                <LoginForm/>
+            </div>
         </div>
     );
 }
