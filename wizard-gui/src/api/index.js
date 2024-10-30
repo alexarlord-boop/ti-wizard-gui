@@ -41,7 +41,7 @@ export const federationsApi = {
         };
 
         if (status) {
-            const response = await fetch(`${config.backendUrl}/federations/`, {
+            const response = await fetch(`${config.backendAPIUrl}/federations/`, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({ url })
@@ -51,7 +51,7 @@ export const federationsApi = {
             }
             return response;
         } else {
-            const response = await fetch(`${config.backendUrl}/federations/${id}`, {
+            const response = await fetch(`${config.backendAPIUrl}/federations/${id}`, {
                 method: 'DELETE',
                 headers
             });
