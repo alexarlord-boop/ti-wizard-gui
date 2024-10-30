@@ -32,6 +32,7 @@ export default function LoginForm() {
         try {
 
             console.log(data);
+            const username = data.username;
             // Send login request with credentials using apiClient
             const loginResponse = await apiClient.post('/api/token/', data);
 
@@ -39,11 +40,12 @@ export default function LoginForm() {
                 // Store the JWT token in local storage
                 const data = loginResponse.data;
                 console.log(data);
+                localStorage.setItem('username', username);
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
                 // alert('Login successful!');
                 toast.success('Login successful!');
-                setTimeout(() => {window.location.href = '/';}, 2000);
+                setTimeout(() => {window.location.href = '/';}, 1000);
                 // redirect the user to the dashboard page
 
             }
