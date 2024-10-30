@@ -6,45 +6,45 @@ import {toast} from "sonner";
 let backendData = null;
 export const federationsApi = {
     async list() {
+        const token = localStorage.getItem('access_token');
+
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
         const data = await response.json();
 
         try {
-            const backendResponse = await fetch(`${config.backendUrl}/federations/`);
+            const backendResponse = await fetch(`${config.backendAPIUrl}/federations/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}` // Attach JWT token here
+                }
+            });
             backendData = await backendResponse.json();
-
         } catch (error) {
             console.error('Error:', error);
-            toast.error('Error fetching active federations',
-
-            );
+            toast.error('Error fetching active federations');
         }
-
 
         return data ? Object.entries(data).map(([url, details]) => ({
             url,
             internalId: backendData?.find(federation => federation.url === url)?.id,
-            // isActive: JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
-
-            isActive: backendData ? backendData.some(federation => federation.url === url) : JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
-
+            isActive: backendData
+                ? backendData.some(federation => federation.url === url)
+                : JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
             ...details
         })) : [];
-
-
-        // Ensure data is an array
-
     },
 
+    async update({ id, status, url }) {
+        const token = localStorage.getItem('access_token');
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` // Attach JWT token here
+        };
 
-    async update({id, status, url}) {
         if (status) {
             const response = await fetch(`${config.backendUrl}/federations/`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({url}),
+                headers,
+                body: JSON.stringify({ url })
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -53,19 +53,16 @@ export const federationsApi = {
         } else {
             const response = await fetch(`${config.backendUrl}/federations/${id}`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response;
         }
-
-
     }
-}
+};
+
 
 export const rolesApi = {
 
