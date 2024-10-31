@@ -9,7 +9,8 @@ export default function FederationSelect({items, onItemClick, activeEntitiesCoun
             <SelectContent>
                 <SelectGroup>
                     {items
-                        .sort((a, b) => activeEntitiesCount[b.name.toLowerCase()] - activeEntitiesCount[a.name.toLowerCase()])
+                        // .sort((a, b) => activeEntitiesCount[b.name.toLowerCase()] - activeEntitiesCount[a.name.toLowerCase()])
+                        .sort((a, b) => a.name.localeCompare(b.name)) // sort alphabetically
                         .map(fed => (
                         <SelectItem
                             value={fed.name}
