@@ -108,6 +108,7 @@ function RemotePage() {
                 entities={entities}
                 entityStatus={entityStatus}
                 handleFederationClick={setSelectedFederation}
+                selectedFederation={selectedFederation}
                 handleEntityClick={setSelectedEntity}
                 searchEntity={searchEntity}
                 setSearchEntity={setSearchEntity}

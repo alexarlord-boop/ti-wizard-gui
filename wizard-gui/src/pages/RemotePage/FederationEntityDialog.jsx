@@ -16,24 +16,28 @@ const titles = {
 
 
 const FederationEntityDialog = ({
-                          isDialogOpen,
-                          setIsDialogOpen,
-                          selectedEntityType,
-                          filteredFederations,
-                          entities,
-                          entityStatus,
-                          handleFederationClick,
-                          handleEntityClick,
-                          searchEntity,
-                          setSearchEntity,
-                          selectedEntity
-                      }) => {
+                                    isDialogOpen,
+                                    setIsDialogOpen,
+                                    selectedEntityType,
+                                    filteredFederations,
+                                    entities,
+                                    entityStatus,
+                                    handleFederationClick,
+                                    selectedFederation,
+                                    handleEntityClick,
+                                    searchEntity,
+                                    setSearchEntity,
+                                    selectedEntity
+                                }) => {
     const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-
+    console.log(activeEntities);
     const activeEntitiesCount = filteredFederations.reduce((acc, federation) => {
         acc[federation.name.toLowerCase()] = activeEntities.filter(entity => entity.entityType === selectedEntityType && entity.ra === federation.name.toLowerCase()).length;
         return acc;
     }, {});
+    const isEntityWithRAInActiveList = (entity) => {
+        return activeEntities.some(activeEntity => (activeEntity.id === entity.id && activeEntity.ra === selectedFederation.toLowerCase()));
+    }
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className={cn("max-w-[85%]", "h-[75%]", "block")}>
@@ -72,6 +76,7 @@ const FederationEntityDialog = ({
                                                 .sort((a, b) => b.isActive - a.isActive)
                                                 .map(entity => {
                                                         const entityName = getRemoteEntityName(entity);
+                                                        console.log(selectedFederation);
 
                                                         return (
                                                             <div
@@ -80,7 +85,10 @@ const FederationEntityDialog = ({
                                                                     "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
                                                                     selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
                                                                 )}
-                                                                onClick={() => handleEntityClick(entity)}
+                                                                onClick={() => {
+                                                                    console.log(entity);
+                                                                    handleEntityClick(entity)
+                                                                }}
                                                             >
                                                                 {
                                                                     entityName.length > 70 ? (
@@ -91,8 +99,17 @@ const FederationEntityDialog = ({
                                                                     )
                                                                 }
                                                                 <span className="flex items-center align-middle ">
-                                                        {entity.isActive ? <CheckCircle size="15"
-                                                                                        className="mr-3 text-green-600"/> : ""}
+                                                        {(isEntityWithRAInActiveList(entity)) ?
+                                                            <CheckCircle size="15"
+                                                                         className="mr-3 text-green-600"/>
+                                                            :
+                                                            (entity.isActive && !isEntityWithRAInActiveList(entity)) ?
+                                                                <CheckCircle size="15"
+                                                                             className="mr-3 text-black"/>
+                                                                :
+                                                                ""
+
+                                                        }
                                                     </span>
                                                             </div>
 
@@ -103,6 +120,13 @@ const FederationEntityDialog = ({
                                     )}
 
                                 </ScrollArea>
+                            </div>
+                            <div className="mt-2 float-end">
+                                <span className="flex text-center items-center text-sm"><CheckCircle size="15"
+                                                                                                     className="mr-3 text-green-600"/>Published in {selectedFederation}</span>
+                                <span className="flex text-center items-center text-sm"><CheckCircle size="15"
+                                                                                                     className="mr-3 text-black"/> Published in another federation</span>
+
                             </div>
                         </div>
                     </div>
