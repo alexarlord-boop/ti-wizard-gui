@@ -14,7 +14,7 @@ import {columns} from './RemoteEntitiesDataTable/columns.jsx';
 import {Spinner} from "../../components/ui/Loader.jsx";
 import BreadcrumbsComponent from "./Breadcrumbs.jsx";
 import AddEntityButtons from "./AddEntityButtons.jsx";
-import EntityDialog from "./EntityDialog.jsx";
+import FederationEntityDialog from "./FederationEntityDialog.jsx";
 import EntityDetails from "../../components/custom/EntityDetails.jsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
@@ -100,7 +100,7 @@ function RemotePage() {
         <>
             <BreadcrumbsComponent/>
             <AddEntityButtons options={options} handleAddEntityButtonClick={handleAddEntityButtonClick}/>
-            <EntityDialog
+            <FederationEntityDialog
                 isDialogOpen={isDialogOpen}
                 setIsDialogOpen={setIsDialogOpen}
                 selectedEntityType={selectedEntityType}

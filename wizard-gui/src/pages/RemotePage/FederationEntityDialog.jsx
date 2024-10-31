@@ -1,4 +1,4 @@
-// EntityDialog.jsx
+// FederationEntityDialog.jsx
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "@/components/ui/dialog";
 import {ScrollArea} from "@radix-ui/react-scroll-area";
 import {CheckCircle} from "lucide-react";
@@ -15,7 +15,7 @@ const titles = {
 }
 
 
-const EntityDialog = ({
+const FederationEntityDialog = ({
                           isDialogOpen,
                           setIsDialogOpen,
                           selectedEntityType,
@@ -118,4 +118,4 @@ const EntityDialog = ({
 
 };
 
-export default EntityDialog;
+export default FederationEntityDialog;
