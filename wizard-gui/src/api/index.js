@@ -117,6 +117,7 @@ export const remoteEntitiesApi = {
             const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
             return data ? Object.entries(data).map(([id, details]) => {
                 const isActive = activeEntities.some(activeEntity => activeEntity.id === details.id);
+                details.ra = federation
                 return {
                     id,
                     isActive,

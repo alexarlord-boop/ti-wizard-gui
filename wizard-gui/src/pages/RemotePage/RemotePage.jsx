@@ -37,11 +37,12 @@ function RemotePage() {
     const {fedStatus, data: fedData} = useFederationsQuery();
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 
+    // TODO:- probably is not needed
     useEffect(() => {
         if (selectedFederation) {
             refetch();
         }
-    }, [selectedFederation, refetch]);
+    }, [selectedFederation]);
 
     useEffect(() => {
         setSelectedEntity(null);

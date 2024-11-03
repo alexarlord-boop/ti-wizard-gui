@@ -4,11 +4,11 @@ import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
 import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
 import {Button} from "../ui/button.jsx";
 import {toast} from "sonner";
-import {Divide} from "lucide-react";
+import {CheckCircle, Divide} from "lucide-react";
 import {getRemoteEntityName} from "../../services/remoteEntityService.js";
 import EntityNameWithTooltip from "./EntityNameTooltip.jsx";
 
-const EntityDetails = ({entity, entityType, withAction}) => {
+const EntityDetails = ({entity, entityType, activeEntities, withAction}) => {
     const updateEntityMutation = useUpdateEntityMutation();
 
     const [entityState, setEntityState] = useState({
@@ -20,6 +20,8 @@ const EntityDetails = ({entity, entityType, withAction}) => {
         resourceContacts: entity?.resourceContacts || {},
         logo: entity?.logo || ""
     });
+
+    const entityPublishedIn = activeEntities?.find((activeEntity) => activeEntity?.id === entity?.id) || null;
 
     useEffect(() => {
         if (entity) {
@@ -64,6 +66,8 @@ const EntityDetails = ({entity, entityType, withAction}) => {
 
     const name = getRemoteEntityName(entity);
 
+    console.log(entity);
+
     return (
         <Card>
             <CardHeader>
@@ -75,11 +79,16 @@ const EntityDetails = ({entity, entityType, withAction}) => {
             </CardHeader>
 
             <CardContent>
+                {entityPublishedIn?.ra && <p>
+                    <strong>Published in:</strong> {entityPublishedIn.ra}
+                </p>}
+
                 <p><strong>Entity ID:</strong> {entityState.entityID}</p>
                 <p>
                     <strong>Provider Name:</strong>{" "}
                     {entityState.resourceProvider?.name?.en || "Not available"}
                 </p>
+
                 <p>
                     <strong>Provider URL:</strong>{" "}
                     {<a href={entityState.resourceProvider?.url?.en} target="_blank"

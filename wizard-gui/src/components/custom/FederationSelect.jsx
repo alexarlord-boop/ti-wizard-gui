@@ -20,9 +20,9 @@ export default function FederationSelect({items, onItemClick, activeEntitiesCoun
                             <div className="inline justify-between">
                                 {fed.name}
                             </div>
-                            {activeEntitiesCount[fed.name.toLowerCase()] > 0 && (
+                            {activeEntitiesCount[fed.name] > 0 && (
                                 <span className="bg-green-500 text-white rounded-full px-2 py-0 text-xs ml-2">
-                                    {activeEntitiesCount[fed.name.toLowerCase()] }
+                                    {activeEntitiesCount[fed.name] }
                                 </span>
                             )}
                         </SelectItem>

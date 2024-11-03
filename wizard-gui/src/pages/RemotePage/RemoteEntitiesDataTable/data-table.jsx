@@ -155,7 +155,6 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                 </div>
             ),
             cell: ({ row }) => {
-
                 const { RA } = row.original;
                 return (
                     <div className="text-center truncate w-[12em]">
