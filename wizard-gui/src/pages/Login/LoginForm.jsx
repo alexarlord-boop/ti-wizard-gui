@@ -59,7 +59,7 @@ export default function LoginForm() {
                 });
 
             } else {
-                setErrorMessage('An error occurred.');
+                form.setError('An error occurred.');
                 console.log(error);
             }
         }
