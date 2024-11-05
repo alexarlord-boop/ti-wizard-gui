@@ -10,6 +10,11 @@ export const federationsApi = {
 
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
         const data = await response.json();
+        console.log(data);
+        // filter out edugain ["https://www.edugain.org"]
+        const edugain = "https://www.edugain.org";
+        delete data[edugain];
+
 
         try {
             const backendResponse = await fetch(`${config.backendAPIUrl}/federations/`, {
@@ -51,7 +56,7 @@ export const federationsApi = {
             }
             return response;
         } else {
-            const response = await fetch(`${config.backendAPIUrl}/federations/${id}`, {
+            const response = await fetch(`${config.backendAPIUrl}/federations/${id}/`, {
                 method: 'DELETE',
                 headers
             });
