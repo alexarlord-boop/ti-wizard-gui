@@ -37,6 +37,8 @@ function RemotePage() {
     const {fedStatus, data: fedData} = useFederationsQuery();
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 
+
+    console.log(fedData);
     // TODO:- probably is not needed
     useEffect(() => {
         if (selectedFederation) {
@@ -58,9 +60,9 @@ function RemotePage() {
         let dt = activeEntities?.map(entity => ({
             id: entity.id,
             name: getRemoteEntityName(entity),
-            role: titles[entity.entityType],
+            role: titles[entity.entity_type],
             RA: entity.ra,
-            isActive: entity.isActive,
+            is_active: entity.is_active,
         }));
         setData(dt);
     }, [isDialogOpen]);
@@ -74,8 +76,8 @@ function RemotePage() {
 
     const options = getAvailableOptions(roles);
 
-    const handleAddEntityButtonClick = (entityType) => {
-        setSelectedEntityType(entityType);
+    const handleAddEntityButtonClick = (entity_type) => {
+        setSelectedEntityType(entity_type);
         setIsDialogOpen(true);
     };
 
@@ -92,7 +94,7 @@ function RemotePage() {
         const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
         const activeEntity = activeEntities.find(e => e.id === entity.id);
         setSelectedEntity(activeEntity);
-        setSelectedEntityType(activeEntity.entityType);
+        setSelectedEntityType(activeEntity.entity_type);
         setIsEntityDetailsOpen(true);
     };
 
@@ -105,7 +107,7 @@ function RemotePage() {
                 isDialogOpen={isDialogOpen}
                 setIsDialogOpen={setIsDialogOpen}
                 selectedEntityType={selectedEntityType}
-                filteredFederations={fedData?.filter(federation => federation.isActive && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || []}
+                filteredFederations={fedData?.filter(federation => federation.is_active && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || []}
                 entities={entities}
                 entityStatus={entityStatus}
                 handleFederationClick={setSelectedFederation}

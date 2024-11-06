@@ -35,9 +35,10 @@ const FederationSelectionPage = () => {
 
     const handleSwitchChange = (federation) => {
         setLoadingFederations(prev => ({...prev, [federation.url]: true}));
+        console.log(federation);
         updateFederationMutation.mutate({
-            id: federation.internalId,
-            status: !federation.isActive,
+            id: federation.id,
+            status: !federation.is_active,
             url: federation.url,
         }, {
             onSettled: () => {
@@ -84,7 +85,7 @@ const FederationSelectionPage = () => {
                                             <div className="flex w-[50px] me-5">
                                                 <Switch
                                                     key={federation.url}
-                                                    checked={federation.isActive}
+                                                    checked={federation.is_active}
                                                     onCheckedChange={() => handleSwitchChange(federation)}
                                                     className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
                                                 />

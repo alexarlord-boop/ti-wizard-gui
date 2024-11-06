@@ -8,11 +8,11 @@ import {CheckCircle, Divide} from "lucide-react";
 import {getRemoteEntityName} from "../../services/remoteEntityService.js";
 import EntityNameWithTooltip from "./EntityNameTooltip.jsx";
 
-const EntityDetails = ({entity, entityType, activeEntities, withAction}) => {
+const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
     const updateEntityMutation = useUpdateEntityMutation();
 
     const [entityState, setEntityState] = useState({
-        isActive: entity?.isActive || false,
+        is_active: entity?.is_active || false,
         resourceName: entity?.resourceName || "",
         resourceProvider: entity?.resourceProvider || {},
         entityID: entity?.entityID || "",
@@ -26,8 +26,8 @@ const EntityDetails = ({entity, entityType, activeEntities, withAction}) => {
     useEffect(() => {
         if (entity) {
             setEntityState({
-                entityType: entityType,
-                isActive: entity.isActive,
+                entity_type: entity_type,
+                is_active: entity.is_active,
                 resourceName: entity.resourceName,
                 resourceProvider: entity.resourceProvider,
                 entityID: entity.entityID,
@@ -47,13 +47,13 @@ const EntityDetails = ({entity, entityType, activeEntities, withAction}) => {
         updateEntityMutation.mutate(
             {
                 entity: entity,
-                status: !entityState.isActive,
+                status: !entityState.is_active,
             },
             {
                 onSuccess: () => {
                     setEntityState((prevState) => ({
                         ...prevState,
-                        isActive: !prevState.isActive
+                        is_active: !prevState.is_active
                     }));
                     toast("Entity updated successfully");
                 },
@@ -75,7 +75,7 @@ const EntityDetails = ({entity, entityType, activeEntities, withAction}) => {
                     {name}
                 </h1>
                 {withAction &&
-                    <Button onClick={handleAdd}>{entityState.isActive ? "- Remove" : "+ Add"}</Button>}
+                    <Button onClick={handleAdd}>{entityState.is_active ? "- Remove" : "+ Add"}</Button>}
             </CardHeader>
 
             <CardContent>

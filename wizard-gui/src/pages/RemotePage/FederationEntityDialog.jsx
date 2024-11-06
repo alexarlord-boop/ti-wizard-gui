@@ -30,8 +30,9 @@ const FederationEntityDialog = ({
                                     selectedEntity
                                 }) => {
     const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+    console.log(activeEntities);
     const activeEntitiesCount = filteredFederations.reduce((acc, federation) => {
-        acc[federation.name] = activeEntities.filter(entity => entity.entityType === selectedEntityType && entity.ra === federation.name).length;
+        acc[federation.name] = activeEntities.filter(entity => entity.entity_type === selectedEntityType && entity.ra === federation.name).length;
         return acc;
     }, {});
     const isEntityWithRAInActiveList = (entity) => {
@@ -72,7 +73,7 @@ const FederationEntityDialog = ({
                                         ) : (
                                             entities
                                                 .filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
-                                                .sort((a, b) => b.isActive - a.isActive)
+                                                .sort((a, b) => b.is_active - a.is_active)
                                                 .map(entity => {
                                                         const entityName = getRemoteEntityName(entity);
                                                         console.log(selectedFederation);
@@ -102,7 +103,7 @@ const FederationEntityDialog = ({
                                                             <CheckCircle size="15"
                                                                          className="mr-3 text-green-600"/>
                                                             :
-                                                            (entity.isActive && !isEntityWithRAInActiveList(entity)) ?
+                                                            (entity.is_active && !isEntityWithRAInActiveList(entity)) ?
                                                                 <CheckCircle size="15"
                                                                              className="mr-3 text-black"/>
                                                                 :
@@ -131,7 +132,7 @@ const FederationEntityDialog = ({
                     </div>
                     <div className="">
                         <h3 className="font-bold">Entity details:</h3>
-                        <EntityDetails entity={selectedEntity} entityType={selectedEntityType} activeEntities={activeEntities}
+                        <EntityDetails entity={selectedEntity} entity_type={selectedEntityType} activeEntities={activeEntities}
                                        withAction></EntityDetails>
                     </div>
                 </div>

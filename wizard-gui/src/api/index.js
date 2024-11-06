@@ -1,16 +1,13 @@
 import config from "../../config.js";
 import {toast} from "sonner";
 import apiClient from "./client.js";
-
+import federations from "../assets/federations.js"
 
 let backendData = null;
 export const federationsApi = {
     async list() {
-        const token = localStorage.getItem('access_token');
 
-        const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
-        const data = await response.json();
-        console.log(data);
+        let data = federations;
         // filter out edugain ["https://www.edugain.org"]
         const edugain = "https://www.edugain.org";
         delete data[edugain];
@@ -26,40 +23,22 @@ export const federationsApi = {
 
         return data ? Object.entries(data).map(([url, details]) => ({
             url,
-            internalId: backendData?.find(federation => federation.url === url)?.id,
-            is_active: backendData
-                ? backendData.some(federation => federation.url === url)
-                : JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
+            id: backendData?.find(federation => federation.url === url)?.id,
+            is_active: backendData.some(federation => federation.url === url),
             ...details
         })) : [];
     },
 
     async update({id, status, url}) {
-        const token = localStorage.getItem('access_token');
-        const headers = {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` // Attach JWT token here
-        };
+
 
         if (status) {
-            const response = await fetch(`${config.backendAPIUrl}/federations/`, {
-                method: 'POST',
-                headers,
-                body: JSON.stringify({url})
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response;
+            const response = await apiClient.post('federations/', {url});
+            console.log(response);
+
         } else {
-            const response = await fetch(`${config.backendAPIUrl}/federations/${id}/`, {
-                method: 'DELETE',
-                headers
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response;
+            const response = await apiClient.delete(`federations/${id}/`);
+
         }
     }
 };
