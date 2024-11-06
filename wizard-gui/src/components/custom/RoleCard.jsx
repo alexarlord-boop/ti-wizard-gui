@@ -21,6 +21,7 @@ import {Switch} from "../ui/switch.jsx";
 import RoleDropdown from "../../pages/RolesPage/RoleDropdown.jsx";
 import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStatusRoleMutation.jsx";
 import ConfirmationModal from "./ConfirmationModal.jsx";
+import {humanReadableTypes} from "../../lib/roles_utils.js";
 
 export default function RoleCard({role, onAdd, onDelete}) {
     const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
@@ -92,7 +93,7 @@ const handleDelete = () => {
                 onConfirm={confirmDelete}
                 allowConfirmation={!role.is_active}
                 onClose={() => {setIsModalOpen(false)}}
-                title={`Delete ${role.entity_type}`}
+                title={`Delete ${humanReadableTypes[role.entity_type]}`}
                 description={role.is_active ? "This role is active. Deactivate role first" : "All related entities will be removed"}/>
 
         </Card>
