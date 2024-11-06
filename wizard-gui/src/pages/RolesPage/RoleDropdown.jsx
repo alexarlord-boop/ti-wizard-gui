@@ -1,7 +1,7 @@
 import {Button} from "../../components/ui/button.jsx";
 import {MoreHorizontal, Pen, Trash2Icon} from "lucide-react";
 import {DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator} from "../../components/ui/dropdown-menu.jsx";
-import React from "react";
+import React, {useState} from "react";
 
 import {
     DropdownMenu,
@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-export default function RoleDropdown({onDelete, role}) {
+export default function RoleDropdown({handleDelete, role}) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -23,7 +23,7 @@ export default function RoleDropdown({onDelete, role}) {
                 <DropdownMenuItem onClick={() => console.log("editing")}>
                     <Pen size="16"/> Edit Role
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete} className="text-red-500 cursor-pointer">
+                <DropdownMenuItem onClick={handleDelete} className="text-red-500 cursor-pointer">
                     <Trash2Icon size="16"/> Delete Role
                 </DropdownMenuItem>
                 <DropdownMenuSeparator/>

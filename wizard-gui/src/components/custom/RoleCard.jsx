@@ -20,12 +20,21 @@ import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
 import {Switch} from "../ui/switch.jsx";
 import RoleDropdown from "../../pages/RolesPage/RoleDropdown.jsx";
 import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStatusRoleMutation.jsx";
+import ConfirmationModal from "./ConfirmationModal.jsx";
 
 export default function RoleCard({role, onAdd, onDelete}) {
-    const {t} = useTranslation();
-    const [loading, setLoading] = useState(false); // New loading state
-
     const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+const handleDelete = () => {
+    console.log("Delete role");
+    setIsModalOpen(true);
+}
+
+    const confirmDelete = () => {
+        onDelete();
+        setIsModalOpen(false);
+    };
 
     return (
 
@@ -69,7 +78,7 @@ export default function RoleCard({role, onAdd, onDelete}) {
 
                     }
                 </div>
-                <RoleDropdown role={role} onDelete={onDelete} />
+                <RoleDropdown role={role} handleDelete={handleDelete} />
 
             </CardContent>
 
@@ -77,66 +86,17 @@ export default function RoleCard({role, onAdd, onDelete}) {
 
 
             </CardFooter>
+
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                onConfirm={confirmDelete}
+                allowConfirmation={!role.is_active}
+                onClose={() => {setIsModalOpen(false)}}
+                title={`Delete ${role.entity_type}`}
+                description={role.is_active ? "This role is active. Deactivate role first" : "All related entities will be removed"}/>
+
         </Card>
 
-        // <Card className={cn(role.is_active && "border border-black")} id={role.entity_type}>
-        //     {role.is_active
-        //         ? (
-        //             <>
-        //                 <CardHeader className="text-left">
-        //                     <CardTitle>{role.display_name}</CardTitle>
-        //                     <CardDescription>
-        //                         Role description text
-        //                         <Badge variant="outline" className="border-black float-end">
-        //                             {getEntityTypeString(role.entity_type)}
-        //                         </Badge>
-        //                     </CardDescription>
-        //                 </CardHeader>
-        //
-        //                 <CardFooter className="flex justify-between items-baseline align-bottom">
-        //                     {role.image_url &&
-        //                         <img src={role.image_url} alt="Role Logo" className=" max-w-[70px] max-h-[70px]"/>}
-        //                     <DropdownMenu>
-        //                         <DropdownMenuTrigger asChild>
-        //                             <Button variant="ghost" className="h-8 w-8 p-0">
-        //                                 <span className="sr-only">Open menu</span>
-        //                                 <MoreHorizontal className="h-4 w-4"/>
-        //                             </Button>
-        //                         </DropdownMenuTrigger>
-        //                         <DropdownMenuContent align="end">
-        //                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        //                             <DropdownMenuItem onClick={() => console.log("editing")}>
-        //                                 <Pen size="16"/> Edit Role
-        //                             </DropdownMenuItem>
-        //                             <DropdownMenuItem onClick={onDelete} className="text-red-500 cursor-pointer">
-        //                                 <Trash2Icon size="16"/> Delete Role
-        //                             </DropdownMenuItem>
-        //                             <DropdownMenuSeparator/>
-        //                             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(role.id)}>
-        //                                 Copy role ID
-        //                             </DropdownMenuItem>
-        //                             <DropdownMenuItem>Export configuration</DropdownMenuItem>
-        //                         </DropdownMenuContent>
-        //                     </DropdownMenu>
-        //                 </CardFooter>
-        //             </>
-        //         )
-        //         : (
-        //             <>
-        //                 <CardHeader className="text-left">
-        //                     <CardTitle>Local Role: {getEntityTypeString(role.entity_type)}</CardTitle>
-        //                     <CardDescription>Add your new identity role in one-click.</CardDescription>
-        //                 </CardHeader>
-        //
-        //                 <CardFooter className="flex justify-between">
-        //                     <p></p>
-        //                     <Button onClick={() => onAdd(role.entity_type)}>{t('roles.cardBtn.create')}</Button>
-        //                 </CardFooter>
-        //             </>
-        //         )
-        //
-        //     }
-        //
-        // </Card>
+
     )
 }
