@@ -19,11 +19,13 @@ import {Input} from "postcss";
 import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
 import {Switch} from "../ui/switch.jsx";
 import RoleDropdown from "../../pages/RolesPage/RoleDropdown.jsx";
+import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStatusRoleMutation.jsx";
 
 export default function RoleCard({role, onAdd, onDelete}) {
     const {t} = useTranslation();
     const [loading, setLoading] = useState(false); // New loading state
 
+    const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
 
     return (
 
@@ -35,8 +37,16 @@ export default function RoleCard({role, onAdd, onDelete}) {
                     <Badge variant="outline" className="float-end p-2">
                         {getEntityTypeString(role.entity_type)}
                         <Switch
-                            // checked={status}
-                            // onClick={handleToggle}
+                            checked={role.is_active}
+                            onClick={
+                                () => {
+                                    changeActiveStatusRoleMutation.mutate({
+                                        role_id: role.id,
+                                        entity_name: role.display_name,
+                                        is_active: !role.is_active
+                                    });
+                                }
+                            }
                             className="ms-2 data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
                         />
                     </Badge>

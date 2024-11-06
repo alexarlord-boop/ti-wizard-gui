@@ -106,6 +106,13 @@ export const rolesApi = {
         localStorage.setItem('roles', JSON.stringify(roles));
     },
 
+    async activate({role_id, entity_name, is_active}) {
+        const response = await apiClient.patch(`roles/${role_id}/activate/`, {is_active});
+        const data = response.data;
+        console.log(data);
+        toast.success(`${entity_name} ${is_active ? 'activated' : 'deactivated'}`);
+    },
+
     async delete({role_id}) {
         const response = await apiClient.delete(`roles/${role_id}/`);
         const data = response.data;

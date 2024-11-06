@@ -24,14 +24,14 @@ function RoleCards({ roles, handleAddRole, handleDeleteRole }) {
                     if (role) {
                     return (
                         <RoleCard
-                            key={index}
+                            key={type}
                             role={role}
                             onAdd={() => handleAddRole(type)}
                             onDelete={() => handleDeleteRole(role.id)}
                         />
                     )} else {
                        return (
-                           <Button size="lg" variant="outline" onClick={() => {handleAddRole(type)}} className="h-[200px] text-lg border-4 border-dashed">+ {humanReadableTypes[type]}</Button>
+                           <Button key={type} size="lg" variant="outline" onClick={() => {handleAddRole(type)}} className="h-[200px] text-lg border-4 border-dashed">+ {humanReadableTypes[type]}</Button>
                        )
                     }
                 })

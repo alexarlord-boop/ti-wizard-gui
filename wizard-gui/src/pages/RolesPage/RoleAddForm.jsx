@@ -70,7 +70,7 @@ export default function RoleAddForm(
     const handleAddRole = (formData) => {
         const data = {
             entity_type: entity_type,
-            is_active: true,
+            is_active: false,
             display_name: formData.display_name,
             logo_image: formData.logo_image
         }
