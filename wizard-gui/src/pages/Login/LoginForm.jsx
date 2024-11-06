@@ -34,7 +34,7 @@ export default function LoginForm() {
             console.log(data);
             const username = data.username;
             // Send login request with credentials using apiClient
-            const loginResponse = await apiClient.post('/api/token/', data);
+            const loginResponse = await apiClient.post('/token/', data);
 
             if (loginResponse.status === 200) {
                 // Store the JWT token in local storage

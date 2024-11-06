@@ -13,7 +13,7 @@ function Login() {
 
         try {
             // Send login request with credentials using apiClient
-            const loginResponse = await apiClient.post('/api/token/', { username, password });
+            const loginResponse = await apiClient.post('token/', { username, password });
 
             if (loginResponse.status === 200) {
                 // Store the JWT token in local storage
