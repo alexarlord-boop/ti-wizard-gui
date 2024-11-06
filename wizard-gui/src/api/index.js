@@ -1,6 +1,6 @@
 import config from "../../config.js";
 import {toast} from "sonner";
-
+import apiClient from "./client.js";
 
 
 let backendData = null;
@@ -17,12 +17,8 @@ export const federationsApi = {
 
 
         try {
-            const backendResponse = await fetch(`${config.backendAPIUrl}/federations/`, {
-                headers: {
-                    'Authorization': `Bearer ${token}` // Attach JWT token here
-                }
-            });
-            backendData = await backendResponse.json();
+            const backendResponse = await apiClient.get('federations/')
+            backendData = await backendResponse.data;
         } catch (error) {
             console.error('Error:', error);
             toast.error('Error fetching active federations');
@@ -31,14 +27,14 @@ export const federationsApi = {
         return data ? Object.entries(data).map(([url, details]) => ({
             url,
             internalId: backendData?.find(federation => federation.url === url)?.id,
-            isActive: backendData
+            is_active: backendData
                 ? backendData.some(federation => federation.url === url)
                 : JSON.parse(localStorage.getItem('activeFederations') || '[]').includes(url),
             ...details
         })) : [];
     },
 
-    async update({ id, status, url }) {
+    async update({id, status, url}) {
         const token = localStorage.getItem('access_token');
         const headers = {
             'Content-Type': 'application/json',
@@ -49,7 +45,7 @@ export const federationsApi = {
             const response = await fetch(`${config.backendAPIUrl}/federations/`, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ url })
+                body: JSON.stringify({url})
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -72,48 +68,58 @@ export const federationsApi = {
 export const rolesApi = {
 
     defaultRoles: [
-        {entityType: 'SAML_IDP', isActive: false, displayName: '', imageUrl: ''},
-        {entityType: 'SAML_SP', isActive: false, displayName: '', imageUrl: ''},
-        {entityType: 'OIDC_OP', isActive: false, displayName: '', imageUrl: ''},
-        {entityType: 'OIDC_RP', isActive: false, displayName: '', imageUrl: ''}
+        {entity_type: 'SAML_IDP', is_active: false, display_name: '', image_url: ''},
+        {entity_type: 'SAML_SP', is_active: false, display_name: '', image_url: ''},
+        {entity_type: 'OIDC_OP', is_active: false, display_name: '', image_url: ''},
+        {entity_type: 'OIDC_RP', is_active: false, display_name: '', image_url: ''}
     ],
 
-    initializeRoles() {
-        if (!localStorage.getItem('roles')) {
-            localStorage.setItem('roles', JSON.stringify(this.defaultRoles));
+
+    async list() {
+        const token = localStorage.getItem('access_token');
+        const rolesResponse = await apiClient.get('roles/');
+
+        if (rolesResponse.status === 200) {
+            return rolesResponse.data;
         }
+        console.log(rolesResponse);
+        toast.error('Error fetching roles');
     },
 
-    list: () => {
-        rolesApi.initializeRoles();
-        const roles = JSON.parse(localStorage.getItem('roles') || '[]');
-        return roles;
+    async add({entity_type, is_active, display_name, logo_image}) {
+        const response = await apiClient.post('roles/', {entity_type, is_active, display_name, logo_image});
+        const data = response.data;
+        console.log(data);
+        toast.success('Role added');
     },
 
-    update({entityType, isActive, displayName, imageUrl}) {
+    update({entity_type, is_active, display_name, image_url}) {
         const roles = JSON.parse(localStorage.getItem('roles') || '[]');
-        const roleIndex = roles.findIndex(role => role.entityType === entityType);
+        const roleIndex = roles.findIndex(role => role.entity_type === entity_type);
 
         if (roleIndex > -1) {
-            roles[roleIndex] = {entityType, isActive, displayName, imageUrl};
+            roles[roleIndex] = {entity_type, is_active, display_name, image_url};
         } else {
-            roles.push({entityType, isActive, displayName, imageUrl});
+            roles.push({entity_type, is_active, display_name, image_url});
         }
 
         localStorage.setItem('roles', JSON.stringify(roles));
     },
 
-    delete(entityType) {
-        let roles = JSON.parse(localStorage.getItem('roles') || '[]');
-        roles = roles.filter(role => role.entityType !== entityType);
-        localStorage.setItem('roles', JSON.stringify(roles));
+    async delete({role_id}) {
+        const response = await apiClient.delete(`roles/${role_id}/`);
+        const data = response.data;
+        console.log(data);
+        toast.success('Role deleted');
     }
+
+
 }
 
 export const remoteEntitiesApi = {
-    async list(federation, entityType) {
-        if (federation && entityType) {
-            const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entityType.toLowerCase()}.json`);
+    async list(federation, entity_type) {
+        if (federation && entity_type) {
+            const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entity_type.toLowerCase()}.json`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -121,12 +127,12 @@ export const remoteEntitiesApi = {
             const data = await response.json();
             const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
             return data ? Object.entries(data).map(([id, details]) => {
-                const isActive = activeEntities.some(activeEntity => activeEntity.id === details.id);
+                const is_active = activeEntities.some(activeEntity => activeEntity.id === details.id);
                 details.ra = federation
                 return {
                     id,
-                    isActive,
-                    entityType,
+                    is_active,
+                    entity_type,
                     ...details
                 };
             }) : [];

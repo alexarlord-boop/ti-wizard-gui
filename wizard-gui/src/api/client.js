@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance
 const apiClient = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
+    baseURL: 'http://127.0.0.1:8000/api/',
 });
 
 // Add a request interceptor to attach the JWT token
@@ -29,7 +29,7 @@ apiClient.interceptors.response.use(
             const refreshToken = localStorage.getItem('refresh_token');
             if (refreshToken) {
                 try {
-                    const response = await axios.post('/api/token/refresh/', {
+                    const response = await axios.post('http://127.0.0.1:8000/api/token/refresh/', {
                         refresh: refreshToken,
                     });
 
@@ -50,6 +50,5 @@ apiClient.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 
 export default apiClient;
