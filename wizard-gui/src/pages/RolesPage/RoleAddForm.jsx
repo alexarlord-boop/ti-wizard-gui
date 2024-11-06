@@ -33,26 +33,34 @@ import {Card, CardContent, CardHeader} from "../../components/ui/card.jsx";
 import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
+import {useAddRoleMutation} from "../../hooks/useAddRoleMutation.jsx";
+
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const FormSchema = z.object({
-    displayName: z.string().min(2, {
+
+    display_name: z.string().min(2, {
         message: "Display name must be at least 2 characters.",
     }),
     // TODO:- improve file format validation
-    imageUrl: z.string().url({
-        message: "Invalid file format",
-    }),
+    // FIle for logo_image should be in file instance
+    // logo_image: z.any()
+        // .refine(
+        //     (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+        //     "Only .jpg, .jpeg, .png and .webp formats are supported."
+        // )
+
 })
 
 export default function RoleAddForm(
     {
         isRoleDetailsOpen, setIsRoleDetailsOpen,
-        entityType, setEntityType,
+        entity_type, setEntityType,
     }
 ) {
     const {t} = useTranslation();
-    const [imageUrl, setImageUrl] = useState("");
-    const [displayName, setDisplayName] = useState("");
+    const [logo_image, setImageUrl] = useState("");
+    const [display_name, setDisplayName] = useState("");
 
     const handleModalTermination = () => {
         setDisplayName("");
@@ -60,19 +68,21 @@ export default function RoleAddForm(
         form.reset();
     }
     const handleAddRole = (formData) => {
-        updateRoleMutation.mutate({
-            entityType: entityType,
-            isActive: true,
-            displayName: formData.displayName,
-            imageUrl: formData.imageUrl
-        });
+        const data = {
+            entity_type: entity_type,
+            is_active: true,
+            display_name: formData.display_name,
+            logo_image: formData.logo_image
+        }
+        console.log(data)
+        addRoleMutation.mutate(data);
     }
 
     const form = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            displayName: "",
-            imageUrl: "",
+            display_name: "",
+            logo_image: "",
         },
     })
 
@@ -84,7 +94,7 @@ export default function RoleAddForm(
     }
 
 
-    const updateRoleMutation = useUpdateRoleMutation()
+    const addRoleMutation = useAddRoleMutation()
 
 
     const handleFileChange = (event) => {
@@ -93,8 +103,8 @@ export default function RoleAddForm(
             const reader = new FileReader();
             reader.onload = (e) => {
                 setImageUrl(e.target.result);
-                form.setValue("imageUrl", e.target.result); // Set the image URL in the form state
-                form.clearErrors("imageUrl");
+                form.setValue("logo_image", e.target.result); // Set the image URL in the form state
+                form.clearErrors("logo_image");
             };
             reader.readAsDataURL(file);
         }
@@ -102,7 +112,7 @@ export default function RoleAddForm(
 
     useEffect(() => {
        handleModalTermination();
-    }, [entityType]);
+    }, [entity_type]);
 
 
 
@@ -112,7 +122,7 @@ export default function RoleAddForm(
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                         <DialogHeader>
-                            <DialogTitle>Add local identity role: {entityType.split("_").join(" ")}</DialogTitle>
+                            <DialogTitle>Add local identity role: {entity_type.split("_").join(" ")}</DialogTitle>
                             <DialogDescription></DialogDescription>
                         </DialogHeader>
                         <div className="grid grid-cols-2 gap-10 py-5">
@@ -124,7 +134,7 @@ export default function RoleAddForm(
                                         <div className="grid w-full items-center gap-1.5">
                                             <FormField
                                                 control={form.control}
-                                                name="displayName"
+                                                name="display_name"
                                                 render={({field}) => (
                                                     <FormItem>
                                                         <FormLabel htmlFor="display-name">Display name</FormLabel>
@@ -137,7 +147,7 @@ export default function RoleAddForm(
                                                             />
                                                         </FormControl>
                                                         <FormDescription>
-                                                            {form.formState.errors.displayName?.message}
+                                                            {form.formState.errors.display_name?.message}
                                                         </FormDescription>
                                                     </FormItem>
                                                 )}
@@ -149,7 +159,7 @@ export default function RoleAddForm(
                                             <div className="grid w-full max-w-sm items-center gap-1.5">
                                                 <FormField
                                                     control={form.control}
-                                                    name="imageUrl"
+                                                    name="logo_image"
                                                     render={({field}) => (
                                                         <FormItem>
                                                             <FormLabel htmlFor="image-url">Logo Image</FormLabel>
@@ -157,20 +167,20 @@ export default function RoleAddForm(
                                                                 <Input
                                                                     id="image-url"
                                                                     type="file"
-                                                                    accept="image/png, image/gif, image/jpeg"
+                                                                    accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
                                                                     placeholder={t("Select image logo")}
                                                                     onChange={handleFileChange} // Use handleFileChange
                                                                 />
 
                                                             </FormControl>
                                                             <FormDescription>
-                                                                {form.formState.errors.imageUrl?.message}
+                                                                {form.formState.errors.logo_image?.message}
                                                             </FormDescription>
                                                         </FormItem>
                                                     )}
                                                 />
                                             </div>
-                                            <img src={imageUrl} alt="logo" className="max-w-[100px] max-h-[80px]"/>
+                                            <img src={logo_image} alt="logo" className="max-w-[100px] max-h-[80px]"/>
 
                                         </div>
                                     </CardContent>

@@ -8,6 +8,9 @@ import {useRolesQuery} from "../../hooks/useRolesQuery.jsx";
 
 import RoleAddForm from "./RoleAddForm.jsx";
 import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
+import {useDeleteRoleMutation} from "../../hooks/useDeleteRoleMutation.jsx";
+import RoleCards from "./RoleCards.jsx";
+import {Button} from "../../components/ui/button.jsx";
 
 const steps = [
     {
@@ -60,32 +63,30 @@ const steps = [
 
 function RolesPage() {
     const [isRoleDetailsOpen, setIsRoleDetailsOpen] = useState(false);
-    const [entityType, setEntityType] = useState("");
+    const [entity_type, setEntityType] = useState("");
     usePageTour(steps);  // Use the custom hook with steps
 
 
     const {status, data: roles} = useRolesQuery();
 
-    if (status === "success") {
-        console.log(roles);
-    }
 
-
-    const handleAddRole = (entityType) => {
+    const handleAddRole = (entity_type) => {
         setIsRoleDetailsOpen(true);
-        setEntityType(entityType);
+        setEntityType(entity_type);
     };
 
     const updateRoleMutation = useUpdateRoleMutation()
-    const handleDeleteRole = (entityType) => {
-        updateRoleMutation.mutate({
-            entityType: entityType,
-            isActive: false,
-            displayName: "",
-            imageUrl: "",
+    const deleteRoleMutation = useDeleteRoleMutation()
+
+    const handleDeleteRole = (role_id) => {
+        deleteRoleMutation.mutate({
+            role_id: role_id
         });
     }
 
+    if (status === "success") {
+        console.log(roles);
+    }
 
     if (status === "loading") {
         return <Spinner size="small" className="mt-20"/>;
@@ -97,23 +98,13 @@ function RolesPage() {
     return (
         <>
             <Breadcrumbs itemList={[{path: '/', label: 'Home'}, {path: '/roles', label: 'My Roles'}]}/>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4" id="role-cards">
-                {roles.map((role, index) => (
-                    <RoleCard
-                        key={index}
-                        role={role}
-                        onAdd={() => {
-                            handleAddRole(role.entityType)
-                        }}
-                        onDelete={() => {
-                            handleDeleteRole(role.entityType)
-                        }}
-                    />
-                ))}
-            </div>
+
+
+            <RoleCards roles={roles} handleAddRole={handleAddRole} handleDeleteRole={handleDeleteRole}/>
+
 
             <RoleAddForm
-                entityType={entityType}
+                entity_type={entity_type}
                 setEntityType={setEntityType}
                 isRoleDetailsOpen={isRoleDetailsOpen}
                 setIsRoleDetailsOpen={setIsRoleDetailsOpen}
