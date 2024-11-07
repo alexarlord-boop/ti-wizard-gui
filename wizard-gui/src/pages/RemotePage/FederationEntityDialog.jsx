@@ -82,7 +82,7 @@ const FederationEntityDialog = ({
                                                             <div
                                                                 key={entity.id}
                                                                 className={cn(
-                                                                    "cursor-pointer p-2 hover:bg-gray-200 flex justify-between",
+                                                                    "cursor-pointer p-1 hover:bg-gray-200 flex  text-left",
                                                                     selectedEntity?.id === entity?.id ? "bg-gray-100" : ""
                                                                 )}
                                                                 onClick={() => {
@@ -90,16 +90,8 @@ const FederationEntityDialog = ({
                                                                     handleEntityClick(entity)
                                                                 }}
                                                             >
-                                                                {
-                                                                    entityName.length > 70 ? (
-                                                                        <EntityNameWithTooltip
-                                                                            entityName={entityName}/>
-                                                                    ) : (
-                                                                        entityName
-                                                                    )
-                                                                }
-                                                                <span className="flex items-center align-middle ">
-                                                        {(isEntityWithRAInActiveList(entity)) ?
+                                                               <span className="flex items-center align-middle ">
+                                                        {entity.is_active && (isEntityWithRAInActiveList(entity)) ?
                                                             <CheckCircle size="15"
                                                                          className="mr-3 text-green-600"/>
                                                             :
@@ -111,6 +103,15 @@ const FederationEntityDialog = ({
 
                                                         }
                                                     </span>
+                                                                {
+                                                                    entityName.length > 70 ? (
+                                                                        <EntityNameWithTooltip
+                                                                            entityName={entityName}/>
+                                                                    ) : (
+                                                                        entityName
+                                                                    )
+                                                                }
+
                                                             </div>
 
                                                         )
@@ -121,7 +122,7 @@ const FederationEntityDialog = ({
 
                                 </ScrollArea>
                             </div>
-                            <div className="mt-2 float-end">
+                            <div className="mt-2 ">
                                 <span className="flex text-center items-center text-sm"><CheckCircle size="15"
                                                                                                      className="mr-3 text-green-600"/>Published in {selectedFederation ? selectedFederation : "selected federation"}</span>
                                 <span className="flex text-center items-center text-sm"><CheckCircle size="15"
