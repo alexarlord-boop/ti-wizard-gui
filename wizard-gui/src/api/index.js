@@ -7,7 +7,12 @@ let backendData = null;
 export const federationsApi = {
     async list() {
 
-        let data = federations;
+        // let data = federations;
+
+
+        const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
+        const data = await response.json();
+        console.log(data);
         // filter out edugain ["https://www.edugain.org"]
         const edugain = "https://www.edugain.org";
         delete data[edugain];
