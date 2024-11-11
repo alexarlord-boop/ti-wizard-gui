@@ -153,3 +153,11 @@ export const remoteEntitiesApi = {
         localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
     }
 }
+
+export const logsApi = {
+    async list() {
+        const response = await apiClient.get('core/logs/');
+        console.log(response.data);
+        return response.data;
+    }
+}

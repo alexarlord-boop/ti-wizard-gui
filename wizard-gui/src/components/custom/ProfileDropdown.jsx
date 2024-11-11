@@ -35,6 +35,11 @@ export default function ProfileDropdown({children}) {
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';
     };
+
+    const handleLogs = () => {
+        window.location.href = '/logs';
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none flex items-center">
@@ -57,7 +62,7 @@ export default function ProfileDropdown({children}) {
 
 
                 <DropdownMenuItem onClick={handleTour}>{t('navbar.startTour')}</DropdownMenuItem>
-                <PrivateComponent> <DropdownMenuItem>{t('navbar.logs')}</DropdownMenuItem></PrivateComponent>
+                <PrivateComponent> <DropdownMenuItem onClick={handleLogs}>{t('navbar.logs')}</DropdownMenuItem></PrivateComponent>
                 <PrivateComponent><DropdownMenuItem>{t('navbar.cronTab')}</DropdownMenuItem></PrivateComponent>
 
                 <DropdownMenuSeparator/>
