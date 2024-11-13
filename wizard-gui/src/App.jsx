@@ -12,6 +12,7 @@ import FederationSelectionPage from "./pages/FederationSelectionPage.jsx";
 import LoginPage from "./pages/Login/LoginPage.jsx";
 import PrivateRoute from "./components/custom/PrivteRoute.jsx";
 import LogsPage from "./pages/LogsPage.jsx";
+import NotificationsPage from "./pages/Notifications.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/remote-entities" element={<PrivateRoute><MainLayout><RemotePage /></MainLayout></PrivateRoute>} />
                 <Route path="/sources/federations" element={<PrivateRoute><MainLayout><FederationSelectionPage /></MainLayout></PrivateRoute>} />
                 <Route path="/logs" element={<PrivateRoute><MainLayout><LogsPage/></MainLayout></PrivateRoute>} />
+                {/*<Route path="/notifications" element={<PrivateRoute><MainLayout><NotificationsPage/></MainLayout></PrivateRoute>} />*/}
                 {/* Catch-all route for unknown paths */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

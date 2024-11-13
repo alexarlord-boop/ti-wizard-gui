@@ -40,6 +40,10 @@ export default function ProfileDropdown({children}) {
         window.location.href = '/logs';
     }
 
+    const handleNotifications = () => {
+        window.location.href = '/notifications';
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none flex items-center">
@@ -63,6 +67,7 @@ export default function ProfileDropdown({children}) {
 
                 <DropdownMenuItem onClick={handleTour}>{t('navbar.startTour')}</DropdownMenuItem>
                 <PrivateComponent> <DropdownMenuItem onClick={handleLogs}>{t('navbar.logs')}</DropdownMenuItem></PrivateComponent>
+                <PrivateComponent> <DropdownMenuItem onClick={handleNotifications}>{t('navbar.notifications')}</DropdownMenuItem></PrivateComponent>
                 <PrivateComponent><DropdownMenuItem>{t('navbar.cronTab')}</DropdownMenuItem></PrivateComponent>
 
                 <DropdownMenuSeparator/>

@@ -1,0 +1,19 @@
+/* styles.css */
+@keyframes notificationHighlight {
+    0% {
+        transform: scale(1);
+        background-color: rgba(255, 0, 0, 0.5);
+    }
+    50% {
+        transform: scale(1.2);
+        background-color: rgba(255, 0, 0, 0.7);
+    }
+    100% {
+        transform: scale(1);
+        background-color: rgba(255, 0, 0, 0.5);
+    }
+}
+
+.notification-highlight {
+    animation: notificationHighlight 1s ease-in-out;
+}
