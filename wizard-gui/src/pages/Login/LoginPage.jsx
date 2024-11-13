@@ -18,7 +18,7 @@ function Login() {
             if (loginResponse.status === 200) {
                 // Store the JWT token in local storage
                 const data = loginResponse.data;
-                console.log(data);
+                // console.log(data);
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
                 alert('Login successful!');
@@ -30,7 +30,7 @@ function Login() {
                 setErrorMessage('Invalid credentials.');
             } else {
                 setErrorMessage('An error occurred.');
-                console.log(error);
+                // console.log(error);
             }
         }
     };

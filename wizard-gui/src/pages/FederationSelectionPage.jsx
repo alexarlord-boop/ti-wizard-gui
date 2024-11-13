@@ -35,7 +35,7 @@ const FederationSelectionPage = () => {
 
     const handleSwitchChange = (federation) => {
         setLoadingFederations(prev => ({...prev, [federation.url]: true}));
-        console.log(federation);
+        // console.log(federation);
         updateFederationMutation.mutate({
             id: federation.id,
             status: !federation.is_active,

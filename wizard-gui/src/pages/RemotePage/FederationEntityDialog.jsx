@@ -76,7 +76,7 @@ const FederationEntityDialog = ({
                                                 .sort((a, b) => b.is_active - a.is_active)
                                                 .map(entity => {
                                                         const entityName = getRemoteEntityName(entity);
-                                                        console.log(selectedFederation);
+                                                        // console.log(selectedFederation);
 
                                                         return (
                                                             <div

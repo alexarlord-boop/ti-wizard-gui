@@ -2,7 +2,7 @@
 /* defines what type of remote entities user can add */
 export const getAvailableOptions = (roles) => {
     let options = [];
-    console.log(roles)
+    // console.log(roles)
     roles.forEach(role => {
         switch (role.entity_type) {
             case 'SAML_IDP':

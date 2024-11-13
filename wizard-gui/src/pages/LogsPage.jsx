@@ -7,7 +7,7 @@ export default function LogsPage() {
     const {status, data: logs} = useLogsQuery();
     const bgColorOnStatus = (status) => {
     //     color different types of statuses
-        console.log(status / 100 % 100);
+    //     console.log(status / 100 % 100);
         if (status === 200) {
             return 'bg-green-50';
         } else if (Math.floor(status / 100) === 4  || Math.floor(status / 100) === 5) {

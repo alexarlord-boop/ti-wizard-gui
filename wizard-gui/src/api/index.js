@@ -12,7 +12,7 @@ export const federationsApi = {
 
         const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         // filter out edugain ["https://www.edugain.org"]
         const edugain = "https://www.edugain.org";
         delete data[edugain];
@@ -39,7 +39,7 @@ export const federationsApi = {
 
         if (status) {
             const response = await apiClient.post('federations/', {url});
-            console.log(response);
+            // console.log(response);
 
         } else {
             const response = await apiClient.delete(`federations/${id}/`);
@@ -66,14 +66,14 @@ export const rolesApi = {
         if (rolesResponse.status === 200) {
             return rolesResponse.data;
         }
-        console.log(rolesResponse);
+        // console.log(rolesResponse);
         toast.error('Error fetching roles');
     },
 
     async add({entity_type, is_active, display_name, logo_image}) {
         const response = await apiClient.post('roles/', {entity_type, is_active, display_name, logo_image});
         const data = response.data;
-        console.log(data);
+        // console.log(data);
         toast.success('Role added');
     },
 
@@ -93,14 +93,14 @@ export const rolesApi = {
     async activate({role_id, entity_name, is_active}) {
         const response = await apiClient.patch(`roles/${role_id}/activate/`, {is_active});
         const data = response.data;
-        console.log(data);
+        // console.log(data);
         toast.success(`${entity_name} ${is_active ? 'activated' : 'deactivated'}`);
     },
 
     async delete({role_id}) {
         const response = await apiClient.delete(`roles/${role_id}/`);
         const data = response.data;
-        console.log(data);
+        // console.log(data);
         toast.success('Role deleted');
     }
 
@@ -157,7 +157,7 @@ export const remoteEntitiesApi = {
 export const logsApi = {
     async list() {
         const response = await apiClient.get('core/logs/');
-        console.log(response.data);
+        // console.log(response.data);
         return response.data;
     }
 }

@@ -66,7 +66,7 @@ const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
 
     const name = getRemoteEntityName(entity);
 
-    console.log(entity);
+    // console.log(entity);
 
     return (
         <Card>
