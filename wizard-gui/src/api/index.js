@@ -70,8 +70,8 @@ export const rolesApi = {
         toast.error('Error fetching roles');
     },
 
-    async add({entity_type, is_active, display_name, logo_image}) {
-        const response = await apiClient.post('roles/', {entity_type, is_active, display_name, logo_image});
+    async add({entity_type, entity_id, is_active, display_name, logo_image}) {
+        const response = await apiClient.post('roles/', {entity_type, entity_id,is_active, display_name, logo_image});
         const data = response.data;
         // console.log(data);
         toast.success('Role added');

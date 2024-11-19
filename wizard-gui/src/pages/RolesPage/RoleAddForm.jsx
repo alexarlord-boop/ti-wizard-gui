@@ -7,7 +7,6 @@ import {useForm} from "react-hook-form"
 import {z} from "zod"
 
 import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label"
 
 import {
     Form,
@@ -29,12 +28,9 @@ import {
 } from "@/components/ui/dialog";
 import {DialogFooter} from "../../components/ui/dialog.jsx";
 import {Button} from "../../components/ui/button.jsx";
-import {Card, CardContent, CardHeader} from "../../components/ui/card.jsx";
-import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
+
 import {useTranslation} from "react-i18next";
-import {toast} from "sonner";
 import {useAddRoleMutation} from "../../hooks/useAddRoleMutation.jsx";
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../../components/ui/accordion.jsx";
 import AccordionCard from "../../components/custom/AccordionCard.jsx";
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -51,6 +47,10 @@ const FormSchema = z.object({
         //     (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
         //     "Only .jpg, .jpeg, .png and .webp formats are supported."
         // )
+
+    entity_id: z.string().includes("https://", {
+        message: "Entity ID must be a valid URL.",
+    }),
 
 })
 
@@ -73,6 +73,7 @@ export default function RoleAddForm(
         const data = {
             entity_type: entity_type,
             is_active: false,
+            entity_id: formData.entity_id,
             display_name: formData.display_name,
             logo_image: formData.logo_image
         }
@@ -83,6 +84,7 @@ export default function RoleAddForm(
     const form = useForm({
         resolver: zodResolver(FormSchema),
         defaultValues: {
+            entity_id: "",
             display_name: "",
             logo_image: "",
         },
@@ -133,8 +135,29 @@ export default function RoleAddForm(
 
 
 
-                                <AccordionCard header="Display information" isOpened={true}>
+                                <AccordionCard header="Entity information" isOpened={true}>
                                     <div className="grid w-full items-center gap-1.5">
+                                        <FormField
+                                            control={form.control}
+                                            name="entity_id"
+                                            render={({field}) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="entity_id">Entity ID</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="entity_id"
+                                                            type="text"
+                                                            placeholder={t("Enter entity ID")}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        {form.formState.errors.entity_id?.message}
+                                                    </FormDescription>
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <br/>
                                         <FormField
                                             control={form.control}
                                             name="display_name"
@@ -184,26 +207,6 @@ export default function RoleAddForm(
                                         <img src={logo_image} alt="logo" className="max-w-[100px] max-h-[80px]" />
                                     </div>
                                 </AccordionCard>
-                                <FormField
-                                    control={form.control}
-                                    name="entity_id"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel htmlFor="entity_id">Entity ID</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    id="entity_id"
-                                                    type="text"
-                                                    placeholder={t("Enter entity ID")}
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormDescription>
-                                                {form.formState.errors.entity_id?.message}
-                                            </FormDescription>
-                                        </FormItem>
-                                    )}
-                                />
 
                                 <AccordionCard header="Supported entity categories">
 

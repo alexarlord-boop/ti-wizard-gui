@@ -4,9 +4,9 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 const AccordionCard = ({ header, children, isOpened = false}) => {
     return (
         <Accordion type="single" collapsible defaultValue={isOpened ? "item" : null}>
-            <AccordionItem value="item" className="px-3 rounded-lg border bg-card text-card-foreground shadow-sm">
+            <AccordionItem value="item" className="px-4 rounded-lg border bg-card text-card-foreground shadow-sm">
                 <AccordionTrigger>{header}</AccordionTrigger>
-                <AccordionContent >
+                <AccordionContent className="mx-1">
                     {children}
                 </AccordionContent>
             </AccordionItem>
