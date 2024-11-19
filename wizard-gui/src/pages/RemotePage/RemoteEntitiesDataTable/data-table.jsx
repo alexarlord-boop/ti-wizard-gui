@@ -24,7 +24,6 @@ import {Button} from "../../../components/ui/button.jsx";
 import DataTableHeader from "./TableHeader.jsx";
 import DataTableBody from "./TableBody.jsx";
 import RegistrationFilter from "./RegistrationFilter.jsx";
-import {useUpdateEntityMutation} from "../../../hooks/useUpdateEntityMutation.jsx";
 
 
 export function DataTable({ handleViewDetails, handleDelete, data }) {
@@ -37,9 +36,6 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
     const [isRegistrationDropdownOpen, setIsRegistrationDropdownOpen] = useState(false);
 
-    const updateEntityMutation = useUpdateEntityMutation();
-
-    console.log(data);
 
     useLayoutEffect(() => {
         let newFilteredData = data;
@@ -92,18 +88,11 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     };
 
 
-    const handleStatusChange = (id, newStatus) => {
-        // const updatedData = filteredData.map((row) =>
-        //     row.id === rowId ? { ...row, status: newStatus } : row
-        // );
-        // setFilteredData(updatedData);
-        console.log(id);
-
-        updateEntityMutation.mutate({
-            id: id,
-            status: !newStatus,
-        });
-
+    const handleStatusChange = (rowId, newStatus) => {
+        const updatedData = filteredData.map((row) =>
+            row.id === rowId ? { ...row, status: newStatus } : row
+        );
+        setFilteredData(updatedData);
     };
 
     const nameColWidth = "w-[40em]";
@@ -194,8 +183,8 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
             accessorKey: "status",
             header: () => <div className={`text-center ${smColWidth}`}>Status</div>,
             cell: ({ row }) => {
-                const { is_active, id } = row.original;
-                return <StatusToggle initialStatus={is_active} onStatusChange={() => handleStatusChange(id, is_active)} />;
+                const { status, id } = row.original;
+                return <StatusToggle initialStatus={status} onStatusChange={(newStatus) => handleStatusChange(id, newStatus)} />;
             },
             sortingFn: (rowA, rowB) => {
                 const statusA = rowA.original.status;

@@ -7,20 +7,9 @@ import {toast} from "sonner";
 import {CheckCircle, Divide} from "lucide-react";
 import {getRemoteEntityName} from "../../services/remoteEntityService.js";
 import EntityNameWithTooltip from "./EntityNameTooltip.jsx";
-import {useCreateEntityMutation} from "../../hooks/useCreateEntityMutation.jsx";
-import {remoteEntitiesApi} from "../../api/index.js";
-import {useDeleteEntityMutation} from "../../hooks/useDeleteEntityMutation.jsx";
 
-const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
-
-    const types = {
-        "idps": "SAML_IDP",
-        "sps": "SAML_SP"
-    }
-
+const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
     const updateEntityMutation = useUpdateEntityMutation();
-    const createEntityMutation = useCreateEntityMutation();
-    const deleteEntityMutation = useDeleteEntityMutation();
 
     const [entityState, setEntityState] = useState({
         is_active: entity?.is_active || false,
@@ -32,17 +21,16 @@ const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
         logo: entity?.logo || ""
     });
 
-    const entityPublishedIn = hostedEntities?.find((activeEntity) => activeEntity?.id === entity?.id) || null;
+    const entityPublishedIn = activeEntities?.find((activeEntity) => activeEntity?.id === entity?.id) || null;
 
     useEffect(() => {
         if (entity) {
             setEntityState({
-                ra: entity.ra,
                 entity_type: entity_type,
                 is_active: entity.is_active,
-                resourceName: entity.resource_name,
+                resourceName: entity.resourceName,
                 resourceProvider: entity.resourceProvider,
-                entityID: entity.entityID || entity.entity_id,
+                entityID: entity.entityID,
                 id: entity.id,
                 resourceContacts: entity.resourceContacts,
                 logo: entity.logo
@@ -56,16 +44,10 @@ const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
 
 
     const handleAdd = () => {
-        console.log(entityState);
-        createEntityMutation.mutate(
+        updateEntityMutation.mutate(
             {
-                entity_id: entityState.entityID,
-                internal_id: entityState.id,
-                resource_name: entityState.resourceName,
-                entity_type: types[entity_type],
-                is_active: entityState.is_active,
-                published_in: entityState.ra,
-
+                entity: entity,
+                status: !entityState.is_active,
             },
             {
                 onSuccess: () => {
@@ -73,41 +55,16 @@ const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
                         ...prevState,
                         is_active: !prevState.is_active
                     }));
-                    toast("Entity added successfully");
+                    toast("Entity updated successfully");
                 },
                 onError: () => {
-                    toast("Failed to add entity");
+                    toast("Failed to update entity");
                 },
             }
         );
     };
 
-    const handleDelete = () => {
-        const id = hostedEntities.find(activeEntity => activeEntity.internal_id === entityState.id).id;
-        deleteEntityMutation.mutate(
-            {
-                id: id
-            },
-            {
-                onSuccess: () => {
-                    setEntityState((prevState) => ({
-                        ...prevState,
-                        is_active: !prevState.is_active
-                    }));
-                    toast("Entity removed successfully");
-                },
-                onError: () => {
-                    toast("Failed to remove entity");
-                },
-            }
-        );
-    }
-
     const name = getRemoteEntityName(entity);
-
-    const isHosted = (entity) => {
-        return hostedEntities.some(activeEntity => activeEntity.internal_id === entity.id);
-    }
 
     // console.log(entity);
 
@@ -117,11 +74,8 @@ const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
                 <h1 className="font-bold text-xl truncate max-w-[30rem]">
                     {name}
                 </h1>
-                {withAction && (
-                    isHosted(entityState) ?
-                        <Button onClick={handleDelete}>{"- Remove"}</Button> :
-                        <Button onClick={handleAdd}>{"+ Add"}</Button>
-                )}
+                {withAction &&
+                    <Button onClick={handleAdd}>{entityState.is_active ? "- Remove" : "+ Add"}</Button>}
             </CardHeader>
 
             <CardContent>

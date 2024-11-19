@@ -14,11 +14,6 @@ const titles = {
     sps: 'SAML SP',
 }
 
-const types = {
-    "idps": "SAML_IDP",
-    "sps": "SAML_SP"
-}
-
 
 const FederationEntityDialog = ({
                                     isDialogOpen,
@@ -26,7 +21,6 @@ const FederationEntityDialog = ({
                                     selectedEntityType,
                                     filteredFederations,
                                     entities,
-                                    hostedEntities,
                                     entityStatus,
                                     handleFederationClick,
                                     selectedFederation,
@@ -35,16 +29,14 @@ const FederationEntityDialog = ({
                                     setSearchEntity,
                                     selectedEntity
                                 }) => {
-    console.log(hostedEntities);
+    const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+    console.log(activeEntities);
     const activeEntitiesCount = filteredFederations.reduce((acc, federation) => {
-        acc[federation.name] = hostedEntities.filter(entity => entity.entity_type === types[selectedEntityType] && entity.published_in === federation.name).length;
+        acc[federation.name] = activeEntities.filter(entity => entity.entity_type === selectedEntityType && entity.ra === federation.name).length;
         return acc;
     }, {});
-    const isHosted = (entity) => {
-        return hostedEntities.some(activeEntity => activeEntity.internal_id === entity.id);
-    }
-    const isEntityWithRAInHostedList = (entity) => {
-        return hostedEntities.some(activeEntity => (activeEntity.internal_id === entity.id && activeEntity.published_in === selectedFederation));
+    const isEntityWithRAInActiveList = (entity) => {
+        return activeEntities.some(activeEntity => (activeEntity.id === entity.id && activeEntity.ra === selectedFederation));
     }
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -81,7 +73,7 @@ const FederationEntityDialog = ({
                                         ) : (
                                             entities
                                                 .filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
-                                                .sort((a, b) => isHosted(b) - isHosted(a))
+                                                .sort((a, b) => b.is_active - a.is_active)
                                                 .map(entity => {
                                                         const entityName = getRemoteEntityName(entity);
                                                         // console.log(selectedFederation);
@@ -99,11 +91,11 @@ const FederationEntityDialog = ({
                                                                 }}
                                                             >
                                                                <span className="flex items-center align-middle ">
-                                                        {isHosted(entity) && (isEntityWithRAInHostedList(entity)) ?
+                                                        {entity.is_active && (isEntityWithRAInActiveList(entity)) ?
                                                             <CheckCircle size="15"
                                                                          className="mr-3 text-green-600"/>
                                                             :
-                                                            (isHosted(entity) && !isEntityWithRAInHostedList(entity)) ?
+                                                            (entity.is_active && !isEntityWithRAInActiveList(entity)) ?
                                                                 <CheckCircle size="15"
                                                                              className="mr-3 text-black"/>
                                                                 :
@@ -141,7 +133,7 @@ const FederationEntityDialog = ({
                     </div>
                     <div className="">
                         <h3 className="font-bold">Entity details:</h3>
-                        <EntityDetails entity={selectedEntity} entity_type={selectedEntityType} hostedEntities={hostedEntities}
+                        <EntityDetails entity={selectedEntity} entity_type={selectedEntityType} activeEntities={activeEntities}
                                        withAction></EntityDetails>
                     </div>
                 </div>
