@@ -34,6 +34,8 @@ import {useUpdateRoleMutation} from "../../hooks/useUpdateRoleMutation.jsx";
 import {useTranslation} from "react-i18next";
 import {toast} from "sonner";
 import {useAddRoleMutation} from "../../hooks/useAddRoleMutation.jsx";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "../../components/ui/accordion.jsx";
+import AccordionCard from "../../components/custom/AccordionCard.jsx";
 
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
@@ -118,9 +120,9 @@ export default function RoleAddForm(
 
     return (
         <Dialog open={isRoleDetailsOpen} onOpenChange={setIsRoleDetailsOpen}>
-            <DialogContent className="max-w-[90%]">
+            <DialogContent className="max-w-[90%] max-h-[90vh]">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} >
                         <DialogHeader>
                             <DialogTitle>Add local identity role: {entity_type.split("_").join(" ")}</DialogTitle>
                             <DialogDescription></DialogDescription>
@@ -128,69 +130,87 @@ export default function RoleAddForm(
                         <div className="grid grid-cols-2 gap-10 py-5">
 
                             <div className="grid gap-5">
-                                <Card className="h-[40dvh]">
-                                    <CardHeader><p className="font-bold">Display information</p></CardHeader>
-                                    <CardContent>
-                                        <div className="grid w-full items-center gap-1.5">
+
+
+
+                                <AccordionCard header="Display information" isOpened={true}>
+                                    <div className="grid w-full items-center gap-1.5">
+                                        <FormField
+                                            control={form.control}
+                                            name="display_name"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="display-name">Display name</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            id="display-name"
+                                                            type="text"
+                                                            placeholder={t("Enter display name")}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        {form.formState.errors.display_name?.message}
+                                                    </FormDescription>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <br />
+                                    <div className="flex items-center justify-between h-[80px]">
+                                        <div className="grid w-full max-w-sm items-center gap-1.5">
                                             <FormField
                                                 control={form.control}
-                                                name="display_name"
-                                                render={({field}) => (
+                                                name="logo_image"
+                                                render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel htmlFor="display-name">Display name</FormLabel>
+                                                        <FormLabel htmlFor="image-url">Logo Image</FormLabel>
                                                         <FormControl>
                                                             <Input
-                                                                id="display-name"
-                                                                type="text"
-                                                                placeholder={t("Enter display name")}
-                                                                {...field}
+                                                                id="image-url"
+                                                                type="file"
+                                                                accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
+                                                                placeholder={t("Select image logo")}
+                                                                onChange={handleFileChange}
                                                             />
                                                         </FormControl>
                                                         <FormDescription>
-                                                            {form.formState.errors.display_name?.message}
+                                                            {form.formState.errors.logo_image?.message}
                                                         </FormDescription>
                                                     </FormItem>
                                                 )}
                                             />
-
                                         </div>
-                                        <br/>
-                                        <div className="flex items-center justify-between h-[80px]">
-                                            <div className="grid w-full max-w-sm items-center gap-1.5">
-                                                <FormField
-                                                    control={form.control}
-                                                    name="logo_image"
-                                                    render={({field}) => (
-                                                        <FormItem>
-                                                            <FormLabel htmlFor="image-url">Logo Image</FormLabel>
-                                                            <FormControl>
-                                                                <Input
-                                                                    id="image-url"
-                                                                    type="file"
-                                                                    accept="image/png, image/gif, image/jpeg, image/jpg, image/webp"
-                                                                    placeholder={t("Select image logo")}
-                                                                    onChange={handleFileChange} // Use handleFileChange
-                                                                />
-
-                                                            </FormControl>
-                                                            <FormDescription>
-                                                                {form.formState.errors.logo_image?.message}
-                                                            </FormDescription>
-                                                        </FormItem>
-                                                    )}
+                                        <img src={logo_image} alt="logo" className="max-w-[100px] max-h-[80px]" />
+                                    </div>
+                                </AccordionCard>
+                                <FormField
+                                    control={form.control}
+                                    name="entity_id"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="entity_id">Entity ID</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    id="entity_id"
+                                                    type="text"
+                                                    placeholder={t("Enter entity ID")}
+                                                    {...field}
                                                 />
-                                            </div>
-                                            <img src={logo_image} alt="logo" className="max-w-[100px] max-h-[80px]"/>
+                                            </FormControl>
+                                            <FormDescription>
+                                                {form.formState.errors.entity_id?.message}
+                                            </FormDescription>
+                                        </FormItem>
+                                    )}
+                                />
 
-                                        </div>
-                                    </CardContent>
+                                <AccordionCard header="Supported entity categories">
 
-                                </Card>
-                                <Card><CardHeader><p className="font-bold">Supported entity categories</p>
-                                </CardHeader></Card>
+                                </AccordionCard>
+
                             </div>
-                            <Card><CardHeader><p className="font-bold">Security settings</p></CardHeader> </Card>
-
+                            <AccordionCard header="Security settings"></AccordionCard>
                         </div>
                         <DialogFooter>
                             <Button type="submit">Add Role</Button>
