@@ -13,9 +13,6 @@ import {cn} from "../../lib/utils.js";
 import {NavigationMenuLinkItem} from "../ui/navigation-menu.jsx";
 import ProfileDropdown from "./ProfileDropdown.jsx";
 import {GearIcon} from "@radix-ui/react-icons";
-import NotificationCenter from "./NotificationCentre.jsx";
-import {Separator} from "../ui/separator.jsx";
-import PrivateComponent from "./PrivateComponent.jsx";
 
 export default function NavBar() {
 
@@ -85,9 +82,7 @@ export default function NavBar() {
 
             </NavigationMenuList>
 
-            <div className="flex h-[30px] items-center ">
-                <PrivateComponent><NotificationCenter /></PrivateComponent>
-                <Separator orientation="vertical" className="mx-2" />
+            <div className="flex">
                 <ProfileDropdown>Settings</ProfileDropdown>
             </div>
 

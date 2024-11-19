@@ -2,7 +2,6 @@
   "navbar": {
     "startTour": "Start tour for this page",
     "logs": "Logs",
-    "notifications": "Notifications",
     "cronTab": "Cron tab",
     "contactDetails": "Contact details"
   },
