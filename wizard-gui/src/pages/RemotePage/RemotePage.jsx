@@ -1,5 +1,5 @@
 // RemotePage.jsx
-import {useState, useEffect} from "react";
+import {useState, useEffect, useLayoutEffect} from "react";
 import {useQuery} from "react-query";
 import {useRolesQuery} from "../../hooks/useRolesQuery.jsx";
 import {useFederationsQuery} from "../../hooks/useFederationsQuery.jsx";
@@ -17,6 +17,8 @@ import AddEntityButtons from "./AddEntityButtons.jsx";
 import FederationEntityDialog from "./FederationEntityDialog.jsx";
 import EntityDetails from "../../components/custom/EntityDetails.jsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {useHostedEntitiesQuery} from "../../hooks/useHostedEntities.jsx";
+import {entityTitles, entityTypes} from "../../constants.js";
 
 const titles = {
     idps: 'SAML IDP',
@@ -36,9 +38,22 @@ function RemotePage() {
     const {status, data: roles} = useRolesQuery();
     const {fedStatus, data: fedData} = useFederationsQuery();
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
+    const {status: hostedEntityStatus, data: hostedEntities, hostedRefetch} = useHostedEntitiesQuery();
 
 
-    console.log(fedData);
+    useEffect(() => {
+        if (hostedEntities) {
+            const dt = hostedEntities.map(entity => ({
+                id: entity.id,
+                name: getRemoteEntityName(entity),
+                role: entityTitles[entity.entity_type.toLowerCase()],
+                RA: entity.published_in,
+                is_active: entity.is_active,
+            }));
+            setData(dt);
+        }
+    }, [hostedEntities]);
+
     // TODO:- probably is not needed
     useEffect(() => {
         if (selectedFederation) {
@@ -56,15 +71,6 @@ function RemotePage() {
         setSelectedEntity(null);
         setSearchEntity("");
 
-        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-        let dt = activeEntities?.map(entity => ({
-            id: entity.id,
-            name: getRemoteEntityName(entity),
-            role: titles[entity.entity_type],
-            RA: entity.ra,
-            is_active: entity.is_active,
-        }));
-        setData(dt);
     }, [isDialogOpen]);
 
     if (status === "loading" || fedStatus === "loading") {
@@ -72,6 +78,14 @@ function RemotePage() {
     }
     if (status === "error" || fedStatus === "error") {
         return <div>Error fetching roles</div>;
+    }
+
+    if (hostedEntityStatus === "loading") {
+        return <Spinner size="sm"/>;
+    }
+
+    if (hostedEntityStatus === "error") {
+        return <div>Error fetching hosted entities</div>;
     }
 
     const options = getAvailableOptions(roles);
@@ -91,8 +105,7 @@ function RemotePage() {
     };
 
     const handleViewDetails = (entity) => {
-        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-        const activeEntity = activeEntities.find(e => e.id === entity.id);
+        const activeEntity = hostedEntities.find(e => e.id === entity.id);
         setSelectedEntity(activeEntity);
         setSelectedEntityType(activeEntity.entity_type);
         setIsEntityDetailsOpen(true);
@@ -109,6 +122,7 @@ function RemotePage() {
                 selectedEntityType={selectedEntityType}
                 filteredFederations={fedData?.filter(federation => federation.is_active && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || []}
                 entities={entities}
+                hostedEntities={hostedEntities}
                 entityStatus={entityStatus}
                 handleFederationClick={setSelectedFederation}
                 selectedFederation={selectedFederation}

@@ -2,10 +2,10 @@ import {useMutation, useQueryClient} from "react-query";
 import {remoteEntitiesApi} from "../api/index.js";
 
 
-export const useUpdateEntityMutation = () => {
+export const useCreateEntityMutation = () => {
     const queryClient = useQueryClient();
     return useMutation(
-        ({id, status}) => remoteEntitiesApi.update({id, status}),
+        ({resource_name, entity_type, is_active, published_in, entity_id, internal_id, resource_provider}) => remoteEntitiesApi.add({resource_name, entity_type, is_active, published_in, entity_id, internal_id, resource_provider}),
         {
             onSuccess: () => {
                 queryClient.invalidateQueries('entities');

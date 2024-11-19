@@ -26,8 +26,6 @@ export default function NotificationCenter() {
         console.error('Error fetching notifications:', error);
     }
 
-    console.log(notifications);
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="focus:outline-none flex items-center">

@@ -108,7 +108,7 @@ export const rolesApi = {
 }
 
 export const remoteEntitiesApi = {
-    async list(federation, entity_type) {
+    async list_all(federation, entity_type) {
         if (federation && entity_type) {
             const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entity_type.toLowerCase()}.json`);
             if (!response.ok) {
@@ -130,27 +130,53 @@ export const remoteEntitiesApi = {
         }
         return [];
     },
+    //
+    // async update(entity, status) {
+    //     await new Promise(resolve => setTimeout(resolve, 300));
+    //
+    //     const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+    //
+    //     if (status && !activeEntities.some(activeEntity => activeEntity.id === entity.id)) {
+    //         activeEntities.push(entity);
+    //     } else {
+    //         const index = activeEntities.findIndex(activeEntity => activeEntity.id === entity.id);
+    //         if (index > -1) {
+    //             activeEntities.splice(index, 1);
+    //         }
+    //     }
+    //     localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
+    // },
+    //
+    // delete(id) {
+    //     let activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+    //     activeEntities = activeEntities.filter(activeEntity => activeEntity.id !== id);
+    //     localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
+    // }
 
-    async update(entity, status) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+//     add list, delete, update methods for urls: 'entities/', 'entities/{id}/'
 
-        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-
-        if (status && !activeEntities.some(activeEntity => activeEntity.id === entity.id)) {
-            activeEntities.push(entity);
-        } else {
-            const index = activeEntities.findIndex(activeEntity => activeEntity.id === entity.id);
-            if (index > -1) {
-                activeEntities.splice(index, 1);
-            }
-        }
-        localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
+    async list() {
+        const response = await apiClient.get('entities/');
+        console.log(response.data);
+        return response.data;
     },
 
-    delete(id) {
-        let activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-        activeEntities = activeEntities.filter(activeEntity => activeEntity.id !== id);
-        localStorage.setItem('activeEntities', JSON.stringify(activeEntities));
+    async add({resource_name, entity_type, is_active, published_in, entity_id, internal_id, resource_provider}) {
+        const response = await apiClient.post('entities/', {resource_name, entity_type, is_active, published_in, entity_id, internal_id, resource_provider});
+        // console.log(response.data);
+        return response.data;
+    },
+
+    async update({id, status}) {
+        const response = await apiClient.patch(`entities/${id}/`, {is_active: status});
+        // console.log(response.data);
+        return response.data;
+    },
+
+    async delete({id}) {
+        const response = await apiClient.delete(`entities/${id}/`);
+        // console.log(response.data);
+        return response.data;
     }
 }
 

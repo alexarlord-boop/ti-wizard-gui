@@ -5,6 +5,6 @@ import {remoteEntitiesApi} from "../api/index.js";
 export const useEntitiesQuery = (federation, entityType) => useQuery(
     {
         queryKey: ['entities', federation, entityType],
-        queryFn: () => remoteEntitiesApi.list(federation, entityType),
+        queryFn: () => remoteEntitiesApi.list_all(federation, entityType),
     }
 );

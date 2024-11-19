@@ -1,6 +1,7 @@
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "../ui/select.jsx";
 
 export default function FederationSelect({items, onItemClick, activeEntitiesCount}) {
+    console.log(activeEntitiesCount);
     return (
         <Select onValueChange={onItemClick}> {/* consumes value from select item */}
             <SelectTrigger>
