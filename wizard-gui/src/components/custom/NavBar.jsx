@@ -12,9 +12,23 @@ import React from "react";
 import {cn} from "../../lib/utils.js";
 import {NavigationMenuLinkItem} from "../ui/navigation-menu.jsx";
 import ProfileDropdown from "./ProfileDropdown.jsx";
-import {GearIcon} from "@radix-ui/react-icons";
+import {GearIcon, UpdateIcon} from "@radix-ui/react-icons";
+import {Button} from "../ui/button.jsx";
+import {useStore} from "../../hooks/store.jsx";
+import {UploadCloud} from "lucide-react";
 
 export default function NavBar() {
+    const pushStateToBackend = useStore((state) => state.pushStateToBackend);
+
+    const configurationPages = [
+        "roles",
+        "remote-entities",
+        "federations",
+
+    ]
+
+    const userOnConfigurationPage = configurationPages.some(page => window.location.pathname.includes(page))
+
 
     return (
         <NavigationMenu id="navbar">
@@ -52,7 +66,7 @@ export default function NavBar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                <NavigationMenuTrigger>Proxy configuration</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>Proxy configuration</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className="text-left grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                             <li className="row-span-3">
@@ -83,6 +97,12 @@ export default function NavBar() {
             </NavigationMenuList>
 
             <div className="flex">
+                {userOnConfigurationPage &&
+                    <Button size="sm" variant="outline" className="me-5"
+                            onClick={pushStateToBackend}
+
+                    ><UploadCloud/></Button>
+                }
                 <ProfileDropdown>Settings</ProfileDropdown>
             </div>
 
@@ -91,7 +111,7 @@ export default function NavBar() {
     );
 }
 
-const ListItem = React.forwardRef(({ className, title, children, disabled, ...props }, ref) => {
+const ListItem = React.forwardRef(({className, title, children, disabled, ...props}, ref) => {
     return (
         <li>
             <NavigationMenuLink asChild>

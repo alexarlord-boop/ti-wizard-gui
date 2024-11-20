@@ -1,10 +1,12 @@
 import {create} from 'zustand'
 import {persist, createJSONStorage} from 'zustand/middleware'
+import apiClient from "../api/client.js";
+import {toast} from "sonner";
 
 
 export const useStore = create(
     persist(
-        (set) => ({
+        (set, get) => ({
             roles: [],
             federations: [],
 
@@ -44,7 +46,7 @@ export const useStore = create(
                     md_url: details.md_url,
                     is_active: false, // Default to false
                 }));
-                set(() => ({ federations: transformedFederations }));
+                set(() => ({federations: transformedFederations}));
             },
 
 
@@ -66,6 +68,41 @@ export const useStore = create(
                     const data = await fetch('/api/sync').then((res) => res.json());
                     set(data);
                 },
+
+            // Push state to backend
+            pushStateToBackend: async () => {
+                try {
+                    // TODO:- make body structure
+                    const federations = get().federations; // Get the current state
+                    const roles = get().roles;
+                    const entities = get().remoteEntities;
+                    const body = {
+                        federations,
+                        roles,
+                        entities,
+                    };
+
+                    console.log('Pushing state to backend:', body);
+
+
+                    const response = await apiClient.post(
+                        'configuration/',
+                        {
+                            body: JSON.stringify(body),
+                        }
+                    )
+
+                    if (!response.ok) {
+                        throw new Error(`Error: ${response.statusText}`);
+                    }
+
+                    console.log('State successfully pushed to the backend!');
+                    toast.success('State successfully pushed to the backend!');
+                } catch (error) {
+                    console.error('Failed to push state to backend:', error);
+                    toast.error('Failed to push state to backend');
+                }
+            },
 
             // Helper methods
             updateEntitiesByFederation: (url, isActive) => set((state) => ({
