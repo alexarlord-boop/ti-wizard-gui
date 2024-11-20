@@ -15,6 +15,11 @@ const titles = {
     sps: 'SAML SP',
 }
 
+const types = {
+    'SAML_IDP': 'idps',
+    'SAML_SP': 'sps',
+}
+
 
 const FederationEntityDialog = ({
                                     isDialogOpen,
@@ -34,8 +39,9 @@ const FederationEntityDialog = ({
     const hostedEntities = useStore((state) => state.remoteEntities);
     console.log(hostedEntities);
     console.log(selectedFederation);
+    console.log(selectedEntityType);
     const hostedEntitiesCount = filteredFederations.reduce((acc, federation) => {
-        acc[federation.name] = hostedEntities.filter(entity => entity.entity_type === selectedEntityType && entity.ra === federation.name).length;
+        acc[federation.name] = hostedEntities.filter(entity => types[entity.entity_type] === selectedEntityType && entity.ra === federation.name).length;
         return acc;
     }, {});
     const isHosted = (entity) => hostedEntities.some(e => e.id === entity.id);

@@ -84,6 +84,7 @@ function RemotePage() {
                 RA: entity.ra,
                 is_active: entity.is_active,
             }));
+            setData(dt);
         },
         [activeEntities]
     )
