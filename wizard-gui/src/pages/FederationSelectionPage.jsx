@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {
     Accordion,
@@ -13,7 +13,8 @@ import {Switch} from "@/components/ui/switch";  // Import Switch from ShadCN
 import {Input} from "@/components/ui/input";
 import {Spinner} from "../components/ui/Loader.jsx";
 import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
-import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.jsx";  // Import Spinner
+import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.jsx";
+import {useStore} from "../hooks/store.jsx";
 
 const FederationSelectionPage = () => {
     const {t, i18n} = useTranslation();
@@ -25,26 +26,48 @@ const FederationSelectionPage = () => {
         setSearchTerm(e.target.value.toLowerCase());
     };
 
-    const {status, data} = useFederationsQuery();
-    const updateFederationMutation = useUpdateFederationMutation()
+    const initializeFederations = useStore((state) => state.initializeFederations);
+    const federations = useStore((state) => state.federations);
+    const changeFederationActiveStatus = useStore((state) => state.changeFederationActiveStatus);
+
+    useEffect(() => {
+        // Fetch data from the JSON server
+       if (federations.length === 0) {
+           const fetchFederations = async () => {
+               try {
+                   const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
+                   const data = await response.json();
+                   const toFilterOut = "https://www.edugain.org";
+                   delete data[toFilterOut];
+                   console.log(data);
+                   initializeFederations(data); // Populate the state
+               } catch (error) {
+                   console.error('Failed to fetch federations:', error);
+               }
+           };
+
+           fetchFederations();
+       }
+    }, [initializeFederations]);
 
     // Filter federations based on search term
-    const filteredFederations = data?.filter(federation =>
+    const filteredFederations = federations?.filter(federation =>
         federation.name.toLowerCase().includes(searchTerm)
     ) || [];
 
     const handleSwitchChange = (federation) => {
-        setLoadingFederations(prev => ({...prev, [federation.url]: true}));
+        // setLoadingFederations(prev => ({...prev, [federation.url]: true}));
         // console.log(federation);
-        updateFederationMutation.mutate({
-            id: federation.id,
-            status: !federation.is_active,
-            url: federation.url,
-        }, {
-            onSettled: () => {
-                setLoadingFederations(prev => ({...prev, [federation.url]: false}));
-            }
-        });
+        // updateFederationMutation.mutate({
+        //     id: federation.id,
+        //     status: !federation.is_active,
+        //     url: federation.url,
+        // }, {
+        //     onSettled: () => {
+        //         setLoadingFederations(prev => ({...prev, [federation.url]: false}));
+        //     }
+        // });
+        changeFederationActiveStatus(federation.url, !federation.is_active);
     };
 
     return (
