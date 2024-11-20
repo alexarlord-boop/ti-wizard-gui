@@ -42,6 +42,11 @@ const FormSchema = z.object({
 
     display_name: z.string().min(2, {
         message: "Display name must be at least 2 characters.",
+    }).refine((display_name) => {
+        const roles = useStore.getState().roles;
+        return !roles.some(role => role.display_name === display_name);
+    }, {
+        message: "Display name must be unique.",
     }),
     // TODO:- improve file format validation
     // FIle for logo_image should be in file instance
@@ -53,6 +58,11 @@ const FormSchema = z.object({
 
     entity_id: z.string().includes("https://", {
         message: "Entity ID must be a valid URL.",
+    }).refine((entity_id) => {
+        const roles = useStore.getState().roles;
+        return !roles.some(role => role.entity_id === entity_id);
+    }, {
+        message: "Entity ID must be unique.",
     }),
 
 })
