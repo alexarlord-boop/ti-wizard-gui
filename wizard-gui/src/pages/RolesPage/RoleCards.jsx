@@ -4,7 +4,7 @@ import {Button} from "../../components/ui/button.jsx";
 import {PlusCircle, PlusIcon} from "lucide-react";
 import {humanReadableTypes, types} from "../../lib/roles_utils.js";
 
-function RoleCards({ roles, handleAddRole, handleDeleteRole }) {
+function RoleCards({ roles, handleAddRole}) {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4" id="role-cards">
@@ -17,7 +17,6 @@ function RoleCards({ roles, handleAddRole, handleDeleteRole }) {
                             key={type}
                             role={role}
                             onAdd={() => handleAddRole(type)}
-                            onDelete={() => handleDeleteRole(role.id)}
                         />
                     )} else {
                        return (

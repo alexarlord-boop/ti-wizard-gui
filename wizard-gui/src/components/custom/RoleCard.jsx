@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
+import {useStore} from "../../hooks/store.jsx";
 
 import {
     Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle,
@@ -23,17 +24,30 @@ import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStat
 import ConfirmationModal from "./ConfirmationModal.jsx";
 import {humanReadableTypes} from "../../lib/roles_utils.js";
 
-export default function RoleCard({role, onAdd, onDelete}) {
+export default function RoleCard({role, onAdd}) {
     const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-const handleDelete = () => {
-    console.log("Delete role");
-    setIsModalOpen(true);
-}
+    const beforeDelete = () => {
+        console.log("Delete role");
+        setIsModalOpen(true);
+    }
+
+    const changeRoleActiveStatus = useStore((state) => state.changeRoleActiveStatus);
+    const deleteRole = useStore((state) => state.deleteRole);
+    const handleActivation = (entity_id, status) => {
+        console.log(role)
+        changeRoleActiveStatus(entity_id, status);
+    }
+
+    const handleDelete = () => {
+        deleteRole(role.entity_id);
+    }
+
+
 
     const confirmDelete = () => {
-        onDelete();
+        handleDelete();
         setIsModalOpen(false);
     };
 
@@ -50,11 +64,7 @@ const handleDelete = () => {
                             checked={role.is_active}
                             onClick={
                                 () => {
-                                    changeActiveStatusRoleMutation.mutate({
-                                        role_id: role.id,
-                                        entity_name: role.display_name,
-                                        is_active: !role.is_active
-                                    });
+                                    handleActivation(role.entity_id, !role.is_active)
                                 }
                             }
                             className="ms-2 data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
@@ -73,13 +83,13 @@ const handleDelete = () => {
                     {role.image_url ?
                         <img src={role.image_url} alt="Role Logo" className=" max-w-[70px] max-h-[70px]"/>
                         :
-                        <Avatar className="scale-2" >
+                        <Avatar className="scale-2">
                             <AvatarFallback title="role logo is missing"></AvatarFallback>
                         </Avatar>
 
                     }
                 </div>
-                <RoleDropdown role={role} handleDelete={handleDelete} />
+                <RoleDropdown role={role} handleDelete={beforeDelete}/>
 
             </CardContent>
 
@@ -92,7 +102,9 @@ const handleDelete = () => {
                 isOpen={isModalOpen}
                 onConfirm={confirmDelete}
                 allowConfirmation={!role.is_active}
-                onClose={() => {setIsModalOpen(false)}}
+                onClose={() => {
+                    setIsModalOpen(false)
+                }}
                 title={`Delete ${humanReadableTypes[role.entity_type]}`}
                 description={role.is_active ? "This role is active. Deactivate role first" : "All related entities will be removed"}/>
 

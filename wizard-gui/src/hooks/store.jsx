@@ -19,11 +19,11 @@ export const useStore = create(
                 set((state) => ({
                     roles: state.roles.map((r) => (r.id === id ? {...r, ...data} : r)),
                 })),
-            changeRoleActiveStatus: (id, status) => set((state) => ({
-                roles: state.roles.map((r) => (r.id === id ? {...r, is_active: status} : r)),
+            changeRoleActiveStatus: (entity_id, status) => set((state) => ({
+                roles: state.roles.map((r) => (r.entity_id === entity_id ? {...r, is_active: status} : r)),
             })),
-            deleteRole: (id) =>
-                set((state) => ({roles: state.roles.filter((r) => r.id !== id)})),
+            deleteRole: (entity_id) =>
+                set((state) => ({roles: state.roles.filter((r) => r.entity_id !== entity_id)})),
 
 
             // Federation management

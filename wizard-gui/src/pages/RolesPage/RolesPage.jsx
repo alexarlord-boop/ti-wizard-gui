@@ -1,4 +1,6 @@
 import React, {useState} from "react";
+import {useStore} from "../../hooks/store.jsx";
+
 import RoleCard from "../../components/custom/RoleCard.jsx";
 import Breadcrumbs from "../../components/custom/Breadcrumbs.jsx";
 import {Spinner} from "../../components/ui/Loader.jsx";
@@ -67,7 +69,7 @@ function RolesPage() {
     usePageTour(steps);  // Use the custom hook with steps
 
 
-    const {status, data: roles} = useRolesQuery();
+    const roles = useStore((state) => state.roles);
 
 
     const handleAddRole = (entity_type) => {
@@ -75,32 +77,12 @@ function RolesPage() {
         setEntityType(entity_type);
     };
 
-    const updateRoleMutation = useUpdateRoleMutation()
-    const deleteRoleMutation = useDeleteRoleMutation()
-
-    const handleDeleteRole = (role_id) => {
-        deleteRoleMutation.mutate({
-            role_id: role_id
-        });
-    }
-
-    if (status === "success") {
-        console.log(roles);
-    }
-
-    if (status === "loading") {
-        return <Spinner size="small" className="mt-20"/>;
-    }
-
-    if (status === "error") {
-        return <div>Error fetching roles</div>;
-    }
     return (
         <>
             <Breadcrumbs itemList={[{path: '/', label: 'Home'}, {path: '/roles', label: 'My Roles'}]}/>
 
 
-            <RoleCards roles={roles} handleAddRole={handleAddRole} handleDeleteRole={handleDeleteRole}/>
+            <RoleCards roles={roles} handleAddRole={handleAddRole}/>
 
 
             <RoleAddForm

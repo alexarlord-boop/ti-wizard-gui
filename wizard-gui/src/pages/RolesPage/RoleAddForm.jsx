@@ -2,6 +2,9 @@
 
 import React, {useEffect, useState} from "react";
 
+import {useStore} from "../../hooks/store.jsx";
+
+
 import {zodResolver} from "@hookform/resolvers/zod"
 import {useForm} from "react-hook-form"
 import {z} from "zod"
@@ -69,6 +72,9 @@ export default function RoleAddForm(
         setImageUrl("");
         form.reset();
     }
+
+
+    const addRole = useStore((state) => state.addRole);
     const handleAddRole = (formData) => {
         const data = {
             entity_type: entity_type,
@@ -77,8 +83,9 @@ export default function RoleAddForm(
             display_name: formData.display_name,
             logo_image: formData.logo_image
         }
-        console.log(data)
-        addRoleMutation.mutate(data);
+        // console.log(data)
+        // addRoleMutation.mutate(data);
+        addRole(data);
     }
 
     const form = useForm({
