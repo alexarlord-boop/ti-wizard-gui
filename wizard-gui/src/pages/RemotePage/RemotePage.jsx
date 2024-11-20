@@ -23,8 +23,8 @@ import ConfirmationModal from "../../components/custom/ConfirmationModal.jsx";
 import {humanReadableTypes} from "../../lib/roles_utils.js";
 
 const titles = {
-    idps: 'SAML IDP',
-    sps: 'SAML SP',
+    'SAML_IDP': 'SAML IDP',
+    'SAML_SP': 'SAML SP',
 };
 
 function RemotePage() {
@@ -84,7 +84,6 @@ function RemotePage() {
                 RA: entity.ra,
                 is_active: entity.is_active,
             }));
-            setData(dt);
         },
         [activeEntities]
     )

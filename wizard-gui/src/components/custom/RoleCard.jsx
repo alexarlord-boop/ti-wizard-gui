@@ -35,9 +35,12 @@ export default function RoleCard({role, onAdd}) {
 
     const changeRoleActiveStatus = useStore((state) => state.changeRoleActiveStatus);
     const deleteRole = useStore((state) => state.deleteRole);
+    const updateEntitiesByRole = useStore((state) => state.updateEntitiesByRole);
     const handleActivation = (entity_id, status) => {
         console.log(role)
         changeRoleActiveStatus(entity_id, status);
+        updateEntitiesByRole(role.entity_type, status);
+
     }
 
     const handleDelete = () => {

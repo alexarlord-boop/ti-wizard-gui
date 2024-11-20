@@ -108,7 +108,12 @@ export const rolesApi = {
 }
 
 export const remoteEntitiesApi = {
+
     async list(federation, entity_type) {
+        const types = {
+            "idps": "SAML_IDP",
+            "sps": "SAML_SP"
+        }
         if (federation && entity_type) {
             const response = await fetch(`https://md.tiw.incubator.geant.org/md/fed/${federation.toLowerCase()}/${entity_type.toLowerCase()}.json`);
             if (!response.ok) {
@@ -123,7 +128,7 @@ export const remoteEntitiesApi = {
                 return {
                     id,
                     is_active,
-                    entity_type,
+                    entity_type: types[entity_type],
                     ...details
                 };
             }) : [];

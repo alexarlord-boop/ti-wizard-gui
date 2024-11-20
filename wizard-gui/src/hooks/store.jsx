@@ -113,11 +113,19 @@ export const useStore = create(
                     entity.federationUrl === url ? {...entity, is_active: isActive} : entity
                 ),
             })),
-            updateEntitiesByRole: (roleId, isActive) => set((state) => ({
-                remoteEntities: state.remoteEntities.map((entity) =>
-                    entity.roleId === roleId ? {...entity, is_active: isActive} : entity
-                ),
-            })),
+            updateEntitiesByRole: (roleType, isActive) => {
+                console.log(roleType, isActive);
+                const typeRelations = {
+                    "SAML_IDP": "SAML_SP",
+                    "SAML_SP": "SAML_IDP"
+                }
+
+                set((state) => ({
+                    remoteEntities: state.remoteEntities.map((entity) =>
+                        entity.entity_type === typeRelations[roleType] ? {...entity, is_active: isActive} : entity
+                    ),
+                }))
+            },
 
 
         }),

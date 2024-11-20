@@ -27,6 +27,7 @@ import RegistrationFilter from "./RegistrationFilter.jsx";
 import ConfirmationModal from "../../../components/custom/ConfirmationModal.jsx";
 import {useStore} from "../../../hooks/store.jsx";
 import {Switch} from "@/components/ui/switch";
+import {titlesToTypes, typeRelations} from "../../../lib/roles_utils.js";
 
 
 export function DataTable({handleViewDetails, data}) {
@@ -41,10 +42,11 @@ export function DataTable({handleViewDetails, data}) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEntity, setSelectedEntity] = useState(null);
 
+    const roles = useStore((state) => state.roles);
     const changeEntityActiveStatus = useStore((state) => state.changeEntityActiveStatus);
     const deleteEntity = useStore((state) => state.deleteEntity);
 
-
+    console.log(data);
     const onDelete = (entity) => {
         setSelectedEntity(entity);
         setIsModalOpen(true)
@@ -204,9 +206,12 @@ export function DataTable({handleViewDetails, data}) {
             accessorKey: "status",
             header: () => <div className={`text-center ${smColWidth}`}>Status</div>,
             cell: ({row}) => {
-                const {is_active, id} = row.original;
+                const {is_active, role, id} = row.original;
+                const activeRoles = roles.map((role) => role.is_active ? role.entity_type : null);
+                const isDisabled = !activeRoles.includes(typeRelations[titlesToTypes[role]]);
                 return <Switch
                     key={id}
+                    disabled={isDisabled}
                     checked={is_active}
                     onCheckedChange={() => {
                         changeEntityActiveStatus(id, !is_active);
