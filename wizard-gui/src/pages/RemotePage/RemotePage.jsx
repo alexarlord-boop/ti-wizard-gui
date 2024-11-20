@@ -1,5 +1,7 @@
 // RemotePage.jsx
 import {useState, useEffect} from "react";
+import {useStore} from "../../hooks/store.jsx";
+
 import {useQuery} from "react-query";
 import {useRolesQuery} from "../../hooks/useRolesQuery.jsx";
 import {useFederationsQuery} from "../../hooks/useFederationsQuery.jsx";
@@ -33,18 +35,18 @@ function RemotePage() {
     const [searchFederation, setSearchFederation] = useState("");
     const [searchEntity, setSearchEntity] = useState("");
 
-    const {status, data: roles} = useRolesQuery();
-    const {fedStatus, data: fedData} = useFederationsQuery();
+    const roles = useStore((state) => state.roles);
+    const federations = useStore((state) => state.federations);
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 
 
-    console.log(fedData);
-    // TODO:- probably is not needed
-    useEffect(() => {
-        if (selectedFederation) {
-            refetch();
-        }
-    }, [selectedFederation]);
+    // console.log(federations);
+    // // TODO:- probably is not needed
+    // useEffect(() => {
+    //     if (selectedFederation) {
+    //         refetch();
+    //     }
+    // }, [selectedFederation]);
 
     useEffect(() => {
         setSelectedEntity(null);
@@ -67,12 +69,7 @@ function RemotePage() {
         setData(dt);
     }, [isDialogOpen]);
 
-    if (status === "loading" || fedStatus === "loading") {
-        return <Spinner size="sm"/>;
-    }
-    if (status === "error" || fedStatus === "error") {
-        return <div>Error fetching roles</div>;
-    }
+
 
     const options = getAvailableOptions(roles);
 
@@ -107,7 +104,7 @@ function RemotePage() {
                 isDialogOpen={isDialogOpen}
                 setIsDialogOpen={setIsDialogOpen}
                 selectedEntityType={selectedEntityType}
-                filteredFederations={fedData?.filter(federation => federation.is_active && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || []}
+                filteredFederations={federations?.filter(federation => federation.is_active && federation.name.toLowerCase().includes(searchFederation.toLowerCase())) || []}
                 entities={entities}
                 entityStatus={entityStatus}
                 handleFederationClick={setSelectedFederation}
