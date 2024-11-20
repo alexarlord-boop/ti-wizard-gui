@@ -1,5 +1,5 @@
 // RemotePage.jsx
-import {useState, useEffect} from "react";
+import React, {useState, useEffect} from "react";
 import {useStore} from "../../hooks/store.jsx";
 
 import {useQuery} from "react-query";
@@ -19,6 +19,8 @@ import AddEntityButtons from "./AddEntityButtons.jsx";
 import FederationEntityDialog from "./FederationEntityDialog.jsx";
 import EntityDetails from "../../components/custom/EntityDetails.jsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import ConfirmationModal from "../../components/custom/ConfirmationModal.jsx";
+import {humanReadableTypes} from "../../lib/roles_utils.js";
 
 const titles = {
     idps: 'SAML IDP',
@@ -34,6 +36,7 @@ function RemotePage() {
     const [selectedEntity, setSelectedEntity] = useState(null);
     const [searchFederation, setSearchFederation] = useState("");
     const [searchEntity, setSearchEntity] = useState("");
+
 
     const roles = useStore((state) => state.roles);
     const federations = useStore((state) => state.federations);
@@ -72,6 +75,20 @@ function RemotePage() {
         setData(dt);
     }, [isDialogOpen]);
 
+    useEffect(
+        () => {
+            let dt = activeEntities?.map(entity => ({
+                id: entity.id,
+                name: getRemoteEntityName(entity),
+                role: titles[entity.entity_type],
+                RA: entity.ra,
+                is_active: entity.is_active,
+            }));
+            setData(dt);
+        },
+        [activeEntities]
+    )
+
 
 
     const options = getAvailableOptions(roles);
@@ -81,16 +98,8 @@ function RemotePage() {
         setIsDialogOpen(true);
     };
 
-    const deleteEntity = useStore((state) => state.deleteEntity);
-    const handleDelete = (entityId) => {
-        const confirmed = window.confirm("Are you sure you want to delete this entity?");
-        if (confirmed) {
-            // remoteEntitiesApi.delete(entityId);
-            deleteEntity(entityId);
-            toast("Entity deleted");
-            setData(prevData => prevData.filter(entity => entity.id !== entityId));
-        }
-    };
+
+
 
     const handleViewDetails = (entity) => {
         // const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
@@ -119,7 +128,7 @@ function RemotePage() {
                 setSearchEntity={setSearchEntity}
                 selectedEntity={selectedEntity}
             />
-            <DataTable handleViewDetails={handleViewDetails} handleDelete={handleDelete} data={data}/>
+            <DataTable handleViewDetails={handleViewDetails} data={data}/>
 
             <Dialog open={isEntityDetailsOpen} onOpenChange={setIsEntityDetailsOpen}>
                 <DialogTitle></DialogTitle>

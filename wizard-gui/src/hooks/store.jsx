@@ -56,9 +56,12 @@ export const useStore = create(
                 set((state) => ({
                     remoteEntities: state.remoteEntities.map((r) => (r.id === id ? {...r, ...data} : r)),
                 })),
-            changeEntityActiveStatus: (id, status) => set((state) => ({
-                remoteEntities: state.remoteEntities.map((r) => (r.id === id ? {...r, is_active: status} : r)),
-            })),
+            changeEntityActiveStatus: (id, status) => {
+                console.log(id, status);
+                set((state) => ({
+                    remoteEntities: state.remoteEntities.map((r) => (r.id === id ? {...r, is_active: status} : r)),
+                }));
+            },
             deleteEntity: (id) => set((state) => ({remoteEntities: state.remoteEntities.filter((r) => r.id !== id)})),
 
 
