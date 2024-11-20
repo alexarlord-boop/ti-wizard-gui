@@ -8,6 +8,7 @@ import EntityNameWithTooltip from "../../components/custom/EntityNameTooltip.jsx
 import EntityDetails from "../../components/custom/EntityDetails.jsx";
 import {cn} from "../../lib/utils.js";
 import {getRemoteEntityName} from "../../services/remoteEntityService.js";
+import {useStore} from "../../hooks/store.jsx";
 
 const titles = {
     idps: 'SAML IDP',
@@ -29,15 +30,16 @@ const FederationEntityDialog = ({
                                     setSearchEntity,
                                     selectedEntity
                                 }) => {
-    const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
-    console.log(activeEntities);
-    const activeEntitiesCount = filteredFederations.reduce((acc, federation) => {
-        acc[federation.name] = activeEntities.filter(entity => entity.entity_type === selectedEntityType && entity.ra === federation.name).length;
+    // const hostedEntities = JSON.parse(localStorage.getItem('hostedEntities') || '[]');
+    const hostedEntities = useStore((state) => state.remoteEntities);
+    console.log(hostedEntities);
+    console.log(selectedFederation);
+    const hostedEntitiesCount = filteredFederations.reduce((acc, federation) => {
+        acc[federation.name] = hostedEntities.filter(entity => entity.entity_type === selectedEntityType && entity.ra === federation.name).length;
         return acc;
     }, {});
-    const isEntityWithRAInActiveList = (entity) => {
-        return activeEntities.some(activeEntity => (activeEntity.id === entity.id && activeEntity.ra === selectedFederation));
-    }
+    const isHosted = (entity) => hostedEntities.some(e => e.id === entity.id);
+    const isInSelectedFederation = (entity) => hostedEntities.some(e => e.id === entity.id && e.ra === selectedFederation);
     return (
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogContent className={cn("max-w-[85%]", "h-[75%]", "block")}>
@@ -53,7 +55,7 @@ const FederationEntityDialog = ({
                             <h3 className="font-bold">Federations <span
                                 className="text-muted-foreground text-sm">({filteredFederations.length})</span></h3>
                             <FederationSelect items={filteredFederations} onItemClick={handleFederationClick}
-                                              activeEntitiesCount={activeEntitiesCount}/>
+                                              hostedEntitiesCount={hostedEntitiesCount}/>
                             <div className="mt-10">
                                 <h3 className="font-bold">{titles[selectedEntityType]} <span
                                     className="text-muted-foreground text-sm">({entities?.length || 0})</span>
@@ -73,7 +75,7 @@ const FederationEntityDialog = ({
                                         ) : (
                                             entities
                                                 .filter(entity => getRemoteEntityName(entity).toLowerCase().includes(searchEntity.toLowerCase()))
-                                                .sort((a, b) => b.is_active - a.is_active)
+                                                .sort((a, b) => isHosted(b) - isHosted(a))
                                                 .map(entity => {
                                                         const entityName = getRemoteEntityName(entity);
                                                         // console.log(selectedFederation);
@@ -91,11 +93,11 @@ const FederationEntityDialog = ({
                                                                 }}
                                                             >
                                                                <span className="flex items-center align-middle ">
-                                                        {entity.is_active && (isEntityWithRAInActiveList(entity)) ?
+                                                        {(isHosted(entity) && isInSelectedFederation(entity)) ?
                                                             <CheckCircle size="15"
                                                                          className="mr-3 text-green-600"/>
                                                             :
-                                                            (entity.is_active && !isEntityWithRAInActiveList(entity)) ?
+                                                            (isHosted(entity) && !isInSelectedFederation(entity)) ?
                                                                 <CheckCircle size="15"
                                                                              className="mr-3 text-black"/>
                                                                 :
@@ -133,7 +135,7 @@ const FederationEntityDialog = ({
                     </div>
                     <div className="">
                         <h3 className="font-bold">Entity details:</h3>
-                        <EntityDetails entity={selectedEntity} entity_type={selectedEntityType} activeEntities={activeEntities}
+                        <EntityDetails entity={selectedEntity} entity_type={selectedEntityType} hostedEntities={hostedEntities}
                                        withAction></EntityDetails>
                     </div>
                 </div>

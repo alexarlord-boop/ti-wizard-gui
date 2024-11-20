@@ -1,6 +1,6 @@
 import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "../ui/select.jsx";
 
-export default function FederationSelect({items, onItemClick, activeEntitiesCount}) {
+export default function FederationSelect({items, onItemClick, hostedEntitiesCount}) {
     return (
         <Select onValueChange={onItemClick}> {/* consumes value from select item */}
             <SelectTrigger>
@@ -9,7 +9,7 @@ export default function FederationSelect({items, onItemClick, activeEntitiesCoun
             <SelectContent>
                 <SelectGroup>
                     {items
-                        // .sort((a, b) => activeEntitiesCount[b.name.toLowerCase()] - activeEntitiesCount[a.name.toLowerCase()])
+                        // .sort((a, b) => hostedEntitiesCount[b.name.toLowerCase()] - hostedEntitiesCount[a.name.toLowerCase()])
                         .sort((a, b) => a.name.localeCompare(b.name)) // sort alphabetically
                         .map(fed => (
                         <SelectItem
@@ -20,9 +20,9 @@ export default function FederationSelect({items, onItemClick, activeEntitiesCoun
                             <div className="inline justify-between">
                                 {fed.name}
                             </div>
-                            {activeEntitiesCount[fed.name] > 0 && (
+                            {hostedEntitiesCount[fed.name] > 0 && (
                                 <span className="bg-green-500 text-white rounded-full px-2 py-0 text-xs ml-2">
-                                    {activeEntitiesCount[fed.name] }
+                                    {hostedEntitiesCount[fed.name] }
                                 </span>
                             )}
                         </SelectItem>

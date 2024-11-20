@@ -1,4 +1,6 @@
 import React, {useEffect, useState} from "react";
+import {useStore} from "../../hooks/store.jsx";
+
 import {Card, CardContent, CardFooter, CardHeader} from "../ui/card.jsx";
 import {Avatar, AvatarFallback} from "../ui/avatar.jsx";
 import {useUpdateEntityMutation} from "../../hooks/useUpdateEntityMutation.jsx";
@@ -8,8 +10,11 @@ import {CheckCircle, Divide} from "lucide-react";
 import {getRemoteEntityName} from "../../services/remoteEntityService.js";
 import EntityNameWithTooltip from "./EntityNameTooltip.jsx";
 
-const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
-    const updateEntityMutation = useUpdateEntityMutation();
+const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
+    // const updateEntityMutation = useUpdateEntityMutation();
+    const addEntity = useStore((state) => state.addEntity);
+    const deleteEntity = useStore((state) => state.deleteEntity);
+    let entities = useStore((state) => state.remoteEntities);
 
     const [entityState, setEntityState] = useState({
         is_active: entity?.is_active || false,
@@ -21,7 +26,7 @@ const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
         logo: entity?.logo || ""
     });
 
-    const entityPublishedIn = activeEntities?.find((activeEntity) => activeEntity?.id === entity?.id) || null;
+    const entityPublishedIn = hostedEntities?.find((activeEntity) => activeEntity?.id === entity?.id) || null;
 
     useEffect(() => {
         if (entity) {
@@ -44,29 +49,40 @@ const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
 
 
     const handleAdd = () => {
-        updateEntityMutation.mutate(
-            {
-                entity: entity,
-                status: !entityState.is_active,
-            },
-            {
-                onSuccess: () => {
-                    setEntityState((prevState) => ({
-                        ...prevState,
-                        is_active: !prevState.is_active
-                    }));
-                    toast("Entity updated successfully");
-                },
-                onError: () => {
-                    toast("Failed to update entity");
-                },
-            }
-        );
+        // check that entity is not already added
+        console.log(entity);
+        const entityExists = entities.find((e) => e.id === entityState.id);
+        if (entityExists) {
+
+            deleteEntity(entity.id);
+            return;
+        }
+
+        addEntity(entity);
+        // updateEntityMutation.mutate(
+        //     {
+        //         entity: entity,
+        //         status: !entityState.is_active,
+        //     },
+        //     {
+        //         onSuccess: () => {
+        //             setEntityState((prevState) => ({
+        //                 ...prevState,
+        //                 is_active: !prevState.is_active
+        //             }));
+        //             toast("Entity updated successfully");
+        //         },
+        //         onError: () => {
+        //             toast("Failed to update entity");
+        //         },
+        //     }
+        // );
     };
 
     const name = getRemoteEntityName(entity);
 
     // console.log(entity);
+    const isHosted = (entity) => hostedEntities.some(e => e.id === entity.id);
 
     return (
         <Card>
@@ -75,7 +91,7 @@ const EntityDetails = ({entity, entity_type, activeEntities, withAction}) => {
                     {name}
                 </h1>
                 {withAction &&
-                    <Button onClick={handleAdd}>{entityState.is_active ? "- Remove" : "+ Add"}</Button>}
+                    <Button onClick={handleAdd}>{isHosted(entity) ? "- Remove" : "+ Add"}</Button>}
             </CardHeader>
 
             <CardContent>

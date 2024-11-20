@@ -37,6 +37,8 @@ function RemotePage() {
 
     const roles = useStore((state) => state.roles);
     const federations = useStore((state) => state.federations);
+    const activeEntities = useStore((state) => state.remoteEntities);
+
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 
 
@@ -53,12 +55,13 @@ function RemotePage() {
 
     }, [selectedFederation]);
 
+
     useEffect(() => {
         setSelectedFederation(null);
         setSelectedEntity(null);
         setSearchEntity("");
 
-        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        // const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
         let dt = activeEntities?.map(entity => ({
             id: entity.id,
             name: getRemoteEntityName(entity),
@@ -78,17 +81,19 @@ function RemotePage() {
         setIsDialogOpen(true);
     };
 
+    const deleteEntity = useStore((state) => state.deleteEntity);
     const handleDelete = (entityId) => {
         const confirmed = window.confirm("Are you sure you want to delete this entity?");
         if (confirmed) {
-            remoteEntitiesApi.delete(entityId);
+            // remoteEntitiesApi.delete(entityId);
+            deleteEntity(entityId);
             toast("Entity deleted");
             setData(prevData => prevData.filter(entity => entity.id !== entityId));
         }
     };
 
     const handleViewDetails = (entity) => {
-        const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
+        // const activeEntities = JSON.parse(localStorage.getItem('activeEntities') || '[]');
         const activeEntity = activeEntities.find(e => e.id === entity.id);
         setSelectedEntity(activeEntity);
         setSelectedEntityType(activeEntity.entity_type);
