@@ -220,10 +220,15 @@ export function DataTable({handleViewDetails, data}) {
                 />
             },
             sortingFn: (rowA, rowB) => {
-                const statusA = rowA.original.status;
-                const statusB = rowB.original.status;
-                if (statusA === "active" && statusB !== "active") return -1;
-                if (statusA !== "active" && statusB === "active") return 1;
+                // const statusA = rowA.original.is_active;
+                // const statusB = rowB.original.is_active;
+                const disabledA = !roles.map((role) => role.is_active ? role.entity_type : null).includes(typeRelations[titlesToTypes[rowA.original.role]]);
+                const disabledB = !roles.map((role) => role.is_active ? role.entity_type : null).includes(typeRelations[titlesToTypes[rowB.original.role]]);
+
+                if (disabledA && !disabledB) return 1;
+                if (!disabledA && disabledB) return -1;
+                // if (statusA && !statusB) return -1;
+                // if (!statusA && statusB) return 1;
                 return 0;
             },
         },
