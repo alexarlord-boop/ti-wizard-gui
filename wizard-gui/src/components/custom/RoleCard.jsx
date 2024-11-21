@@ -23,11 +23,13 @@ import RoleDropdown from "../../pages/RolesPage/RoleDropdown.jsx";
 import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStatusRoleMutation.jsx";
 import ConfirmationModal from "./ConfirmationModal.jsx";
 import {humanReadableTypes, typeRelations} from "../../lib/roles_utils.js";
+import {Checkbox} from "../ui/checkbox.jsx";
 
 export default function RoleCard({role, onAdd}) {
     const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+    const [isEntityDeletionChecked, setIsEntityDeletionChecked] = useState(false);
 
     const beforeDelete = () => {
         console.log("Delete role");
@@ -38,10 +40,14 @@ export default function RoleCard({role, onAdd}) {
     const changeRoleActiveStatus = useStore((state) => state.changeRoleActiveStatus);
     const deleteRole = useStore((state) => state.deleteRole);
     const updateEntitiesByRole = useStore((state) => state.updateEntitiesByRole);
+    const deleteEntitiesByRole = useStore((state) => state.deleteEntitiesByRole);
 
     const beforeChangeStatus = () => {
-
-        setIsStatusModalOpen(true);
+        if (entities.some(e => e.entity_type === typeRelations[role.entity_type])){
+            setIsStatusModalOpen(true);
+        } else {
+            handleActivation(role.entity_id, !role.is_active);
+        }
 
     }
 
@@ -59,6 +65,9 @@ export default function RoleCard({role, onAdd}) {
 
     const handleDelete = () => {
         deleteRole(role.entity_id);
+        if (isEntityDeletionChecked) {
+            deleteEntitiesByRole(role.entity_type);
+        }
     }
 
 
@@ -123,9 +132,31 @@ export default function RoleCard({role, onAdd}) {
                     setIsModalOpen(false)
                 }}
                 title={`Delete ${humanReadableTypes[role.entity_type]}`}
-                description={role.is_active ? "This role is active. Deactivate role first" : "All related entities will be removed"}/>
+                description={role.is_active ? "This role is active. Deactivate role first" : "Entities related to this role won't operate."}
+                content={
+                    (
+                        !role.is_active && <span className="flex ">
+                        <Checkbox
+                            id="deletion"
+                            checked={isEntityDeletionChecked} // Ensure the checkbox reflects the state
+                            onCheckedChange={() => {
+                                console.log(isEntityDeletionChecked)
+                                setIsEntityDeletionChecked(!isEntityDeletionChecked);
+                            }}
+                        />
+                        <label
+                            htmlFor="deletion"
+                            className="ms-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                            Delete all related entities
+                        </label>
+                    </span>
+                    )
 
-            {role &&
+                }/>
+
+
+            {(role && entities.some(e => e.entity_type === typeRelations[role.entity_type])) &&
                 <ConfirmationModal
                     isOpen={isStatusModalOpen}
                     onConfirm={confirmChangeStatus}
@@ -134,16 +165,22 @@ export default function RoleCard({role, onAdd}) {
                         setIsStatusModalOpen(false)
                     }}
                     title={`${role.is_active ? "Deactivate" : "Activate"} ${humanReadableTypes[role.entity_type]}`}
-                    description={`${role.is_active ? "Deactivation" : "Activation"} of this role will ${role.is_active ? "deactivate":"activate"} related ${humanReadableTypes[typeRelations[role.entity_type]]} entities:`}
-                    content={
-                    //     just a list of names
-                        <ul>
-                            {entities.filter(e => e.entity_type === typeRelations[role.entity_type]).map(e => <li key={e.id}>{e.resourceName}</li>)}
-                        </ul>
+                    description={
+                        <html>
+                        {role.is_active ? "Deactivation" : "Activation"}
+                        &nbsp; of this role will {role.is_active ? <Badge className=" bg-red-500">suspend</Badge> : <Badge className=" bg-green-500">activate</Badge>} related {humanReadableTypes[typeRelations[role.entity_type]]} entities:
+                        </html>
+                        }
+                        content={
+                            //     just a list of names
+                            <ul>
+                                {entities.filter(e => e.entity_type === typeRelations[role.entity_type]).map(e => <li
+                                    key={e.id}>{e.resourceName}</li>)}
+                            </ul>
 
-                    }
-                />
-            }
+                        }
+                    />
+                }
 
 
         </Card>

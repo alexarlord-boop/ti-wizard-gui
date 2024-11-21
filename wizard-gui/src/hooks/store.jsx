@@ -2,6 +2,7 @@ import {create} from 'zustand'
 import {persist, createJSONStorage} from 'zustand/middleware'
 import apiClient from "../api/client.js";
 import {toast} from "sonner";
+import {typeRelations} from "../lib/roles_utils.js";
 
 
 export const useStore = create(
@@ -126,6 +127,15 @@ export const useStore = create(
                     ),
                 }))
             },
+
+            deleteEntitiesByRole: (roleType) => {
+                console.log(roleType)
+                set((state) => ({
+                    remoteEntities: state.remoteEntities.filter((entity) =>
+                        entity.entity_type !== typeRelations[roleType]
+                    ),
+                }))
+            }
 
 
         }),
