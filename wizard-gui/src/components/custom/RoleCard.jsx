@@ -22,20 +22,34 @@ import {Switch} from "../ui/switch.jsx";
 import RoleDropdown from "../../pages/RolesPage/RoleDropdown.jsx";
 import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStatusRoleMutation.jsx";
 import ConfirmationModal from "./ConfirmationModal.jsx";
-import {humanReadableTypes} from "../../lib/roles_utils.js";
+import {humanReadableTypes, typeRelations} from "../../lib/roles_utils.js";
 
 export default function RoleCard({role, onAdd}) {
     const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
     const beforeDelete = () => {
         console.log("Delete role");
         setIsModalOpen(true);
     }
 
+    const entities = useStore((state) => state.remoteEntities);
     const changeRoleActiveStatus = useStore((state) => state.changeRoleActiveStatus);
     const deleteRole = useStore((state) => state.deleteRole);
     const updateEntitiesByRole = useStore((state) => state.updateEntitiesByRole);
+
+    const beforeChangeStatus = () => {
+
+        setIsStatusModalOpen(true);
+
+    }
+
+    const confirmChangeStatus = () => {
+        handleActivation(role.entity_id, !role.is_active);
+        setIsStatusModalOpen(false)
+    }
+
     const handleActivation = (entity_id, status) => {
         console.log(role)
         changeRoleActiveStatus(entity_id, status);
@@ -48,12 +62,12 @@ export default function RoleCard({role, onAdd}) {
     }
 
 
-
     const confirmDelete = () => {
         handleDelete();
         setIsModalOpen(false);
     };
 
+    console.log(entities)
     return (
 
         <Card id={role.entity_type} className="h-[200px] border-2 border-black">
@@ -67,7 +81,7 @@ export default function RoleCard({role, onAdd}) {
                             checked={role.is_active}
                             onClick={
                                 () => {
-                                    handleActivation(role.entity_id, !role.is_active)
+                                    beforeChangeStatus();
                                 }
                             }
                             className="ms-2 data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
@@ -110,6 +124,27 @@ export default function RoleCard({role, onAdd}) {
                 }}
                 title={`Delete ${humanReadableTypes[role.entity_type]}`}
                 description={role.is_active ? "This role is active. Deactivate role first" : "All related entities will be removed"}/>
+
+            {role &&
+                <ConfirmationModal
+                    isOpen={isStatusModalOpen}
+                    onConfirm={confirmChangeStatus}
+                    // allowConfirmation={!role.is_active}
+                    onClose={() => {
+                        setIsStatusModalOpen(false)
+                    }}
+                    title={`${role.is_active ? "Deactivate" : "Activate"} ${humanReadableTypes[role.entity_type]}`}
+                    description={`${role.is_active ? "Deactivation" : "Activation"} of this role will ${role.is_active ? "deactivate":"activate"} related ${humanReadableTypes[typeRelations[role.entity_type]]} entities:`}
+                    content={
+                    //     just a list of names
+                        <ul>
+                            {entities.filter(e => e.entity_type === typeRelations[role.entity_type]).map(e => <li key={e.id}>{e.resourceName}</li>)}
+                        </ul>
+
+                    }
+                />
+            }
+
 
         </Card>
 
