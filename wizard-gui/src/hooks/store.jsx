@@ -122,6 +122,14 @@ export const useStore = create(
                     })
                 }
 
+                if (fromRole) {
+                    const relatedEntities = entities.filter((entity) => entity.entity_type === typeRelations[fromRole]);
+                    return relatedEntities.filter((entity) => {
+                        const relatedFederation = get().federations.find((federation) => federation.name === entity.ra);
+                        return relatedFederation.is_active;
+                    })
+                }
+
 
 
             },

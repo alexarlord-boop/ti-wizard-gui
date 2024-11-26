@@ -43,7 +43,7 @@ export default function RoleCard({role, onAdd}) {
     const deleteRole = useStore((state) => state.deleteRole);
     const updateEntitiesByRole = useStore((state) => state.updateEntitiesByRole);
     const deleteEntitiesByRole = useStore((state) => state.deleteEntitiesByRole);
-    const possibleToChangeEntitiesCount = possibleToChangeEntities(false,true).length;
+    const possibleToChangeEntitiesCount = possibleToChangeEntities(null,role.entity_type).length;
 
     const beforeChangeStatus = () => {
         if (possibleToChangeEntitiesCount > 0){
@@ -174,7 +174,7 @@ export default function RoleCard({role, onAdd}) {
                         readableTitle={humanReadableTypes[role.entity_type]}
                         readableDescription={humanReadableTypes[typeRelations[role.entity_type]]}
                         filterBy={(e) => e.entity_type === typeRelations[role.entity_type]}
-                        entities={possibleToChangeEntities(false, true)}
+                        entities={possibleToChangeEntities(null, role.entity_type)}
                         isOpen={isStatusModalOpen}
                         onConfirm={confirmChangeStatus}
                         setIsOpen={setIsStatusModalOpen}
