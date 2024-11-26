@@ -24,6 +24,7 @@ import {useChangeActiveStatusRoleMutation} from "../../hooks/useChangeActiveStat
 import ConfirmationModal from "./ConfirmationModal.jsx";
 import {humanReadableTypes, typeRelations} from "../../lib/roles_utils.js";
 import {Checkbox} from "../ui/checkbox.jsx";
+import ChangeStatusConfirmationModal from "./ChangeStatusConfirmationModal.jsx";
 
 export default function RoleCard({role, onAdd}) {
     const changeActiveStatusRoleMutation = useChangeActiveStatusRoleMutation();
@@ -37,13 +38,14 @@ export default function RoleCard({role, onAdd}) {
     }
 
     const entities = useStore((state) => state.remoteEntities);
+    const possibleToChangeEntities = useStore((state) => state.getPossibleToChangeEntities);
     const changeRoleActiveStatus = useStore((state) => state.changeRoleActiveStatus);
     const deleteRole = useStore((state) => state.deleteRole);
     const updateEntitiesByRole = useStore((state) => state.updateEntitiesByRole);
     const deleteEntitiesByRole = useStore((state) => state.deleteEntitiesByRole);
 
     const beforeChangeStatus = () => {
-        if (entities.some(e => e.entity_type === typeRelations[role.entity_type])){
+        if (possibleToChangeEntities(false,true).length > 0){
             setIsStatusModalOpen(true);
         } else {
             handleActivation(role.entity_id, !role.is_active);
@@ -164,29 +166,17 @@ export default function RoleCard({role, onAdd}) {
                 }/>
 
 
-            {(role && entities.some(e => e.entity_type === typeRelations[role.entity_type])) &&
-                <ConfirmationModal
-                    isOpen={isStatusModalOpen}
-                    onConfirm={confirmChangeStatus}
-                    // allowConfirmation={!role.is_active}
-                    onClose={() => {
-                        setIsStatusModalOpen(false)
-                    }}
-                    title={`${role.is_active ? "Deactivate" : "Activate"} ${humanReadableTypes[role.entity_type]}`}
-                    description={
-                        <html>
-                        {role.is_active ? "Deactivation" : "Activation"}
-                        &nbsp; of this role will {role.is_active ? <Badge className=" bg-red-500">suspend</Badge> : <Badge className=" bg-green-500">activate</Badge>} related {humanReadableTypes[typeRelations[role.entity_type]]} entities:
-                        </html>
-                        }
-                        content={
-                            //     just a list of names
-                            <ul>
-                                {entities.filter(e => e.entity_type === typeRelations[role.entity_type]).map(e => <li
-                                    key={e.id}>{e.resourceName}</li>)}
-                            </ul>
-
-                        }
+            {(role && possibleToChangeEntities(false,true).length > 0) &&
+                    <ChangeStatusConfirmationModal
+                        objectType={"role"}
+                        activationOf={role}
+                        readableTitle={humanReadableTypes[role.entity_type]}
+                        readableDescription={humanReadableTypes[typeRelations[role.entity_type]]}
+                        filterBy={(e) => e.entity_type === typeRelations[role.entity_type]}
+                        entities={possibleToChangeEntities(false, true)}
+                        isOpen={isStatusModalOpen}
+                        onConfirm={confirmChangeStatus}
+                        setIsOpen={setIsStatusModalOpen}
                     />
                 }
 

@@ -32,10 +32,7 @@ export const useStore = create(
                 set((state) => ({
                     federations: state.federations.map((f) =>
                         f.url === url ? {...f, is_active: status} : f
-                    ),
-                    remoteEntities: state.remoteEntities.map((entity) =>
-                        entity.federationUrl === url ? {...entity, is_active: status} : entity
-                    ),
+                    )
                 })),
 
             // Initialize federations from server
@@ -109,11 +106,43 @@ export const useStore = create(
             },
 
             // Helper methods
-            updateEntitiesByFederation: (url, isActive) => set((state) => ({
-                remoteEntities: state.remoteEntities.map((entity) =>
-                    entity.federationUrl === url ? {...entity, is_active: isActive} : entity
-                ),
-            })),
+
+            getPossibleToChangeEntities: (fromFederation=false, fromRole=false) => {
+                const { roles, federations, remoteEntities } = get();
+                return remoteEntities.filter(entity => {
+                    const relatedRole = roles.find(role => role.entity_type === typeRelations[entity.entity_type]);
+                    const relatedFederation = federations.find(federation => federation.name === entity.ra);
+                    if (fromFederation) {
+                        return relatedRole?.is_active;
+                    }
+                    if (fromRole) {
+                        return relatedFederation?.is_active;
+                    }
+                });
+            },
+
+            updateEntitiesByFederation: (federationName, isActive) => {
+            //    change entities that  possible to change, use this.getPossibleToChangeEntities
+                if (isActive) {
+                    const possibleToChangeEntities = get().getPossibleToChangeEntities(true);
+                    set((state) => ({
+                        remoteEntities: state.remoteEntities.map((entity) =>
+                            possibleToChangeEntities.includes(entity) ? {...entity, is_active: true} : entity
+                        ),
+                    }))
+
+                } else {
+                    // set all entities to inactive
+                    set((state) => ({
+                        remoteEntities: state.remoteEntities.map((entity) =>
+                            entity.ra === federationName ? {...entity, is_active: false} : entity
+                        ),
+                    }))
+                }
+
+
+            },
+
             updateEntitiesByRole: (roleType, isActive) => {
                 console.log(roleType, isActive);
                 const typeRelations = {
@@ -121,11 +150,21 @@ export const useStore = create(
                     "SAML_SP": "SAML_IDP"
                 }
 
-                set((state) => ({
-                    remoteEntities: state.remoteEntities.map((entity) =>
-                        entity.entity_type === typeRelations[roleType] ? {...entity, is_active: isActive} : entity
-                    ),
-                }))
+                if (isActive) {
+                    const possibleToChangeEntities = get().getPossibleToChangeEntities(false, true);
+                    set((state) => ({
+                        remoteEntities: state.remoteEntities.map((entity) =>
+                            possibleToChangeEntities.includes(entity) ? {...entity, is_active: true} : entity
+                        ),
+                    }))
+                }
+                else {
+                    set((state) => ({
+                        remoteEntities: state.remoteEntities.map((entity) =>
+                            entity.entity_type === typeRelations[roleType] ? {...entity, is_active: false} : entity
+                        ),
+                    }))
+                }
             },
 
             deleteEntitiesByRole: (roleType) => {
@@ -136,7 +175,6 @@ export const useStore = create(
                     ),
                 }))
             }
-
 
         }),
         {

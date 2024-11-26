@@ -43,6 +43,7 @@ export function DataTable({handleViewDetails, data}) {
     const [selectedEntity, setSelectedEntity] = useState(null);
 
     const roles = useStore((state) => state.roles);
+    const federations = useStore((state) => state.federations);
     const changeEntityActiveStatus = useStore((state) => state.changeEntityActiveStatus);
     const deleteEntity = useStore((state) => state.deleteEntity);
 
@@ -206,9 +207,10 @@ export function DataTable({handleViewDetails, data}) {
             accessorKey: "status",
             header: () => <div className={`text-center ${smColWidth}`}>Status</div>,
             cell: ({row}) => {
-                const {is_active, role, id} = row.original;
+                const {is_active, RA, role, id} = row.original;
                 const activeRoles = roles.map((role) => role.is_active ? role.entity_type : null);
-                const isDisabled = !activeRoles.includes(typeRelations[titlesToTypes[role]]);
+                const activeFederations = federations.map((federation) => federation.is_active ? federation.name : null);
+                const isDisabled = !activeRoles.includes(typeRelations[titlesToTypes[role]]) || !activeFederations.includes(RA);
                 return <Switch
                     key={id}
                     disabled={isDisabled}
