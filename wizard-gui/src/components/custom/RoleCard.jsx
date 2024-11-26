@@ -43,9 +43,10 @@ export default function RoleCard({role, onAdd}) {
     const deleteRole = useStore((state) => state.deleteRole);
     const updateEntitiesByRole = useStore((state) => state.updateEntitiesByRole);
     const deleteEntitiesByRole = useStore((state) => state.deleteEntitiesByRole);
+    const possibleToChangeEntitiesCount = possibleToChangeEntities(false,true).length;
 
     const beforeChangeStatus = () => {
-        if (possibleToChangeEntities(false,true).length > 0){
+        if (possibleToChangeEntitiesCount > 0){
             setIsStatusModalOpen(true);
         } else {
             handleActivation(role.entity_id, !role.is_active);
@@ -166,7 +167,7 @@ export default function RoleCard({role, onAdd}) {
                 }/>
 
 
-            {(role && possibleToChangeEntities(false,true).length > 0) &&
+            {(role && possibleToChangeEntitiesCount > 0) &&
                     <ChangeStatusConfirmationModal
                         objectType={"role"}
                         activationOf={role}
