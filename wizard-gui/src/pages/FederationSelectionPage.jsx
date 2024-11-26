@@ -48,17 +48,17 @@ const FederationSelectionPage = () => {
 
     }
 
-    const confirmChangeStatus = () => {
+    const confirmChangeStatus = (ids) => {
         console.log(clickedFederation);
-        handleActivation(clickedFederation, !clickedFederation.is_active);
+        handleActivation(clickedFederation, !clickedFederation.is_active, ids);
         setIsStatusModalOpen(false)
     }
 
-    const handleActivation = (federation, status) => {
+    const handleActivation = (federation, status, ids) => {
 
         console.log(federation);
         changeFederationActiveStatus(federation.url, status);
-        updateEntitiesByFederation(federation.name, status);
+        updateEntitiesByFederation(federation.name, status, ids);
     }
 
 

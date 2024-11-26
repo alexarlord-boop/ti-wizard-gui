@@ -134,7 +134,7 @@ export const useStore = create(
 
             },
 
-            updateEntitiesByFederation: (federationName, isActive) => {
+            updateEntitiesByFederation: (federationName, isActive, ids) => {
             //    change entities that  possible to change, use this.getPossibleToChangeEntities
                console.log(federationName);
                 if (isActive) {
@@ -142,7 +142,7 @@ export const useStore = create(
                     console.log(possibleToChangeEntities);
                     set((state) => ({
                         remoteEntities: state.remoteEntities.map((entity) =>
-                            possibleToChangeEntities.includes(entity) ? {...entity, is_active: true} : entity
+                            possibleToChangeEntities.includes(entity) && ids.includes(entity.id) ? {...entity, is_active: true} : entity
                         ),
                     }))
 
@@ -158,7 +158,7 @@ export const useStore = create(
 
             },
 
-            updateEntitiesByRole: (roleType, isActive) => {
+            updateEntitiesByRole: (roleType, isActive, ids) => {
                 console.log(roleType, isActive);
                 const typeRelations = {
                     "SAML_IDP": "SAML_SP",
@@ -169,7 +169,7 @@ export const useStore = create(
                     const possibleToChangeEntities = get().getPossibleToChangeEntities(null, roleType);
                     set((state) => ({
                         remoteEntities: state.remoteEntities.map((entity) =>
-                            possibleToChangeEntities.includes(entity) ? {...entity, is_active: true} : entity
+                            possibleToChangeEntities.includes(entity) && ids.includes(entity.id) ? {...entity, is_active: true} : entity
                         ),
                     }))
                 }

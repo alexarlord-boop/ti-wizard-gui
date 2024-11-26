@@ -54,15 +54,15 @@ export default function RoleCard({role, onAdd}) {
 
     }
 
-    const confirmChangeStatus = () => {
-        handleActivation(role.entity_id, !role.is_active);
+    const confirmChangeStatus = (ids) => {
+        handleActivation(role.entity_id, !role.is_active, ids);
         setIsStatusModalOpen(false)
     }
 
-    const handleActivation = (entity_id, status) => {
+    const handleActivation = (entity_id, status, ids) => {
         console.log(role)
         changeRoleActiveStatus(entity_id, status);
-        updateEntitiesByRole(role.entity_type, status);
+        updateEntitiesByRole(role.entity_type, status, ids);
 
     }
 
