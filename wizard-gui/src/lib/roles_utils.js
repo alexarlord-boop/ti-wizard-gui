@@ -19,6 +19,13 @@ export const humanReadableTypes = {
     "OIDC_RP": "OIDC Relying Party",
 }
 
+export const humanReadableShortTypes = {
+    "SAML_IDP": "SAML IDP",
+    "SAML_SP": "SAML SP",
+    "OIDC_OP": "OIDC Provider",
+    "OIDC_RP": "OIDC RP",
+}
+
 export const typeRelations = {
     "SAML_IDP": "SAML_SP",
     "SAML_SP": "SAML_IDP",

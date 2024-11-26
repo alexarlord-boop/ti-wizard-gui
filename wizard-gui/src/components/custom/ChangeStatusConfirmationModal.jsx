@@ -1,5 +1,5 @@
 import ConfirmationModal from "./ConfirmationModal.jsx";
-import {humanReadableTypes, typeRelations} from "../../lib/roles_utils.js";
+import {humanReadableShortTypes, humanReadableTypes, typeRelations} from "../../lib/roles_utils.js";
 import React, {useEffect, useState} from "react";
 import {Badge} from "@/components/ui/badge"
 import {Checkbox} from "../ui/checkbox.jsx";
@@ -63,7 +63,7 @@ export default function ChangeStatusConfirmationModal({
             activationOf.is_active ?
                 <ul>
                     {entities.filter(e => filterBy(e)).map(e =>
-                        <li key={e.id}>{e.resourceName}</li>
+                        <li key={e.id}>{e.resourceName} <span className="float-end">{humanReadableShortTypes[e.entity_type]}</span></li>
                     )}
                 </ul>
 
@@ -87,6 +87,7 @@ export default function ChangeStatusConfirmationModal({
                                 className="mr-2"
                             />
                             <label htmlFor={e.id}>{e.resourceName}</label>
+                            <span className="ml-auto">{humanReadableShortTypes[e.entity_type]}</span>
                         </li>
                     )}
                 </ul>
