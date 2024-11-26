@@ -132,10 +132,12 @@ export default function RoleCard({role, onAdd}) {
                     setIsModalOpen(false)
                 }}
                 title={`Delete ${humanReadableTypes[role.entity_type]}`}
-                description={role.is_active ? "This role is active. Deactivate role first" : "Entities related to this role won't operate."}
+                description={role.is_active ? "This role is active. Deactivate role first" : "After deletion of a role, entities related to this role won't operate."}
                 content={
                     (
-                        !role.is_active && <span className="flex ">
+                        !role.is_active &&
+                        <>
+                        <span className="flex ">
                         <Checkbox
                             id="deletion"
                             checked={isEntityDeletionChecked} // Ensure the checkbox reflects the state
@@ -151,6 +153,12 @@ export default function RoleCard({role, onAdd}) {
                             Delete all related entities
                         </label>
                     </span>
+                            <ul>
+                                {entities.filter(e => e.entity_type === typeRelations[role.entity_type]).map(e => <li
+                                    key={e.id}>{e.resourceName}</li>)}
+                            </ul>
+                        </>
+
                     )
 
                 }/>
