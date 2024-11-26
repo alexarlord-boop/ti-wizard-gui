@@ -101,7 +101,7 @@ export default function NavBar() {
                     <Button size="sm" variant="outline" className="me-5"
                             onClick={pushStateToBackend}
 
-                    ><UploadCloud/></Button>
+                    >Push State</Button>
                 }
                 <ProfileDropdown>Settings</ProfileDropdown>
             </div>
