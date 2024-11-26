@@ -166,7 +166,7 @@ export const useStore = create(
                 }
 
                 if (isActive) {
-                    const possibleToChangeEntities = get().getPossibleToChangeEntities(false, true);
+                    const possibleToChangeEntities = get().getPossibleToChangeEntities(null, roleType);
                     set((state) => ({
                         remoteEntities: state.remoteEntities.map((entity) =>
                             possibleToChangeEntities.includes(entity) ? {...entity, is_active: true} : entity
