@@ -225,8 +225,8 @@ export function DataTable({handleViewDetails, data}) {
                     />
                     {isDisabled && (
                         <div
-                            className="absolute -left-[50%] top-full -mt-5 hidden w-max bg-gray-700 text-white text-xs rounded p-1 group-hover:block">
-                            Suspended due to inactive {disabledReason}
+                            className="absolute -left-[50%] top-full -mt-10 hidden w-max bg-gray-700 text-white text-xs rounded p-1 group-hover:block">
+                            Suspended due to inactive <a href={`/${disabledReason.toLowerCase()}s`} className="underline">{disabledReason}</a>
                         </div>
                     )}
                 </div>

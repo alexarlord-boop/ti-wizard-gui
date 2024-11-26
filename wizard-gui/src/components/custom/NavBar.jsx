@@ -52,10 +52,10 @@ export default function NavBar() {
                     <NavigationMenuTrigger>Sources</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className="text-left grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                            <ListItem href="/sources/federations" title="National Federations">
+                            <ListItem href="/federations" title="National Federations">
                                 Registration Authorities (RAs)
                             </ListItem>
-                            <ListItem href="/sources/federations" title="Individual entities">
+                            <ListItem href="/federations" title="Individual entities">
                                 Local file
                             </ListItem>
                             {/*<ListItem href="/source/xml" title="+ MDX Source">*/}

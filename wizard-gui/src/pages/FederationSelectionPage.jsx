@@ -109,7 +109,7 @@ const FederationSelectionPage = () => {
                 itemList={[
                     {path: '/', label: 'Home'},
                     {path: '/sources', label: 'Sources'},
-                    {path: '/sources/federations', label: 'National Federations'}
+                    {path: '/federations', label: 'National Federations'}
                 ]}
             />
 
