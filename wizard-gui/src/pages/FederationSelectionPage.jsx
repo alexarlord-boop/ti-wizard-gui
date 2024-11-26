@@ -38,7 +38,8 @@ const FederationSelectionPage = () => {
     const updateEntitiesByFederation = useStore((state) => state.updateEntitiesByFederation);
 
     const beforeChangeStatus = (federation) => {
-        if (entities.some(e => e.ra === federation?.name) && possibleToChangeEntities(true).length > 0) {
+        console.log(possibleToChangeEntities(federation.name).length);
+        if (entities.some(e => e.ra === federation?.name) && possibleToChangeEntities(federation.name).length > 0) {
             setIsStatusModalOpen(true);
         } else {
 
@@ -183,7 +184,7 @@ const FederationSelectionPage = () => {
                     readableTitle={clickedFederation.name}
                     readableDescription={""}
                     filterBy={(e) => e.ra === clickedFederation.name}
-                    entities={possibleToChangeEntities(true)}
+                    entities={possibleToChangeEntities(clickedFederation.name)}
                     isOpen={isStatusModalOpen}
                     onConfirm={confirmChangeStatus}
                     setIsOpen={setIsStatusModalOpen}

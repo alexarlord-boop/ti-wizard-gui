@@ -211,15 +211,25 @@ export function DataTable({handleViewDetails, data}) {
                 const activeRoles = roles.map((role) => role.is_active ? role.entity_type : null);
                 const activeFederations = federations.map((federation) => federation.is_active ? federation.name : null);
                 const isDisabled = !activeRoles.includes(typeRelations[titlesToTypes[role]]) || !activeFederations.includes(RA);
-                return <Switch
-                    key={id}
-                    disabled={isDisabled}
-                    checked={is_active}
-                    onCheckedChange={() => {
-                        changeEntityActiveStatus(id, !is_active);
-                    }}
-                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
-                />
+                const disabledReason = !activeRoles.includes(typeRelations[titlesToTypes[role]]) ? "Role" : "Federation";
+
+                return <div className="relative group">
+                    <Switch
+                        key={id}
+                        disabled={isDisabled}
+                        checked={is_active}
+                        onCheckedChange={() => {
+                            changeEntityActiveStatus(id, !is_active);
+                        }}
+                        className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                    />
+                    {isDisabled && (
+                        <div
+                            className="absolute -left-[50%] top-full -mt-5 hidden w-max bg-gray-700 text-white text-xs rounded p-1 group-hover:block">
+                            Suspended due to inactive {disabledReason}
+                        </div>
+                    )}
+                </div>
             },
             sortingFn: (rowA, rowB) => {
                 // const statusA = rowA.original.is_active;

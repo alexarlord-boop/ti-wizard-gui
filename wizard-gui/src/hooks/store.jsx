@@ -107,24 +107,31 @@ export const useStore = create(
 
             // Helper methods
 
-            getPossibleToChangeEntities: (fromFederation=false, fromRole=false) => {
-                const { roles, federations, remoteEntities } = get();
-                return remoteEntities.filter(entity => {
-                    const relatedRole = roles.find(role => role.entity_type === typeRelations[entity.entity_type]);
-                    const relatedFederation = federations.find(federation => federation.name === entity.ra);
-                    if (fromFederation) {
-                        return relatedRole?.is_active;
-                    }
-                    if (fromRole) {
-                        return relatedFederation?.is_active;
-                    }
-                });
+            getPossibleToChangeEntities: (fromFederation=null, fromRole=null) => {
+            //     it should take inactive entities related to federation or role
+            //     then check their related roles or federations and if they are active
+            //     finally return the list of entities that can be activated
+                console.log(fromFederation);
+                const entities = get().remoteEntities;
+
+                if (fromFederation) {
+                    const relatedEntities = entities.filter((entity) => entity.ra === fromFederation);
+                    return relatedEntities.filter((entity) => {
+                        const relatedRole = get().roles.find((role) => typeRelations[role.entity_type] === entity.entity_type);
+                        return relatedRole.is_active;
+                    })
+                }
+
+
+
             },
 
             updateEntitiesByFederation: (federationName, isActive) => {
             //    change entities that  possible to change, use this.getPossibleToChangeEntities
+               console.log(federationName);
                 if (isActive) {
-                    const possibleToChangeEntities = get().getPossibleToChangeEntities(true);
+                    const possibleToChangeEntities = get().getPossibleToChangeEntities(federationName, null);
+                    console.log(possibleToChangeEntities);
                     set((state) => ({
                         remoteEntities: state.remoteEntities.map((entity) =>
                             possibleToChangeEntities.includes(entity) ? {...entity, is_active: true} : entity
