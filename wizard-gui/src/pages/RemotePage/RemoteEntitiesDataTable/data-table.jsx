@@ -205,7 +205,17 @@ export function DataTable({handleViewDetails, data}) {
         {
             id: "status",
             accessorKey: "status",
-            header: () => <div className={`text-center ${smColWidth}`}>Status</div>,
+            header: ({column}) => (
+                <div className={`text-center ${smColWidth}`}>
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Status
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
+                    </Button>
+                </div>
+            ),
             cell: ({row}) => {
                 const {is_active, RA, role, id} = row.original;
                 const activeRoles = roles.map((role) => role.is_active ? role.entity_type : null);
