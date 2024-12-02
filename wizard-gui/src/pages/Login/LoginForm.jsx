@@ -31,15 +31,15 @@ export default function LoginForm() {
 
         try {
 
-            console.log(data);
+            // console.log(data);
             const username = data.username;
             // Send login request with credentials using apiClient
-            const loginResponse = await apiClient.post('/api/token/', data);
+            const loginResponse = await apiClient.post('/token/', data);
 
             if (loginResponse.status === 200) {
                 // Store the JWT token in local storage
                 const data = loginResponse.data;
-                console.log(data);
+                // console.log(data);
                 localStorage.setItem('username', username);
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
@@ -50,7 +50,7 @@ export default function LoginForm() {
 
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             if (error.response && error.response.status === 401) {
             //     add error to form description
                 form.setError('general', {
@@ -59,8 +59,8 @@ export default function LoginForm() {
                 });
 
             } else {
-                setErrorMessage('An error occurred.');
-                console.log(error);
+                form.setError('An error occurred.');
+                // console.log(error);
             }
         }
     };
@@ -68,7 +68,7 @@ export default function LoginForm() {
 
     function onSubmit(data) {
 
-        console.log(data);
+        // console.log(data);
         toast.success('Login successful!');
 
     }

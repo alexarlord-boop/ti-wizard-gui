@@ -1,12 +1,12 @@
 import React, {useEffect, useLayoutEffect, useState} from "react";
-import { getSortedRowModel, getFilteredRowModel, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { Table } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import {getSortedRowModel, getFilteredRowModel, getCoreRowModel, useReactTable} from "@tanstack/react-table";
+import {Table} from "@/components/ui/table";
+import {Input} from "@/components/ui/input";
+import {ScrollArea} from "@radix-ui/react-scroll-area";
 import {ArrowUpDown, MoreHorizontal} from "lucide-react";
 import EntityNameWithTooltip from "../../../components/custom/EntityNameTooltip.jsx";
 import StatusToggle from "./EntityStatusToggle.jsx";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import RoleFilter from "./RoleFilter";
 import ColumnVisibilityToggle from "./ColumnVisibilityToggle";
 
@@ -24,10 +24,14 @@ import {Button} from "../../../components/ui/button.jsx";
 import DataTableHeader from "./TableHeader.jsx";
 import DataTableBody from "./TableBody.jsx";
 import RegistrationFilter from "./RegistrationFilter.jsx";
+import ConfirmationModal from "../../../components/custom/ConfirmationModal.jsx";
+import {useStore} from "../../../hooks/store.jsx";
+import {Switch} from "@/components/ui/switch";
+import {titlesToTypes, typeRelations} from "../../../lib/roles_utils.js";
 
 
-export function DataTable({ handleViewDetails, handleDelete, data }) {
-    const [sorting, setSorting] = useState([{ id: "status", desc: false }]);
+export function DataTable({handleViewDetails, data}) {
+    const [sorting, setSorting] = useState([{id: "status", desc: false}]);
     const [columnFilters, setColumnFilters] = useState([]);
     const [columnVisibility, setColumnVisibility] = useState({});
     const [selectedRoles, setSelectedRoles] = useState([]);
@@ -35,7 +39,28 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
     const [filteredData, setFilteredData] = useState(data);
     const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
     const [isRegistrationDropdownOpen, setIsRegistrationDropdownOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedEntity, setSelectedEntity] = useState(null);
 
+    const roles = useStore((state) => state.roles);
+    const federations = useStore((state) => state.federations);
+    const changeEntityActiveStatus = useStore((state) => state.changeEntityActiveStatus);
+    const deleteEntity = useStore((state) => state.deleteEntity);
+
+    console.log(data);
+    const onDelete = (entity) => {
+        setSelectedEntity(entity);
+        setIsModalOpen(true)
+    }
+    const confirmDelete = () => {
+        console.log(selectedEntity)
+        handleDelete(selectedEntity.id);
+        setIsModalOpen(false);
+    }
+    const handleDelete = (entity_id) => {
+        console.log(entity_id)
+        deleteEntity(entity_id);
+    }
 
     useLayoutEffect(() => {
         let newFilteredData = data;
@@ -90,7 +115,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
 
     const handleStatusChange = (rowId, newStatus) => {
         const updatedData = filteredData.map((row) =>
-            row.id === rowId ? { ...row, status: newStatus } : row
+            row.id === rowId ? {...row, status: newStatus} : row
         );
         setFilteredData(updatedData);
     };
@@ -105,25 +130,24 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         : [...new Set(data.map((row) => row.role))];
 
 
-
     const columns = [
         {
             id: "name",
             accessorKey: "name",
-            header: ({ column }) => (
+            header: ({column}) => (
                 <div className={` text-center ${nameColWidth}`}>
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
                         Name
-                        <ArrowUpDown className="ml-2 h-4 w-4" />
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
                     </Button>
                 </div>
             ),
-            cell: ({ row }) => {
+            cell: ({row}) => {
                 const entity = row.original;
-                const { name } = row.original;
+                const {name} = row.original;
                 return (
                     <div className="text-left truncate max-w-md hover:underline cursor-pointer">
                         <span onClick={() => handleViewDetails(entity)}>
@@ -143,7 +167,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "Registered in",
             accessorKey: "RA",
-            header: ({ column }) => (
+            header: ({column}) => (
                 <div className={`text-center ${mdColWidth}`}>
                     <RegistrationFilter
                         selectedRegistrations={selectedRegistrations}
@@ -154,9 +178,8 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                     />
                 </div>
             ),
-            cell: ({ row }) => {
-
-                const { RA } = row.original;
+            cell: ({row}) => {
+                const {RA} = row.original;
                 return (
                     <div className="text-center truncate w-[12em]">
                         {RA}
@@ -167,7 +190,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
 
         {
             accessorKey: "role",
-            header: ({ column }) => (
+            header: ({column}) => (
                 <div className={`text-center ${mdColWidth}`}>
                     <RoleFilter
                         selectedRoles={selectedRoles}
@@ -182,16 +205,52 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
         {
             id: "status",
             accessorKey: "status",
-            header: () => <div className={`text-center ${smColWidth}`}>Status</div>,
-            cell: ({ row }) => {
-                const { status, id } = row.original;
-                return <StatusToggle initialStatus={status} onStatusChange={(newStatus) => handleStatusChange(id, newStatus)} />;
+            header: ({column}) => (
+                <div className={`text-center ${smColWidth}`}>
+                    <Button
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    >
+                        Status
+                        <ArrowUpDown className="ml-2 h-4 w-4"/>
+                    </Button>
+                </div>
+            ),
+            cell: ({row}) => {
+                const {is_active, RA, role, id} = row.original;
+                const activeRoles = roles.map((role) => role.is_active ? role.entity_type : null);
+                const activeFederations = federations.map((federation) => federation.is_active ? federation.name : null);
+                const isDisabled = !activeRoles.includes(typeRelations[titlesToTypes[role]]) || !activeFederations.includes(RA);
+                const disabledReason = !activeRoles.includes(typeRelations[titlesToTypes[role]]) ? "Role" : "Federation";
+
+                return <div className="relative group">
+                    <Switch
+                        key={id}
+                        disabled={isDisabled}
+                        checked={is_active}
+                        onCheckedChange={() => {
+                            changeEntityActiveStatus(id, !is_active);
+                        }}
+                        className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+                    />
+                    {isDisabled && (
+                        <div
+                            className="absolute -left-[50%] top-full -mt-10 hidden w-max bg-gray-700 text-white text-xs rounded p-1 group-hover:block">
+                            Suspended due to inactive <a href={`/${disabledReason.toLowerCase()}s`} className="underline">{disabledReason}</a>
+                        </div>
+                    )}
+                </div>
             },
             sortingFn: (rowA, rowB) => {
-                const statusA = rowA.original.status;
-                const statusB = rowB.original.status;
-                if (statusA === "active" && statusB !== "active") return -1;
-                if (statusA !== "active" && statusB === "active") return 1;
+                const statusA = rowA.original.is_active;
+                const statusB = rowB.original.is_active;
+                const disabledA = !roles.map((role) => role.is_active ? role.entity_type : null).includes(typeRelations[titlesToTypes[rowA.original.role]]);
+                const disabledB = !roles.map((role) => role.is_active ? role.entity_type : null).includes(typeRelations[titlesToTypes[rowB.original.role]]);
+
+                if (disabledA && !disabledB) return 1;
+                if (!disabledA && disabledB) return -1;
+                if (statusA && !statusB) return -1;
+                if (!statusA && statusB) return 1;
                 return 0;
             },
         },
@@ -199,7 +258,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
             id: "actions",
             accessorKey: "actions",
             header: () => <div className={`text-center ${smColWidth}`}>Actions</div>,
-            cell: ({ row }) => {
+            cell: ({row}) => {
                 const entity = row.original;
 
                 return (
@@ -207,7 +266,7 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="h-8 w-8 p-0">
                                 <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
+                                <MoreHorizontal className="h-4 w-4"/>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
@@ -220,8 +279,8 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                             </DropdownMenuItem>
                             <DropdownMenuItem>Refresh metadata</DropdownMenuItem>
                             <DropdownMenuItem>Restart entity</DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => handleDelete(entity.id)} className="text-red-500">
+                            <DropdownMenuSeparator/>
+                            <DropdownMenuItem onClick={() => onDelete(entity)} className="text-red-500">
                                 Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -256,14 +315,22 @@ export function DataTable({ handleViewDetails, handleDelete, data }) {
                     onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
                     className="max-w-sm"
                 />
-                <ColumnVisibilityToggle table={table} />
+                <ColumnVisibilityToggle table={table}/>
             </div>
             <ScrollArea className="h-[60dvh] overflow-y-scroll rounded-md border">
                 <Table>
-                    <DataTableHeader table={table} />
-                    <DataTableBody table={table} columns={columns} />
+                    <DataTableHeader table={table}/>
+                    <DataTableBody table={table} columns={columns}/>
                 </Table>
             </ScrollArea>
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                onConfirm={confirmDelete}
+                onClose={() => {
+                    setIsModalOpen(false)
+                }}
+                title={`Delete ${selectedEntity?.role} entity`}
+                description={`If you delete this entity, ...`}/>
         </div>
     );
 }
