@@ -174,7 +174,7 @@ export default function RoleAddForm(
                                                 </FormItem>
                                             )}
                                         />
-                                        <br/>
+
                                         <FormField
                                             control={form.control}
                                             name="display_name"
@@ -196,7 +196,7 @@ export default function RoleAddForm(
                                             )}
                                         />
                                     </div>
-                                    <br />
+
                                     <div className="flex items-center justify-between h-[80px]">
                                         <div className="grid w-full max-w-sm items-center gap-1.5">
                                             <FormField
