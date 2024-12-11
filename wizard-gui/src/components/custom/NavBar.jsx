@@ -15,10 +15,11 @@ import ProfileDropdown from "./ProfileDropdown.jsx";
 import {GearIcon, UpdateIcon} from "@radix-ui/react-icons";
 import {Button} from "../ui/button.jsx";
 import {useStore} from "../../hooks/store.jsx";
-import {UploadCloud} from "lucide-react";
+import {ArrowDownCircle, ArrowLeftCircle, ArrowUpCircle, FolderSyncIcon, LoaderIcon, UploadCloud} from "lucide-react";
 
 export default function NavBar() {
     const pushStateToBackend = useStore((state) => state.pushStateToBackend);
+    const syncWithDb = useStore((state) => state.syncWithDb);
 
     const configurationPages = [
         "roles",
@@ -28,7 +29,7 @@ export default function NavBar() {
     ]
 
     const userOnConfigurationPage = configurationPages.some(page => window.location.pathname.includes(page))
-
+    const hasChanges = useStore((state) => state.hasChanges);
 
     return (
         <NavigationMenu id="navbar">
@@ -98,10 +99,16 @@ export default function NavBar() {
 
             <div className="flex">
                 {userOnConfigurationPage &&
-                    <Button size="sm" variant="outline" className="me-5"
-                            onClick={pushStateToBackend}
+                    <div className="flex gap-2 justify-between">
+                        <Button className="px-2" size="sm" variant="outline"
+                                onClick={syncWithDb}
 
-                    >Push State</Button>
+                        ><ArrowDownCircle className="h-5"/>Sync State</Button>
+                        <Button size="sm" variant="outline" className={`me-5 px-2 ${hasChanges ? 'border-red-500  ' : ''}`}
+                                onClick={pushStateToBackend}
+
+                        ><ArrowUpCircle className="h-5"/>Push State</Button>
+                    </div>
                 }
                 <ProfileDropdown>Settings</ProfileDropdown>
             </div>

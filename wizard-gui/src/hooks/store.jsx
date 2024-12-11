@@ -64,10 +64,20 @@ export const useStore = create(
 
 
             // Sync with server
-            syncWithServer:
+            syncWithDb:
                 async () => {
-                    const data = await fetch('/api/sync').then((res) => res.json());
-                    set(data);
+                   try {
+                       const data = await apiClient.get('core/retrieve_state/').then((res) => res.data);
+                       set(data);
+                       set({ hasChanges: false });
+                          console.log('State successfully synced with the backend!');
+                            toast.success('State successfully synced with the backend!');
+                   } catch (error) {
+                          console.error('Failed to sync state with the backend:', error);
+                          toast.error('Failed to sync state with the backend');
+                   }
+
+
                 },
 
             // Push state to backend
