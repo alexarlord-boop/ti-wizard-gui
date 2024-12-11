@@ -73,30 +73,22 @@ export const useStore = create(
             // Push state to backend
             pushStateToBackend: async () => {
                 try {
-                    // TODO:- make body structure
                     const federations = get().federations; // Get the current state
                     const roles = get().roles;
-                    const entities = get().remoteEntities;
-                    const body = {
+                    const entities = get().entities;
+
+                    // Prepare API request bodies
+                    const stateRequest = apiClient.post('core/update_state/', { federations, roles, entities });
+
+                    console.log('Pushing state to backend:', {
                         federations,
                         roles,
                         entities,
-                    };
+                    });
 
-                    console.log('Pushing state to backend:', body);
-
-
-                    const response = await apiClient.post(
-                        'configuration/',
-                        {
-                            body: JSON.stringify(body),
-                        }
-                    )
-
-                    if (!response.ok) {
-                        throw new Error(`Error: ${response.statusText}`);
-                    }
-
+                    // Send the request
+                    await stateRequest;
+                    set({ hasChanges: false }); // Reset changes tracker
                     console.log('State successfully pushed to the backend!');
                     toast.success('State successfully pushed to the backend!');
                 } catch (error) {
@@ -104,6 +96,7 @@ export const useStore = create(
                     toast.error('Failed to push state to backend');
                 }
             },
+
 
             // Helper methods
 
