@@ -3,6 +3,8 @@ import {persist, createJSONStorage} from 'zustand/middleware'
 import apiClient from "../api/client.js";
 import {toast} from "sonner";
 import {typeRelations} from "../lib/roles_utils.js";
+import {federationsApi} from "../api/index.js";
+import {useFederationsQuery} from "./useFederationsQuery.jsx";
 
 
 export const useStore = create(
@@ -83,10 +85,19 @@ export const useStore = create(
                 async () => {
                    try {
                        const data = await apiClient.get('core/retrieve_state/').then((res) => res.data);
-                       set(data);
-                       set({ hasChanges: false });
-                          console.log('State successfully synced with the backend!');
-                            toast.success('State successfully synced with the backend!');
+
+                       if (data.federations.length === 0){
+                           window.location.href = '/federations';
+                       } else if (data.roles.length === 0){
+                            window.location.href = '/roles';
+                       }
+
+                       else {
+                           set(data);
+                           set({hasChanges: false});
+                           console.log('State successfully synced with the backend!');
+                           toast.success('State successfully synced with the backend!');
+                       }
                    } catch (error) {
                           console.error('Failed to sync state with the backend:', error);
                           toast.error('Failed to sync state with the backend');

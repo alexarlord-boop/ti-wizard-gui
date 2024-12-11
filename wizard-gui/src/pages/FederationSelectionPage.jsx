@@ -73,6 +73,7 @@ const FederationSelectionPage = () => {
                     delete data[toFilterOut];
                     console.log(data);
                     initializeFederations(data); // Populate the state
+                    console.log(federations);
                 } catch (error) {
                     console.error('Failed to fetch federations:', error);
                 }
@@ -80,7 +81,7 @@ const FederationSelectionPage = () => {
 
             fetchFederations();
         }
-    }, [initializeFederations]);
+    }, []);
 
     // Filter federations based on search term
     const filteredFederations = federations?.filter(federation =>
