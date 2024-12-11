@@ -40,7 +40,7 @@ function RemotePage() {
 
     const roles = useStore((state) => state.roles);
     const federations = useStore((state) => state.federations);
-    const activeEntities = useStore((state) => state.remoteEntities);
+    const activeEntities = useStore((state) => state.entities);
 
     const {status: entityStatus, data: entities, refetch} = useEntitiesQuery(selectedFederation, selectedEntityType);
 

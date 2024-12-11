@@ -14,7 +14,7 @@ const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
     // const updateEntityMutation = useUpdateEntityMutation();
     const addEntity = useStore((state) => state.addEntity);
     const deleteEntity = useStore((state) => state.deleteEntity);
-    let entities = useStore((state) => state.remoteEntities);
+    let entities = useStore((state) => state.entities);
 
     const [entityState, setEntityState] = useState({
         is_active: entity?.is_active || false,

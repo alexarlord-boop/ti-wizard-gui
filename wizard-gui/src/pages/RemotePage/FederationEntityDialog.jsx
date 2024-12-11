@@ -36,7 +36,7 @@ const FederationEntityDialog = ({
                                     selectedEntity
                                 }) => {
     // const hostedEntities = JSON.parse(localStorage.getItem('hostedEntities') || '[]');
-    const hostedEntities = useStore((state) => state.remoteEntities);
+    const hostedEntities = useStore((state) => state.entities);
     console.log(hostedEntities);
     console.log(selectedFederation);
     console.log(selectedEntityType);

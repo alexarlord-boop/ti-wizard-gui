@@ -23,7 +23,7 @@ const FederationSelectionPage = () => {
     const [searchTerm, setSearchTerm] = useState(''); // State to manage search term
     const [loadingFederations, setLoadingFederations] = useState({}); // State to manage loading status of each federation
 
-    const entities = useStore((state) => state.remoteEntities);
+    const entities = useStore((state) => state.entities);
     const possibleToChangeEntities = useStore((state) => state.getPossibleToChangeEntities);
     const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 

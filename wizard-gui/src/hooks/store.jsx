@@ -10,8 +10,10 @@ export const useStore = create(
         (set, get) => ({
             roles: [],
             federations: [],
+            entities: [],
 
-            remoteEntities: [],
+            hasChanges: false,
+
 
 
             // Role management
@@ -19,12 +21,17 @@ export const useStore = create(
             updateRole: (id, data) =>
                 set((state) => ({
                     roles: state.roles.map((r) => (r.id === id ? {...r, ...data} : r)),
+                    hasChanges: true,
                 })),
             changeRoleActiveStatus: (entity_id, status) => set((state) => ({
                 roles: state.roles.map((r) => (r.entity_id === entity_id ? {...r, is_active: status} : r)),
+                hasChanges: true,
             })),
             deleteRole: (entity_id) =>
-                set((state) => ({roles: state.roles.filter((r) => r.entity_id !== entity_id)})),
+                set((state) => ({
+                    roles: state.roles.filter((r) => r.entity_id !== entity_id),
+                    hasChanges: true,
+                })),
 
 
             // Federation management
@@ -32,7 +39,8 @@ export const useStore = create(
                 set((state) => ({
                     federations: state.federations.map((f) =>
                         f.url === url ? {...f, is_active: status} : f
-                    )
+                    ),
+                    hasChanges: true,
                 })),
 
             // Initialize federations from server
@@ -49,18 +57,25 @@ export const useStore = create(
 
 
             // Entity management
-            addEntity: (entity) => set((state) => ({remoteEntities: [...state.remoteEntities, entity]})),
+            addEntity: (entity) => set((state) => ({
+                entities: [...state.entities, entity],
+                hasChanges: true,
+            })),
             updateEntity: (id, data) =>
                 set((state) => ({
-                    remoteEntities: state.remoteEntities.map((r) => (r.id === id ? {...r, ...data} : r)),
+                    entities: state.entities.map((r) => (r.id === id ? {...r, ...data} : r)),
+                    hasChanges: true,
                 })),
             changeEntityActiveStatus: (id, status) => {
                 console.log(id, status);
                 set((state) => ({
-                    remoteEntities: state.remoteEntities.map((r) => (r.id === id ? {...r, is_active: status} : r)),
+                    entities: state.entities.map((r) => (r.id === id ? {...r, is_active: status} : r)),
+                    hasChanges: true,
                 }));
             },
-            deleteEntity: (id) => set((state) => ({remoteEntities: state.remoteEntities.filter((r) => r.id !== id)})),
+            deleteEntity: (id) => set((state) => ({entities: state.entities.filter((r) => r.id !== id),
+                hasChanges: true,
+            })),
 
 
             // Sync with server
@@ -115,7 +130,7 @@ export const useStore = create(
             //     then check their related roles or federations and if they are active
             //     finally return the list of entities that can be activated
                 console.log(fromFederation);
-                const entities = get().remoteEntities;
+                const entities = get().entities;
 
                 if (fromFederation) {
                     const relatedEntities = entities.filter((entity) => entity.ra === fromFederation);
@@ -144,17 +159,19 @@ export const useStore = create(
                     const possibleToChangeEntities = get().getPossibleToChangeEntities(federationName, null);
                     console.log(possibleToChangeEntities);
                     set((state) => ({
-                        remoteEntities: state.remoteEntities.map((entity) =>
+                        entities: state.entities.map((entity) =>
                             possibleToChangeEntities.includes(entity) && ids.includes(entity.id) ? {...entity, is_active: true} : entity
                         ),
+                        hasChanges: true,
                     }))
 
                 } else {
                     // set all entities to inactive
                     set((state) => ({
-                        remoteEntities: state.remoteEntities.map((entity) =>
+                        entities: state.entities.map((entity) =>
                             entity.ra === federationName ? {...entity, is_active: false} : entity
                         ),
+                        hasChanges: true,
                     }))
                 }
 
@@ -171,16 +188,18 @@ export const useStore = create(
                 if (isActive) {
                     const possibleToChangeEntities = get().getPossibleToChangeEntities(null, roleType);
                     set((state) => ({
-                        remoteEntities: state.remoteEntities.map((entity) =>
+                        entities: state.entities.map((entity) =>
                             possibleToChangeEntities.includes(entity) && ids.includes(entity.id) ? {...entity, is_active: true} : entity
                         ),
+                        hasChanges: true,
                     }))
                 }
                 else {
                     set((state) => ({
-                        remoteEntities: state.remoteEntities.map((entity) =>
+                        entities: state.entities.map((entity) =>
                             entity.entity_type === typeRelations[roleType] ? {...entity, is_active: false} : entity
                         ),
+                        hasChanges: true,
                     }))
                 }
             },
@@ -188,9 +207,10 @@ export const useStore = create(
             deleteEntitiesByRole: (roleType) => {
                 console.log(roleType)
                 set((state) => ({
-                    remoteEntities: state.remoteEntities.filter((entity) =>
+                    entities: state.entities.filter((entity) =>
                         entity.entity_type !== typeRelations[roleType]
                     ),
+                    hasChanges: true,
                 }))
             }
 

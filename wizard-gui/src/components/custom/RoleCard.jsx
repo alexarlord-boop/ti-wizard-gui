@@ -37,7 +37,7 @@ export default function RoleCard({role, onAdd}) {
         setIsModalOpen(true);
     }
 
-    const entities = useStore((state) => state.remoteEntities);
+    const entities = useStore((state) => state.entities);
     const possibleToChangeEntities = useStore((state) => state.getPossibleToChangeEntities);
     const changeRoleActiveStatus = useStore((state) => state.changeRoleActiveStatus);
     const deleteRole = useStore((state) => state.deleteRole);
