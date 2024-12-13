@@ -60,7 +60,6 @@ export default function RoleCard({role, onAdd}) {
     }
 
     const handleActivation = (entity_id, status, ids) => {
-        console.log(role)
         changeRoleActiveStatus(entity_id, status);
         updateEntitiesByRole(role.entity_type, status, ids);
 
@@ -79,7 +78,7 @@ export default function RoleCard({role, onAdd}) {
         setIsModalOpen(false);
     };
 
-    console.log(entities)
+    // console.log(entities)
     return (
 
         <Card id={role.entity_type} className="h-[200px] border-2 border-black">
