@@ -100,11 +100,11 @@ export default function NavBar() {
             <div className="flex">
                 {userOnConfigurationPage &&
                     <div className="flex gap-2 justify-between">
-                        <Button className="px-2" size="sm" variant="outline"
+                        <Button className="px-2 border-2" size="sm" variant="outline"
                                 onClick={syncWithDb}
 
                         ><ArrowDownCircle className="h-5"/>Sync State</Button>
-                        <Button size="sm" variant="outline" className={`me-5 px-2 ${hasChanges ? 'border-red-500  ' : ''}`}
+                        <Button size="sm" variant="outline" className={`me-5 px-2 border-2 ${hasChanges ? 'border-orange-500 border-2 ' : ''}`}
                                 onClick={pushStateToBackend}
 
                         ><ArrowUpCircle className="h-5"/>Push State</Button>
