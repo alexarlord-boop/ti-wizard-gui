@@ -99,6 +99,7 @@ const EntityDetails = ({entity, entity_type, hostedEntities, withAction}) => {
                     <strong>Published in:</strong> {entityPublishedIn.ra}
                 </p>}
 
+                <p><strong>Hashed ID:</strong> {entityState.id}</p>
                 <p><strong>Entity ID:</strong> {entityState.entityID}</p>
                 <p>
                     <strong>Provider Name:</strong>{" "}
