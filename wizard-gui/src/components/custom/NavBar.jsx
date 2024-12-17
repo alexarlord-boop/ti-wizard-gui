@@ -12,9 +12,24 @@ import React from "react";
 import {cn} from "../../lib/utils.js";
 import {NavigationMenuLinkItem} from "../ui/navigation-menu.jsx";
 import ProfileDropdown from "./ProfileDropdown.jsx";
-import {GearIcon} from "@radix-ui/react-icons";
+import {GearIcon, UpdateIcon} from "@radix-ui/react-icons";
+import {Button} from "../ui/button.jsx";
+import {useStore} from "../../hooks/store.jsx";
+import {ArrowDownCircle, ArrowLeftCircle, ArrowUpCircle, FolderSyncIcon, LoaderIcon, UploadCloud} from "lucide-react";
 
 export default function NavBar() {
+    const pushStateToBackend = useStore((state) => state.pushStateToBackend);
+    const syncWithDb = useStore((state) => state.syncWithDb);
+
+    const configurationPages = [
+        "roles",
+        "remote-entities",
+        "federations",
+
+    ]
+
+    const userOnConfigurationPage = configurationPages.some(page => window.location.pathname.includes(page))
+    const hasChanges = useStore((state) => state.hasChanges);
 
     return (
         <NavigationMenu id="navbar">
@@ -38,10 +53,10 @@ export default function NavBar() {
                     <NavigationMenuTrigger>Sources</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className="text-left grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                            <ListItem href="/sources/federations" title="National Federations">
+                            <ListItem href="/federations" title="National Federations">
                                 Registration Authorities (RAs)
                             </ListItem>
-                            <ListItem href="/sources/federations" title="Individual entities">
+                            <ListItem href="/federations" title="Individual entities">
                                 Local file
                             </ListItem>
                             {/*<ListItem href="/source/xml" title="+ MDX Source">*/}
@@ -52,7 +67,7 @@ export default function NavBar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                <NavigationMenuTrigger>Proxy configuration</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>Proxy configuration</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className="text-left grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                             <li className="row-span-3">
@@ -83,6 +98,18 @@ export default function NavBar() {
             </NavigationMenuList>
 
             <div className="flex">
+                {userOnConfigurationPage &&
+                    <div className="flex gap-2 justify-between">
+                        <Button className="px-2 border-2" size="sm" variant="outline"
+                                onClick={syncWithDb}
+
+                        ><ArrowDownCircle className="h-5"/>Sync State</Button>
+                        <Button size="sm" variant="outline" className={`me-5 px-2 border-2 ${hasChanges ? 'border-orange-500 border-2 ' : ''}`}
+                                onClick={pushStateToBackend}
+
+                        ><ArrowUpCircle className="h-5"/>Push State</Button>
+                    </div>
+                }
                 <ProfileDropdown>Settings</ProfileDropdown>
             </div>
 
@@ -91,7 +118,7 @@ export default function NavBar() {
     );
 }
 
-const ListItem = React.forwardRef(({ className, title, children, disabled, ...props }, ref) => {
+const ListItem = React.forwardRef(({className, title, children, disabled, ...props}, ref) => {
     return (
         <li>
             <NavigationMenuLink asChild>

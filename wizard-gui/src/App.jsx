@@ -11,6 +11,7 @@ import RoleEditPage from "./pages/RoleEditPage.jsx";
 import FederationSelectionPage from "./pages/FederationSelectionPage.jsx";
 import LoginPage from "./pages/Login/LoginPage.jsx";
 import PrivateRoute from "./components/custom/PrivteRoute.jsx";
+import LogsPage from "./pages/LogsPage.jsx";
 
 function App() {
     const [count, setCount] = useState(0);
@@ -26,8 +27,8 @@ function App() {
                 <Route path="/roles" element={<PrivateRoute><MainLayout><RolesPage /></MainLayout></PrivateRoute>} />
                 <Route path="/roles/edit/:entityType" element={<PrivateRoute><MainLayout><RoleEditPage /></MainLayout></PrivateRoute>} />
                 <Route path="/remote-entities" element={<PrivateRoute><MainLayout><RemotePage /></MainLayout></PrivateRoute>} />
-                <Route path="/sources/federations" element={<PrivateRoute><MainLayout><FederationSelectionPage /></MainLayout></PrivateRoute>} />
-
+                <Route path="/federations" element={<PrivateRoute><MainLayout><FederationSelectionPage /></MainLayout></PrivateRoute>} />
+                <Route path="/logs" element={<PrivateRoute><MainLayout><LogsPage/></MainLayout></PrivateRoute>} />
                 {/* Catch-all route for unknown paths */}
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

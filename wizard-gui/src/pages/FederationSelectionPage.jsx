@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {
     Accordion,
@@ -13,38 +13,96 @@ import {Switch} from "@/components/ui/switch";  // Import Switch from ShadCN
 import {Input} from "@/components/ui/input";
 import {Spinner} from "../components/ui/Loader.jsx";
 import {useFederationsQuery} from "../hooks/useFederationsQuery.jsx";
-import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.jsx";  // Import Spinner
+import {useUpdateFederationMutation} from "../hooks/useUpdateFederationMutation.jsx";
+import {useStore} from "../hooks/store.jsx";
+import {humanReadableTypes, typeRelations} from "../lib/roles_utils.js";
+import ChangeStatusConfirmationModal from "../components/custom/ChangeStatusConfirmationModal.jsx";
 
 const FederationSelectionPage = () => {
     const {t, i18n} = useTranslation();
     const [searchTerm, setSearchTerm] = useState(''); // State to manage search term
     const [loadingFederations, setLoadingFederations] = useState({}); // State to manage loading status of each federation
 
+    const entities = useStore((state) => state.entities);
+    const possibleToChangeEntities = useStore((state) => state.getPossibleToChangeEntities);
+    const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value.toLowerCase());
     };
 
-    const {status, data} = useFederationsQuery();
-    const updateFederationMutation = useUpdateFederationMutation()
+    const initializeFederations = useStore((state) => state.initializeFederations);
+    const [clickedFederation, setClickedFederation] = useState(null);
+    const federations = useStore((state) => state.federations);
+    const changeFederationActiveStatus = useStore((state) => state.changeFederationActiveStatus);
+    const updateEntitiesByFederation = useStore((state) => state.updateEntitiesByFederation);
+
+    const beforeChangeStatus = (federation) => {
+        console.log(possibleToChangeEntities(federation.name).length);
+        if (entities.some(e => e.ra === federation?.name) && possibleToChangeEntities(federation.name).length > 0) {
+            setIsStatusModalOpen(true);
+        } else {
+
+            handleActivation(federation, !federation?.is_active);
+        }
+
+    }
+
+    const confirmChangeStatus = (ids) => {
+        console.log(clickedFederation);
+        handleActivation(clickedFederation, !clickedFederation.is_active, ids);
+        setIsStatusModalOpen(false)
+    }
+
+    const handleActivation = (federation, status, ids) => {
+
+        console.log(federation);
+        changeFederationActiveStatus(federation.url, status);
+        updateEntitiesByFederation(federation.name, status, ids);
+    }
+
+
+    useEffect(() => {
+        // Fetch data from the JSON server
+        if (federations.length === 0) {
+            const fetchFederations = async () => {
+                try {
+                    const response = await fetch('https://md.tiw.incubator.geant.org/md/ra.json');
+                    const data = await response.json();
+                    const toFilterOut = "https://www.edugain.org";
+                    delete data[toFilterOut];
+                    console.log(data);
+                    initializeFederations(data); // Populate the state
+                    console.log(federations);
+                } catch (error) {
+                    console.error('Failed to fetch federations:', error);
+                }
+            };
+
+            fetchFederations();
+        }
+    }, []);
 
     // Filter federations based on search term
-    const filteredFederations = data?.filter(federation =>
+    const filteredFederations = federations?.filter(federation =>
         federation.name.toLowerCase().includes(searchTerm)
     ) || [];
 
     const handleSwitchChange = (federation) => {
-        setLoadingFederations(prev => ({...prev, [federation.url]: true}));
-        updateFederationMutation.mutate({
-            id: federation.internalId,
-            status: !federation.isActive,
-            url: federation.url,
-        }, {
-            onSettled: () => {
-                setLoadingFederations(prev => ({...prev, [federation.url]: false}));
-            }
-        });
+        // setLoadingFederations(prev => ({...prev, [federation.url]: true}));
+        // console.log(federation);
+        // updateFederationMutation.mutate({
+        //     id: federation.id,
+        //     status: !federation.is_active,
+        //     url: federation.url,
+        // }, {
+        //     onSettled: () => {
+        //         setLoadingFederations(prev => ({...prev, [federation.url]: false}));
+        //     }
+        // });
+        changeFederationActiveStatus(federation.url, !federation.is_active);
     };
+
 
     return (
         <>
@@ -52,7 +110,7 @@ const FederationSelectionPage = () => {
                 itemList={[
                     {path: '/', label: 'Home'},
                     {path: '/sources', label: 'Sources'},
-                    {path: '/sources/federations', label: 'National Federations'}
+                    {path: '/federations', label: 'National Federations'}
                 ]}
             />
 
@@ -84,8 +142,13 @@ const FederationSelectionPage = () => {
                                             <div className="flex w-[50px] me-5">
                                                 <Switch
                                                     key={federation.url}
-                                                    checked={federation.isActive}
-                                                    onCheckedChange={() => handleSwitchChange(federation)}
+                                                    checked={federation.is_active}
+                                                    onClick={
+                                                        () => {
+                                                            setClickedFederation(federation);
+                                                            beforeChangeStatus(federation);
+                                                        }
+                                                    }
                                                     className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
                                                 />
                                                 {
@@ -113,6 +176,20 @@ const FederationSelectionPage = () => {
                         </ScrollArea>
                     </div>
                 )
+            }
+            {
+                clickedFederation &&
+                <ChangeStatusConfirmationModal
+                    objectType={"federation"}
+                    activationOf={clickedFederation}
+                    readableTitle={clickedFederation.name}
+                    readableDescription={""}
+                    filterBy={(e) => e.ra === clickedFederation.name}
+                    entities={possibleToChangeEntities(clickedFederation.name)}
+                    isOpen={isStatusModalOpen}
+                    onConfirm={confirmChangeStatus}
+                    setIsOpen={setIsStatusModalOpen}
+                />
             }
         </>
     );

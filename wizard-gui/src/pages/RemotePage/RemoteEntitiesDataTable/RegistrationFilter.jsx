@@ -17,7 +17,9 @@ const RegistrationFilter = ({ selectedRegistrations, handleRegistrationChange, i
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                {availableRegistrations.map((registration) => (
+                {availableRegistrations
+                    .sort((a, b) => a.localeCompare(b)) // sort alphabetically
+                    .map((registration) => (
                     <DropdownMenuCheckboxItem
                         key={registration}
                         checked={selectedRegistrations.includes(registration)}
@@ -25,7 +27,8 @@ const RegistrationFilter = ({ selectedRegistrations, handleRegistrationChange, i
                     >
                         {registration}
                     </DropdownMenuCheckboxItem>
-                ))}
+                ))
+                }
             </DropdownMenuContent>
         </DropdownMenu>
     );
